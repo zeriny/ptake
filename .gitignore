@@ -1,0 +1,6 @@
+*.log
+data/*
+config/*
+bin/*
+results/*
+*.sh

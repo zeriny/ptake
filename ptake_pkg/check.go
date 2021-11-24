@@ -6,6 +6,7 @@ import (
 	"github.com/patrickmn/go-cache"
 	"path"
 	"strings"
+	"time"
 )
 
 //matchServiceCNAME is the interface to check whether there are CNAME matching vulnerable service cname patterns
@@ -119,12 +120,12 @@ func recursive(domain CNAME, o *Options, domainCache *cache.Cache, depth int) (d
 
 		// Get CNAME records
 		cnames := domain.Cnames
-		if cnames!=nil {
+		if cnames != nil {
 			for i := range cnames {
 				//TODO: break the loop
 				cnameStatus := recursive(cnames[i], o, domainCache, depth+1)
 				//domainCache.Set(cnames[i], cnameStatus, cache.NoExpiration)
-				if cnameStatus.VulnerableLevel == 0{
+				if cnameStatus.VulnerableLevel == 0 {
 					continue
 				}
 				// If the current domain is innocent but some cnames are vulnerable,
@@ -144,9 +145,9 @@ func recursive(domain CNAME, o *Options, domainCache *cache.Cache, depth int) (d
 }
 
 // This function is the interface to check whether a subdomain can be taken over via vulnerable services.
-func checkService(domain CNAME, o *Options, domainCache *cache.Cache) {
-	depth := 1
-	domainStatus := recursive(domain, o, domainCache, depth)
+func checkService(domain CNAME, cacheFile string, o *Options) {
+	domainCache := cache.New(30*time.Second, 10*time.Second)
+	domainStatus := recursive(domain, o, domainCache, 1)
 	// Only Match Service CNAME Patterns
 	if domainStatus.VulnerableLevel == 1 {
 		// Check whether Web contents match any fingerprints of vulnerable services.
@@ -157,17 +158,18 @@ func checkService(domain CNAME, o *Options, domainCache *cache.Cache) {
 	if domainStatus.VulnerableLevel >= 1 {
 		fmt.Println("[+] " + domain.Domain)
 		fmt.Println(checkInfo)
-	} else if o.Verbose{
+	} else if o.Verbose {
 		fmt.Println(checkInfo)
 	}
 
-	if o.OutputPath != ""{
+	if o.OutputPath != "" {
 		if domainStatus.VulnerableLevel > 0 {
 			vulnerablePath := path.Join(o.OutputPath, "vulnerable.txt")
 			saveDomainStatus(domainStatus, vulnerablePath)
-		} else if o.Verbose{
+		} else if o.Verbose {
 			normalPath := path.Join(o.OutputPath, "normal.txt")
 			saveDomainStatus(domainStatus, normalPath)
 		}
 	}
+	saveCache(domain.Domain, cacheFile)
 }

@@ -1,43 +1,22 @@
 package ptake_pkg
 
 import (
+	"encoding/json"
 	"fmt"
-	"github.com/patrickmn/go-cache"
-	"log"
-	"os"
 	"path"
 	"sync"
-	"time"
 )
 
 func StartGetSubdomains(o *Options) {
-	var err error
 	var sldList []string
-	sldCache := make(map[string]int)
-
-	domainCache := cache.New(30*time.Second, 10*time.Second)
-	sldFile := path.Join(o.InputPath, "sld.txt")
-	fqdnFile := path.Join(o.InputPath, "fqdn.txt")
-	cacheFile := path.Join(o.CachePath, "sld_cache.txt")
+	var sldCache map[string]int
 
 	// Load SLDs to be handled.
-	_, err = os.Stat(sldFile)
-	if err == nil {
-		sldList, err = readFile(sldFile)
-		if err != nil {
-			log.Fatalln(err)
-		}
-	}
+	sldFile := path.Join(o.InputPath, "sld.txt")
+	sldList = readFile(sldFile)
 
-	// Load SLDs that have been handled.
-	_, err = os.Stat(cacheFile)
-	if err == nil {
-		slds, _ := readFile(cacheFile)
-		for i := range slds{
-			sldCache[slds[i]] = 1
-		}
-	}
-	//sldList = append(sldList, "twitter.com")
+	cacheFile := path.Join(o.CachePath, "sld_cache.txt")
+	sldCache = readCache(cacheFile) // Load SLDs that have been handled.
 
 	chanStream := make(chan string, o.Threads*10)
 	wg := new(sync.WaitGroup)
@@ -47,7 +26,7 @@ func StartGetSubdomains(o *Options) {
 		wg.Add(1)
 		go func() {
 			for sld := range chanStream {
-				getSubdomains(sld, fqdnFile, cacheFile, o, domainCache)
+				getSubdomains(sld, o)
 			}
 			wg.Done()
 		}()
@@ -69,31 +48,15 @@ func StartGetSubdomains(o *Options) {
 
 func StartGetCnames(o *Options) {
 	var subdomainList []string
-	var err error
 	subdomainCache := make(map[string]int)
 
+	// Load FQDNs to be handled.
 	fqdnPath := path.Join(o.InputPath, "fqdn.txt")
-	cnamePath := path.Join(o.InputPath, "cname.txt")
+	subdomainList = readFqdnFile(fqdnPath, 1)
+
 	cacheFile := path.Join(o.CachePath, "fqdn_cache.txt")
+	subdomainCache = readCache(cacheFile) // Load FQDNs that have been handled.
 
-	if fqdnPath != "" {
-		subdomainList, err = readFqdnFile(fqdnPath, 1)
-		if err != nil {
-			log.Fatalln(err)
-		}
-	}
-
-	// Load Subdomains that have been resolved.
-	_, err = os.Stat(cacheFile)
-	if err == nil {
-		fqdns, _ := readFile(cacheFile)
-		for i := range fqdns{
-			subdomainCache[fqdns[i]] = 1
-		}
-	}
-
-
-	domainCache := cache.New(30*time.Second, 10*time.Second)
 	chanStream := make(chan string, o.Threads*10)
 	wg := new(sync.WaitGroup)
 
@@ -102,7 +65,7 @@ func StartGetCnames(o *Options) {
 		wg.Add(1)
 		go func() {
 			for subdomain := range chanStream {
-				getCnames(subdomain, cnamePath, cacheFile, o, domainCache)
+				getCnames(subdomain, o)
 			}
 			wg.Done()
 		}()
@@ -123,35 +86,17 @@ func StartGetCnames(o *Options) {
 }
 
 func StartChecker(o *Options) {
-	var cnameList []CNAME
-	var err error
-	subdomainCache := make(map[string]int)
+	var cnameList []string
+	var subdomainCache map[string]int
 
-
-	// Initialize
+	// Load CNAME chains to be checked.
 	cnamePath := path.Join(o.InputPath, "cname.txt")
-	//vulnerablePath := path.Join(o.Output, "vulnerable.txt")
-	//normalPath := path.Join(o.Output, "normal.txt")
-	cacheFile := path.Join(o.CachePath, "check_cache.txt")
-
-
-	if cnamePath != "" {
-		_, cnameList, err = readCnameFile(cnamePath)
-		if err != nil {
-			log.Fatalln(err)
-		}
-	}
+	cnameList = readFile(cnamePath)
 
 	// Load Subdomains that have been checked.
-	_, err = os.Stat(cacheFile)
-	if err == nil {
-		fqdns, _ := readFile(cacheFile)
-		for i := range fqdns{
-			subdomainCache[fqdns[i]] = 1
-		}
-	}
+	cacheFile := path.Join(o.CachePath, "check_cache.txt")
+	subdomainCache = readCache(cacheFile)
 
-	domainCache := cache.New(30*time.Second, 10*time.Second)
 	chanStream := make(chan CNAME, o.Threads*10)
 	wg := new(sync.WaitGroup)
 
@@ -160,8 +105,7 @@ func StartChecker(o *Options) {
 		wg.Add(1)
 		go func() {
 			for cname := range chanStream {
-				checkService(cname, o, domainCache)
-				save(cname.Domain, cacheFile)
+				checkService(cname, cacheFile, o)
 			}
 			wg.Done()
 		}()
@@ -169,11 +113,13 @@ func StartChecker(o *Options) {
 
 	// Producer
 	for i := 0; i < len(cnameList); i++ {
-		_, ok := subdomainCache[cnameList[i].Domain]
+		var cname CNAME
+		json.Unmarshal([]byte(cnameList[i]), &cname)
+		_, ok := subdomainCache[cname.Domain]
 		if ok {
 			continue
 		}
-		chanStream <- cnameList[i]
+		chanStream <- cname
 	}
 
 	close(chanStream)

@@ -82,6 +82,8 @@ func Initialize(o *Options) (){
             os.RemoveAll(path.Join([]string{o.CachePath, d.Name()}...))
         }
         fmt.Printf("[!] Cache files in %s are removed!", o.CachePath)
+        os.Remove(o.LogPath)
+        fmt.Printf("[!] Log file is removed (%s)", o.CachePath)
     }
 
     // Log Path

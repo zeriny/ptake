@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-
 func get(url string, timeout int, addHeaders map[string]string) (body []byte) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
@@ -27,5 +26,3 @@ func get(url string, timeout int, addHeaders map[string]string) (body []byte) {
 	b := resp.Body()
 	return b
 }
-
-

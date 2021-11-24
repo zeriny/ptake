@@ -23,7 +23,7 @@ func main() {
 	flag.StringVar(&o.OutputPath, "result_path", "", "Output results (json object) to a .txt file.")
 	flag.BoolVar(&o.CheckAvailable, "check_status", false, "Check whether CNAMEs are available (can be registered).")
 	flag.BoolVar(&o.CheckFull, "check_full", false, "Check full DNS chains no matter whether any cname is vulnerable.")
-	flag.BoolVar(&o.Fresh, "fresh", false, "Start a fresh scan. If the flag set, a new scan will be " +
+	flag.BoolVar(&o.Fresh, "fresh", false, "Start a fresh scan. If the flag set, a new scan will be "+
 		"start, and the cache file of the last scan will be totally removed.")
 
 	flag.IntVar(&o.Threads, "thread", 10, "Number of concurrent threads.")
@@ -54,7 +54,7 @@ func main() {
 	//domainCache := cache.New(30*time.Second, 10*time.Second)
 	//ptake_pkg.TestGetCnames("10years.qq.com", o.Timeout, o.Config, domainCache, 1 )
 	modules := strings.Split(o.Modules, ",")
-	for i := range modules{
+	for i := range modules {
 		switch modules[i] {
 		case "subdomain":
 			fmt.Printf("[+] Start module: %s\n", modules[i])

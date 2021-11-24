@@ -7,10 +7,10 @@ import (
 	"github.com/patrickmn/go-cache"
 	"log"
 	"net"
-	"time"
+	"path"
 	"strings"
+	"time"
 )
-
 
 func resolve(domain string) (res []string) {
 	d := new(dns.Msg)
@@ -31,20 +31,20 @@ func resolve(domain string) (res []string) {
 
 // Judge whether a domain has a legal format.
 // TODO: more constraints.
-func isLegalDomain(domain string) (flag bool){
+func isLegalDomain(domain string) (flag bool) {
 	if !strings.Contains(domain, ".") {
 		return false
 	}
 
 	illegalCharacters := "~!@#$%^&*()+*/<>,[]\\/"
-	for i := range illegalCharacters{
+	for i := range illegalCharacters {
 		ch := string(illegalCharacters[i])
 		if strings.Contains(domain, ch) {
 			return false
 		}
 	}
 	illegalPrefixes := "_-."
-	for i := range illegalPrefixes{
+	for i := range illegalPrefixes {
 		ch := string(illegalPrefixes[i])
 		if strings.HasPrefix(domain, ch) {
 			return false
@@ -59,7 +59,7 @@ func domainFilter(subdomains []string) (filteredSubdomains []string) {
 	for i := range subdomains {
 		fqdn := subdomains[i]
 		isLegal := isLegalDomain(fqdn)
-		if isLegal == false{
+		if isLegal == false {
 			continue
 		}
 		filteredSubdomains = append(filteredSubdomains, fqdn)
@@ -68,14 +68,11 @@ func domainFilter(subdomains []string) (filteredSubdomains []string) {
 	return filteredSubdomains
 }
 
-func getSubdomains(sld string, fqdnFile string, cacheFile string, o *Options, domainCache *cache.Cache) {
-	if _, found := domainCache.Get(sld); found {
-		return
-	}
+func getSubdomains(sld string, o *Options) {
 	var subdomains []string
 	for i := 1; i <= o.Retries; i++ {
 		subdomains = getSubdomainFromPDNS(sld, o.Timeout*10, o.Config)
-		if subdomains !=nil{
+		if subdomains != nil {
 			break
 		}
 		log.Printf("Retry getSubdomainFrom PDNS: %s\n", sld)
@@ -85,16 +82,19 @@ func getSubdomains(sld string, fqdnFile string, cacheFile string, o *Options, do
 	//TODO: Filter algorithm-generated subdomains
 	filteredSubdomains := domainFilter(subdomains)
 
-	saveSubdomains(sld, filteredSubdomains, fqdnFile)
-	if o.Verbose{
+	// Output results and save caches.
+	fqdnFile := path.Join(o.InputPath, "fqdn.txt")
+	cacheFile := path.Join(o.CachePath, "sld_cache.txt")
+
+	if o.Verbose {
 		fmt.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
 	}
 	log.Printf("Get subdomains: %s (%d)", sld, len(filteredSubdomains))
-	domainCache.Set(sld, 1, cache.NoExpiration)
-	save(sld, cacheFile)
+	saveFqdnFile(sld, filteredSubdomains, fqdnFile)
+	saveCache(sld, cacheFile)
 }
 
-func getCnamesRecursive(subdomain string, o *Options, domainCache *cache.Cache, depth int) (cname CNAME){
+func getCnamesRecursive(subdomain string, o *Options, domainCache *cache.Cache, depth int) (cname CNAME) {
 	// The subdomain has been handled
 	if item, found := domainCache.Get(subdomain); found {
 		return item.(CNAME)
@@ -121,15 +121,15 @@ func getCnamesRecursive(subdomain string, o *Options, domainCache *cache.Cache, 
 
 	// Only leave the first <cnameLimit> cnames
 	cnameLimit := Min(len(cnames), o.Config.CnameListSize)
-	for i := range cnames[:cnameLimit]{
-		if cnames[i] == subdomain{
+	for i := range cnames[:cnameLimit] {
+		if cnames[i] == subdomain {
 			continue
 		}
 		// TODO: Identify random-looking CNAMEs
 		curr := getCnamesRecursive(cnames[i], o, domainCache, depth+1)
 		cname.Cnames = append(cname.Cnames, curr)
 	}
-	if o.Verbose{
+	if o.Verbose {
 		fmt.Printf("Look up: %s (depth: %d, cname:%d)\n", subdomain, depth, len(cname.Cnames))
 	}
 	domainCache.Set(subdomain, cname, cache.NoExpiration)
@@ -138,24 +138,25 @@ func getCnamesRecursive(subdomain string, o *Options, domainCache *cache.Cache, 
 
 // Resolve subdomain and fetch CNAME records
 // Output CNAME object: {domain: "domain", cnames: []CNAME}
-func getCnames(subdomain string, cnamePath string, cacheFile string, o *Options, domainCache *cache.Cache){
+func getCnames(subdomain string, o *Options) {
 	isLegal := isLegalDomain(subdomain)
-	if isLegal == false{
+	if isLegal == false {
 		fmt.Printf("[-] '%s' is not with legal domain format.", subdomain)
 		return
 	}
 
+	domainCache := cache.New(30*time.Second, 10*time.Second)
 	cname := getCnamesRecursive(subdomain, o, domainCache, 1)
+
+	// Output results and save caches.
+	cnamePath := path.Join(o.InputPath, "cname.txt")
+	cacheFile := path.Join(o.CachePath, "fqdn_cache.txt")
 	log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
-
-	// Output results
-	if len(cname.Cnames)>0{
-		saveCnames(cname, cnamePath)
+	if len(cname.Cnames) > 0 {
+		saveCnameFile(cname, cnamePath)
 	}
-	// Save to LogFile
-	save(cname.Domain, cacheFile)
+	saveCache(cname.Domain, cacheFile)
 }
-
 
 // TODO: check NXDOMAIN
 func nxdomain(nameserver string) bool {
@@ -173,4 +174,3 @@ func isAvailable(domain string) bool {
 	available := available.Domain(domain)
 	return available
 }
-
