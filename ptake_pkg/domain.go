@@ -71,7 +71,7 @@ func domainFilter(subdomains []string) (filteredSubdomains []string) {
 func getSubdomains(sld string, o *Options) {
 	var subdomains []string
 	for i := 1; i <= o.Retries; i++ {
-		subdomains = getSubdomainFromPDNS(sld, o.Timeout*10, o.Config)
+		subdomains = getSubdomainFromPDNS(sld, o.Timeout*100, o.Config)
 		if subdomains != nil {
 			break
 		}
