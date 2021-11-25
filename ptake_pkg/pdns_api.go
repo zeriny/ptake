@@ -4,24 +4,30 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 	"strings"
 )
 
-func getSubdomainFromPDNS(domain string, timeout int, conf Conf) (subdomains []string) {
+func getSubdomainFromPDNS(domain string, timeout int, retries int, conf Conf) (subdomains []string) {
 	domain2Count := make(map[string]int)
 
 	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain)
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
-	body := get(url, timeout, tokenHeader)
-	if body == nil {
-		log.Println("No response")
-		return subdomains
-	}
+
+	var body []byte
 	var respBody PDNSResponse
+	for i := 1; i <= retries; i++ {
+		body = get(url, timeout, tokenHeader)
+		if body == nil {
+			log.Printf("[PDNS API - subdomain] No response! Retrying %s...", domain)
+			time.Sleep(1 * time.Second)
+			continue
+		}
+	}
 	jsonErr := json.Unmarshal(body, &respBody)
 	if jsonErr != nil {
-		log.Println("get subdomain error:", string(domain))
+		log.Printf("[PDNS API - subdomain] %s: %s\n", domain, jsonErr)
 		return subdomains
 	}
 
@@ -55,6 +61,9 @@ func getSubdomainFromPDNS(domain string, timeout int, conf Conf) (subdomains []s
 			subdomains = append(subdomains, fqdn)
 		}
 	}
+	if len(subdomains)== 0{
+		subdomains = append(subdomains, domain)
+	}
 	return subdomains
 }
 
@@ -62,18 +71,28 @@ func getSubdomainFromPDNS(domain string, timeout int, conf Conf) (subdomains []s
 // TODO:
 // 1. set parameters by configurations. (done)
 // 2. filter CNAME records by access count and last_seen time, ensuring the records are still alive.
-func getCnamesFromPDNS(domain string, timeout int, conf Conf) (cnames []string) {
+func getCnamesFromPDNS(domain string, timeout int, retries int, conf Conf) (cnames []string) {
 	//limit := 200
 	//minAccess := 200
 
 	url := fmt.Sprintf(conf.PdnsCnameUrl, domain)
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
-	body := get(url, timeout, tokenHeader)
+
+	var body []byte
 	var respBody PDNSResponse
+	for i := 1; i <= retries; i++ {
+		body = get(url, timeout, tokenHeader)
+		if body == nil {
+			log.Printf("[PDNS API - CNAME] No response! Retrying %s...", domain)
+			time.Sleep(1 * time.Second)
+			continue
+		}
+	}
+
 	jsonErr := json.Unmarshal(body, &respBody)
 	if jsonErr != nil {
-		log.Println("get cname error:", string(domain))
+		log.Printf("[PDNS API - CNAME] %s: %s\n", domain, jsonErr)
 		return cnames
 	}
 

@@ -56,6 +56,9 @@ func isLegalDomain(domain string) (flag bool) {
 // Filter algo-generated domains
 // TODO: Identify random-looking subdomains
 func domainFilter(subdomains []string) (filteredSubdomains []string) {
+	if len(subdomains)==0{
+		return subdomains
+	}
 	for i := range subdomains {
 		fqdn := subdomains[i]
 		isLegal := isLegalDomain(fqdn)
@@ -70,14 +73,7 @@ func domainFilter(subdomains []string) (filteredSubdomains []string) {
 
 func getSubdomains(sld string, o *Options) {
 	var subdomains []string
-	for i := 1; i <= o.Retries; i++ {
-		subdomains = getSubdomainFromPDNS(sld, o.Timeout*100, o.Config)
-		if subdomains != nil {
-			break
-		}
-		log.Printf("Retry getSubdomainFrom PDNS: %s\n", sld)
-		time.Sleep(2 * time.Second)
-	}
+	subdomains = getSubdomainFromPDNS(sld, o.Timeout, o.Retries, o.Config)
 
 	//TODO: Filter algorithm-generated subdomains
 	filteredSubdomains := domainFilter(subdomains)
@@ -88,8 +84,8 @@ func getSubdomains(sld string, o *Options) {
 
 	if o.Verbose {
 		fmt.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
+		log.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
 	}
-	log.Printf("Get subdomains: %s (%d)", sld, len(filteredSubdomains))
 	saveFqdnFile(sld, filteredSubdomains, fqdnFile)
 	saveCache(sld, cacheFile)
 }
@@ -109,14 +105,7 @@ func getCnamesRecursive(subdomain string, o *Options, domainCache *cache.Cache, 
 	cname.Domain = subdomain
 	var cnames []string
 	// Recursively get CNAME records via passive DNS API.
-	for i := 1; i <= o.Retries; i++ {
-		cnames = getCnamesFromPDNS(subdomain, o.Timeout, o.Config)
-		if cnames != nil {
-			break
-		}
-		log.Printf("Retry getCnamesFromPDNS: %s\n", subdomain)
-		time.Sleep(2 * time.Second)
-	}
+	cnames = getCnamesFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
 	cnames = domainFilter(cnames)
 
 	// Only leave the first <cnameLimit> cnames
@@ -141,7 +130,7 @@ func getCnamesRecursive(subdomain string, o *Options, domainCache *cache.Cache, 
 func getCnames(subdomain string, o *Options) {
 	isLegal := isLegalDomain(subdomain)
 	if isLegal == false {
-		fmt.Printf("[-] '%s' is not with legal domain format.", subdomain)
+		log.Printf("[-] '%s' is not in legal format.\n", subdomain)
 		return
 	}
 

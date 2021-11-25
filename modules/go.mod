@@ -1,4 +1,4 @@
-module ptake_pkg
+module modules
 
 go 1.17
 

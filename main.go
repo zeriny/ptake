@@ -69,6 +69,6 @@ func main() {
 			fmt.Println("[-] Please select modules (-module 'subdomain,cname,check').")
 		}
 	}
-	log.Println("Over!")
+	log.Println("Scan Over!")
 
 }
