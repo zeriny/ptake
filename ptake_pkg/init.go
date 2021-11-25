@@ -1,6 +1,7 @@
 package ptake_pkg
 
 import (
+    "bufio"
     "encoding/json"
     "fmt"
     "gopkg.in/yaml.v2"
@@ -38,6 +39,43 @@ func loadServiceList(file string) (serviceList []Service) {
     }
 
     return serviceList
+}
+
+func splitInputFile(inputPath string, outputPath string, l int){
+    var lines []string
+    file, err := os.Open(inputPath)
+    if err != nil {
+        log.Fatalln(err)
+    }
+    defer file.Close()
+    scanner := bufio.NewScanner(file)
+    for scanner.Scan() {
+        lines = append(lines, scanner.Text())
+    }
+    if scanner.Err() != nil {
+        log.Fatalln(err)
+    }
+
+    for i := range lines {
+        outputBase := fmt.Sprintf("%salexa_%dk", outputPath, (i/l+1))
+        err := os.MkdirAll(outputBase,os.ModePerm)
+        if err!=nil {
+            fmt.Println(err)
+            os.Exit(1)
+        }
+        outputPath := path.Join(outputBase, "sld.txt")
+        fmt.Println(outputPath)
+        f, err := os.OpenFile(outputPath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0600)
+        if err != nil {
+            log.Fatalln(err)
+        }
+        defer f.Close()
+        _, err = f.WriteString(lines[i] + "\n")
+        if err != nil {
+            log.Fatalln(err)
+        }
+    }
+
 }
 
 func Initialize(o *Options) (){
@@ -87,7 +125,11 @@ func Initialize(o *Options) (){
     }
 
     // Log Path
-    logFile, err := os.OpenFile(o.LogPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+    logPath := path.Join(o.InputPath, "ptake.log")
+    if o.LogPath != ""{
+        logPath = o.LogPath
+    }
+    logFile, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
     if err != nil {
         return
     }

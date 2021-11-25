@@ -18,7 +18,7 @@ func main() {
 
 	o := ptake_pkg.Options{}
 	flag.StringVar(&o.Modules, "module", "", "Selected modules (splitted by ,).")
-	flag.StringVar(&o.Dataset, "dataset", "default", "Dataset name.")
+	flag.StringVar(&o.Dataset, "dataset", "", "Dataset name.")
 	flag.StringVar(&o.InputPath, "data_path", "", "Path to Dataset.")
 	flag.StringVar(&o.OutputPath, "result_path", "", "Output results (json object) to a .txt file.")
 	flag.BoolVar(&o.CheckAvailable, "check_status", false, "Check whether CNAMEs are available (can be registered).")
@@ -34,7 +34,7 @@ func main() {
 	flag.BoolVar(&o.Verbose, "v", false, "Display more information per each request.")
 	flag.StringVar(&o.ConfigPath, "c", "./config/conf.yaml", "Path to conf.yaml.")
 	flag.StringVar(&o.ServicePath, "service", "./config/services.json", "Path to services.json file.")
-	flag.StringVar(&o.LogPath, "log", "./ptake.log", "Path to a log file.")
+	flag.StringVar(&o.LogPath, "log", "", "Path to a log file.")
 
 	flag.Parse()
 
