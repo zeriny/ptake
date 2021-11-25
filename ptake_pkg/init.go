@@ -134,7 +134,7 @@ func Initialize(o *Options) (){
         return
     }
     log.SetOutput(logFile)
-    log.SetFlags(log.Llongfile | log.Lmicroseconds | log.Ldate)
+    log.SetFlags(log.Lshortfile | log.Lmicroseconds | log.Ldate)
 
     // Configurations
     o.Config = loadConfig(o.ConfigPath)
