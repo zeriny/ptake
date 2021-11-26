@@ -1,0 +1,119 @@
+===> get subdomains
+20211126 09:33:29
+20211126 09:33:29
+===> get subdomains
+20211126 09:34:04
+20211126 09:34:04
+===> get subdomains
+20211126 09:34:32
+0 data/all_10k/cache/sld_cache.txt
+0 data/all_10k/cache/sld_cache.txt
+20211126 09:34:32
+===> get subdomains
+20211126 09:35:04
+0 data/all_10k/cache/sld_cache.txt
+===> get subdomains
+20211126 09:35:18
+4 data/all_10k/cache/sld_cache.txt
+443 data/all_10k/cache/sld_cache.txt
+20211126 09:35:48
+782 data/all_10k/cache/sld_cache.txt
+20211126 09:36:02
+782 data/all_10k/cache/sld_cache.txt
+20211126 09:39:03
+===> get subdomains
+20211126 15:08:12
+782 data/all_10k/cache/sld_cache.txt
+833 data/all_10k/cache/sld_cache.txt
+20211126 15:08:15
+===> get subdomains
+20211126 15:09:41
+833 data/all_10k/cache/sld_cache.txt
+2529 data/all_10k/cache/sld_cache.txt
+20211126 15:11:36
+===> get subdomains
+20211126 16:02:26
+2529 data/all_10k/cache/sld_cache.txt
+2529 data/all_10k/cache/sld_cache.txt
+20211126 16:02:26
+===> get subdomains
+20211126 16:03:23
+2529 data/all_10k/cache/sld_cache.txt
+2778 data/all_10k/cache/sld_cache.txt
+20211126 16:03:41
+===> get subdomains
+20211126 16:10:28
+2778 data/all_10k/cache/sld_cache.txt
+2778 data/all_10k/cache/sld_cache.txt
+20211126 16:10:28
+===> get subdomains
+20211126 16:10:48
+2778 data/all_10k/cache/sld_cache.txt
+3866 data/all_10k/cache/sld_cache.txt
+20211126 16:11:44
+===> get subdomains
+20211126 16:15:01
+3866 data/all_10k/cache/sld_cache.txt
+3866 data/all_10k/cache/sld_cache.txt
+20211126 16:15:01
+===> get subdomains
+20211126 16:15:12
+3866 data/all_10k/cache/sld_cache.txt
+===> get subdomains
+20211126 16:17:26
+3868 data/all_10k/cache/sld_cache.txt
+===> get subdomains
+20211126 16:19:20
+3866 data/all_10k/cache/sld_cache.txt
+===> get subdomains
+20211126 16:22:01
+4534 data/all_10k/cache/sld_cache.txt
+4534 data/all_10k/cache/sld_cache.txt
+20211126 16:22:01
+===> get subdomains
+20211126 16:22:05
+4534 data/all_10k/cache/sld_cache.txt
+4812 data/all_10k/cache/sld_cache.txt
+20211126 16:22:44
+===> get subdomains
+20211126 16:23:40
+4812 data/all_10k/cache/sld_cache.txt
+5201 data/all_10k/cache/sld_cache.txt
+20211126 16:23:58
+===> get subdomains
+20211126 16:29:19
+5201 data/all_10k/cache/sld_cache.txt
+5261 data/all_10k/cache/sld_cache.txt
+20211126 16:29:23
+===> get subdomains
+20211126 16:29:56
+5261 data/all_10k/cache/sld_cache.txt
+6303 data/all_10k/cache/sld_cache.txt
+20211126 16:30:18
+===> get subdomains
+20211126 16:31:27
+6303 data/all_10k/cache/sld_cache.txt
+7000 data/all_10k/cache/sld_cache.txt
+20211126 16:35:37
+===> get subdomains
+20211126 16:37:49
+7633 data/all_10k/cache/sld_cache.txt
+8379 data/all_10k/cache/sld_cache.txt
+20211126 16:38:09
+===> get subdomains
+20211126 16:38:26
+8379 data/all_10k/cache/sld_cache.txt
+8842 data/all_10k/cache/sld_cache.txt
+20211126 16:38:43
+===> get subdomains
+20211126 16:38:56
+8842 data/all_10k/cache/sld_cache.txt
+8887 data/all_10k/cache/sld_cache.txt
+20211126 16:38:58
+===> get subdomains
+20211126 16:39:23
+8887 data/all_10k/cache/sld_cache.txt
+10000 data/all_10k/cache/sld_cache.txt
+20211126 16:41:19
+20211126 16:53:14  ==> start get cnames
+20211126 16:54:22 7977 data/all_10k/cache/fqdn_cache.txt

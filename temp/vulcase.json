@@ -1,0 +1,26 @@
+{
+  "domain": "imap.mercedes-benz.com.cn",
+  "vulnerable_level": 2,
+  "type": "CnameVulnerable",
+  "matched_services": null,
+  "vul_cnames": [
+    {
+      "domain": "imap.c5.corpease.net",
+      "vulnerable_level": 2,
+      "type": "CnameVulnerable",
+      "matched_services": null,
+      "vul_cnames": [
+        {
+          "domain": "c2.icoermail.net",
+          "vulnerable_level": 2,
+          "type": "Available",
+          "matched_services": null,
+          "vul_cnames": null,
+          "timestamp": 1637912206
+        }
+      ],
+      "timestamp": 1637912206
+    }
+  ],
+  "timestamp": 1637912207
+}

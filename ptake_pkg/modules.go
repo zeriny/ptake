@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"path"
+	"ptake/config"
 	"sync"
 )
 
-func StartGetSubdomains(o *Options) {
+func StartGetSubdomains(o *config.GlobalConfig) {
 	var sldList []string
 	var sldCache map[string]int
 
@@ -46,7 +47,7 @@ func StartGetSubdomains(o *Options) {
 	fmt.Println("[+] Get subdomains over!")
 }
 
-func StartGetCnames(o *Options) {
+func StartGetCnames(o *config.GlobalConfig) {
 	var subdomainList []string
 	subdomainCache := make(map[string]int)
 
@@ -85,7 +86,7 @@ func StartGetCnames(o *Options) {
 	fmt.Println("[+] Get cnames over!")
 }
 
-func StartChecker(o *Options) {
+func StartChecker(o *config.GlobalConfig) {
 	var cnameList []string
 	var subdomainCache map[string]int
 

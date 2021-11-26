@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"ptake/config"
 	"strings"
 )
 
@@ -150,7 +151,7 @@ func saveDomainStatus(domainStatus DomainStatus, output string) {
 	wf.WriteString("\n")
 }
 
-func getCheckInfo(status DomainStatus, o *Options) (resultStr string) {
+func getCheckInfo(status DomainStatus, o *config.GlobalConfig) (resultStr string) {
 
 	if status.VulnerableLevel != 0 {
 		switch status.Type {

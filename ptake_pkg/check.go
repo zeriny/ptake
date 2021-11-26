@@ -4,13 +4,15 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/patrickmn/go-cache"
+	"log"
 	"path"
+	"ptake/config"
 	"strings"
 	"time"
 )
 
 //matchServiceCNAME is the interface to check whether there are CNAME matching vulnerable service cname patterns
-func checkServicePattern(domain string, services []Service) (matchedServices []MatchedService) {
+func checkServicePattern(domain string, services []config.Service) (matchedServices []MatchedService) {
 
 	for i := range services {
 		var matchedPatterns []string
@@ -36,7 +38,7 @@ func checkServicePattern(domain string, services []Service) (matchedServices []M
 
 //TODO: add DNS / HTTP header fingerprints
 // checkFingerprints is the interface to check whether web contents contain vulnerable services' fingerprints.
-func checkFingerprints(subdomain string, domainStatus DomainStatus, forceSSL bool, timeout int, allServices []Service) (newDomainStatus DomainStatus) {
+func checkFingerprints(subdomain string, domainStatus DomainStatus, forceSSL bool, timeout int, allServices []config.Service) (newDomainStatus DomainStatus) {
 
 	// Check if response body matches vulnerable services' fingerprints
 	url := "http://" + subdomain
@@ -83,7 +85,7 @@ func checkFingerprints(subdomain string, domainStatus DomainStatus, forceSSL boo
 }
 
 // recursive is the function to check the status of all domain names in DNS chains.
-func recursive(domain CNAME, o *Options, domainCache *cache.Cache, depth int) (domainStatus DomainStatus) {
+func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (domainStatus DomainStatus) {
 	if status, found := domainCache.Get(domain.Domain); found {
 		return status.(DomainStatus)
 	}
@@ -91,6 +93,7 @@ func recursive(domain CNAME, o *Options, domainCache *cache.Cache, depth int) (d
 	services := o.ServiceList
 	domainStatus.VulnerableLevel = 0
 	domainStatus.Domain = domain.Domain
+	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")
 	if depth > 5 {
 		domainCache.Set(domain.Domain, domainStatus, cache.NoExpiration)
 		return domainStatus
@@ -145,7 +148,7 @@ func recursive(domain CNAME, o *Options, domainCache *cache.Cache, depth int) (d
 }
 
 // This function is the interface to check whether a subdomain can be taken over via vulnerable services.
-func checkService(domain CNAME, cacheFile string, o *Options) {
+func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 	domainCache := cache.New(30*time.Second, 10*time.Second)
 	domainStatus := recursive(domain, o, domainCache, 1)
 	// Only Match Service CNAME Patterns
@@ -153,6 +156,7 @@ func checkService(domain CNAME, cacheFile string, o *Options) {
 		// Check whether Web contents match any fingerprints of vulnerable services.
 		domainStatus = checkFingerprints(domain.Domain, domainStatus, o.Ssl, o.Timeout, o.ServiceList)
 	}
+	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")
 	// Output vulnerable result information.
 	checkInfo := getCheckInfo(domainStatus, o)
 	if domainStatus.VulnerableLevel >= 1 {
@@ -171,5 +175,7 @@ func checkService(domain CNAME, cacheFile string, o *Options) {
 			saveDomainStatus(domainStatus, normalPath)
 		}
 	}
+	log.Printf("Check subdomains: (%s) %s \n", domain, domainStatus.Type)
+
 	saveCache(domain.Domain, cacheFile)
 }

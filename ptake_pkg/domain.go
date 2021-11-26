@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"path"
+	"ptake/config"
 	"strings"
 	"time"
 )
@@ -71,7 +72,7 @@ func domainFilter(subdomains []string) (filteredSubdomains []string) {
 	return filteredSubdomains
 }
 
-func getSubdomains(sld string, o *Options) {
+func getSubdomains(sld string, o *config.GlobalConfig) {
 	var subdomains []string
 	subdomains = getSubdomainFromPDNS(sld, o.Timeout, o.Retries, o.Config)
 
@@ -90,7 +91,7 @@ func getSubdomains(sld string, o *Options) {
 	saveCache(sld, cacheFile)
 }
 
-func getCnamesRecursive(subdomain string, o *Options, domainCache *cache.Cache, depth int) (cname CNAME) {
+func getCnamesRecursive(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (cname CNAME) {
 	// The subdomain has been handled
 	if item, found := domainCache.Get(subdomain); found {
 		return item.(CNAME)
@@ -127,7 +128,7 @@ func getCnamesRecursive(subdomain string, o *Options, domainCache *cache.Cache, 
 
 // Resolve subdomain and fetch CNAME records
 // Output CNAME object: {domain: "domain", cnames: []CNAME}
-func getCnames(subdomain string, o *Options) {
+func getCnames(subdomain string, o *config.GlobalConfig) {
 	isLegal := isLegalDomain(subdomain)
 	if isLegal == false {
 		log.Printf("[-] '%s' is not in legal format.\n", subdomain)

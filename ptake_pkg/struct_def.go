@@ -1,45 +1,5 @@
 package ptake_pkg
 
-type Conf struct {
-	SubAccess        int    `yaml:"sub_access"`
-	CnameAccess      int    `yaml:"cname_access"`
-	RecursiveDepth   int    `yaml:"recursive_depth"`
-	CnameListSize    int    `yaml:"cname_list_size"`
-	PdnsCnameUrl     string `yaml:"pdns_cname_url"`
-	PdnsSubdomainUrl string `yaml:"pdns_subdomain_url"`
-	PdnsApiToken     string `yaml:"pdns_api_token"`
-}
-
-type Options struct {
-	Dataset        string
-	InputPath      string
-	OutputPath     string
-	CheckAvailable bool
-	CheckFull      bool
-	Fresh          bool
-	Ssl            bool
-	Verbose        bool
-
-	Modules string
-	Threads int
-	Timeout int
-	Retries int
-
-	ServicePath string
-	ServiceList []Service
-	ConfigPath  string
-	Config      Conf
-	CachePath   string
-	LogPath     string
-}
-
-type Service struct {
-	Service      string   `json:"service"`
-	NamePatterns []string `json:"name_patterns"`
-	Fingerprint  []string `json:"fingerprint"`
-	NXDomain     bool     `json:"nxdomain"`
-}
-
 type MatchedService struct {
 	Service             string   `json:"service"`
 	MatchedPatterns     []string `json:"matched_patterns"`
@@ -57,6 +17,7 @@ type DomainStatus struct {
 	MatchedServices []MatchedService `json:"matched_services"` // Set if Type is MatchServicePattern
 	//MatchServiceFps []string `json:"match_service_fps"` // Set if Vulnerable is 2
 	VulCnames []DomainStatus `json:"vul_cnames"` // Set when Type is CnameVulnerable
+	CheckTime string `json:"check_time"` // Checking Time
 }
 
 type PDNSResponse struct {
@@ -70,8 +31,8 @@ type PDNSRecord struct {
 	RRName string `json:"rrname"`
 	RRType string `json:"rrtype"`
 	Rdata  string `json:"rdata,omitempty"`
-	//TimeFirst int `json:"time_first"`
-	//TimeLast int `json:"time_last"`
+	//TimeFirst int64 `json:"time_first"`
+	//TimeLast int64 `json:"time_last"`
 }
 
 type CNAME struct {
