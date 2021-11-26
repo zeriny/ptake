@@ -35,6 +35,7 @@ func saveCache(s string, file string) {
 }
 
 func readFile(path string) (lines []string) {
+	fmt.Println("Read File: ", path)
 	file, err := os.Open(path)
 	if err != nil {
 		log.Fatalln(err)
@@ -42,11 +43,13 @@ func readFile(path string) (lines []string) {
 
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
+	// Hint: The default MaxScanTokenSize is set with 64 * 1024 (65536). If exceeded, ErrTooLong will be thrown.
+	scanner.Buffer([]byte{}, bufio.MaxScanTokenSize*10)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
 	if scanner.Err() != nil {
-		log.Fatalln(err)
+		log.Fatalln(scanner.Err())
 	}
 	return lines
 }
