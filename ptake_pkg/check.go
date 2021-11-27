@@ -159,11 +159,16 @@ func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")
 	// Output vulnerable result information.
 	checkInfo := getCheckInfo(domainStatus, o)
-	if domainStatus.VulnerableLevel >= 1 {
+	if checkInfo == "" {
 		fmt.Println("[+] " + domain.Domain)
-		fmt.Println(checkInfo)
-	} else if o.Verbose {
-		fmt.Println(checkInfo)
+		fmt.Println(domainStatus)
+	} else{
+		if domainStatus.VulnerableLevel >= 1 {
+			fmt.Println("[+] " + domain.Domain)
+			fmt.Println(checkInfo)
+		} else if o.Verbose {
+			fmt.Println(checkInfo)
+		}
 	}
 
 	if o.OutputPath != "" {
@@ -178,4 +183,44 @@ func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 	log.Printf("Check subdomains: (%s) %s \n", domain, domainStatus.Type)
 
 	saveCache(domain.Domain, cacheFile)
+}
+
+func getCheckInfo(status DomainStatus, o *config.GlobalConfig) (resultStr string) {
+
+	if status.VulnerableLevel != 0 {
+		switch status.Type {
+		case "Available":
+			resultStr = fmt.Sprintf("[Available]  %s\n", status.Domain)
+		case "MatchServicePattern":
+			resultStr = fmt.Sprintf("[MatchServicePattern] %s", status.Domain)
+			for i := range status.MatchedServices {
+				matchedService := status.MatchedServices[i]
+				resultStr += fmt.Sprintf(" -(%s)", strings.ToUpper(matchedService.Service))
+			}
+			//resultStr = fmt.Sprintf("[%s]%s", status.MatchServiceCnames, status.Domain)
+		case "AbandonedService":
+			resultStr = fmt.Sprintf("[AbandonedService] %s ", status.Domain)
+			for i := range status.MatchedServices {
+				matchedService := status.MatchedServices[i]
+				resultStr += fmt.Sprintf(" -(%s)\n", strings.ToUpper(matchedService.Service))
+			}
+
+			for i := range status.VulCnames {
+				resultStr += fmt.Sprintf("[CnameVulnerable]  %s -> %s\n", status.Domain, status.VulCnames[i].Domain) + getCheckInfo(status.VulCnames[i], o)
+			}
+
+		case "CnameVulnerable":
+			resultStr = ""
+			for i := range status.VulCnames {
+				resultStr += fmt.Sprintf("[CnameVulnerable]  %s -> %s\n", status.Domain, status.VulCnames[i].Domain) + getCheckInfo(status.VulCnames[i], o)
+			}
+		default:
+			resultStr = fmt.Sprintf("[Vulnerable]%s", status.Domain)
+		}
+	}
+
+	if status.VulnerableLevel == 0 && o.Verbose {
+		resultStr = fmt.Sprintf("[NotVulnerable]%s", status.Domain)
+	}
+	return resultStr
 }

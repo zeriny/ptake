@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"ptake/config"
 	"strings"
 )
 
@@ -152,46 +151,6 @@ func saveDomainStatus(domainStatus DomainStatus, output string) {
 	status, _ := json.Marshal(domainStatus)
 	wf.Write(status)
 	wf.WriteString("\n")
-}
-
-func getCheckInfo(status DomainStatus, o *config.GlobalConfig) (resultStr string) {
-
-	if status.VulnerableLevel != 0 {
-		switch status.Type {
-		case "Available":
-			resultStr = fmt.Sprintf("[Available]  %s\n", status.Domain)
-		case "MatchServicePattern":
-			resultStr = fmt.Sprintf("[MatchServicePattern] %s", status.Domain)
-			for i := range status.MatchedServices {
-				matchedService := status.MatchedServices[i]
-				resultStr += fmt.Sprintf(" -(%s)", strings.ToUpper(matchedService.Service))
-			}
-			//resultStr = fmt.Sprintf("[%s]%s", status.MatchServiceCnames, status.Domain)
-		case "AbandonedService":
-			resultStr = fmt.Sprintf("[AbandonedService] %s ", status.Domain)
-			for i := range status.MatchedServices {
-				matchedService := status.MatchedServices[i]
-				resultStr += fmt.Sprintf(" -(%s)\n", strings.ToUpper(matchedService.Service))
-			}
-
-			for i := range status.VulCnames {
-				resultStr += fmt.Sprintf("[CnameVulnerable]  %s -> %s\n", status.Domain, status.VulCnames[i].Domain) + getCheckInfo(status.VulCnames[i], o)
-			}
-
-		case "CnameVulnerable":
-			resultStr = ""
-			for i := range status.VulCnames {
-				resultStr += fmt.Sprintf("[CnameVulnerable]  %s -> %s\n", status.Domain, status.VulCnames[i].Domain) + getCheckInfo(status.VulCnames[i], o)
-			}
-		default:
-			resultStr = fmt.Sprintf("[Vulnerable]%s", status.Domain)
-		}
-	}
-
-	if status.VulnerableLevel == 0 && o.Verbose {
-		resultStr = fmt.Sprintf("[NotVulnerable]%s", status.Domain)
-	}
-	return resultStr
 }
 
 //func saveJson(serviceInfo, subdomain, output string) {

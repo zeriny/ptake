@@ -19,10 +19,12 @@ func get(url string, timeout int, addHeaders map[string]string) (body []byte) {
 	req.Header.SetMethod("GET")
 
 	resp := fasthttp.AcquireResponse()
-	defer fasthttp.ReleaseResponse(resp)
+	//defer fasthttp.ReleaseResponse(resp)
 
 	client := &fasthttp.Client{TLSConfig: &tls.Config{InsecureSkipVerify: true}}
 	client.DoTimeout(req, resp, time.Duration(timeout)*time.Second)
 	b := resp.Body()
+
+
 	return b
 }
