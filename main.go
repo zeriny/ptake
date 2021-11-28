@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"os"
 	"ptake/config"
 	"ptake/ptake_pkg"
@@ -53,7 +53,7 @@ func main() {
 	}
 
 	config.Initialize(&gc)
-	log.Println("Initializing...")
+	log.Infoln("Initializing...")
 
 
 	modules := strings.Split(gc.Modules, ",")
@@ -72,6 +72,6 @@ func main() {
 			fmt.Println("[-] Please select modules (-module 'subdomain,cname,check').")
 		}
 	}
-	log.Println("Scan Over!")
+	log.Infoln("Scan Over!")
 
 }

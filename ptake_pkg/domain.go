@@ -5,7 +5,7 @@ import (
 	"github.com/haccer/available"
 	"github.com/miekg/dns"
 	"github.com/patrickmn/go-cache"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"net"
 	"path"
 	"ptake/config"
@@ -84,8 +84,9 @@ func getSubdomains(sld string, o *config.GlobalConfig) {
 	cacheFile := path.Join(o.CachePath, "sld_cache.txt")
 
 	if o.Verbose {
-		fmt.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
-		log.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
+		//fmt.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
+		//log.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
+		log.Infof("Get subdomains: %s (%d)", sld, len(filteredSubdomains))
 	}
 	saveFqdnFile(sld, filteredSubdomains, fqdnFile)
 	saveCache(sld, cacheFile)
@@ -120,7 +121,7 @@ func getCnamesRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 		cname.Cnames = append(cname.Cnames, curr)
 	}
 	if o.Verbose {
-		fmt.Printf("Look up: %s (depth: %d, cname:%d)\n", subdomain, depth, len(cname.Cnames))
+		log.Infof("Look up: %s (depth: %d, cname:%d)", subdomain, depth, len(cname.Cnames))
 	}
 	domainCache.Set(subdomain, cname, cache.NoExpiration)
 	return cname
@@ -131,7 +132,8 @@ func getCnamesRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 func getCnames(subdomain string, o *config.GlobalConfig) {
 	isLegal := isLegalDomain(subdomain)
 	if isLegal == false {
-		log.Printf("[-] '%s' is not in legal format.\n", subdomain)
+		//log.Printf("[-] '%s' is not in legal format.\n", subdomain)
+		log.Warningf("[-] '%s' is not in legal format.", subdomain)
 		return
 	}
 
@@ -141,7 +143,8 @@ func getCnames(subdomain string, o *config.GlobalConfig) {
 	// Output results and save caches.
 	cnamePath := path.Join(o.InputPath, "cname.txt")
 	cacheFile := path.Join(o.CachePath, "fqdn_cache.txt")
-	log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
+	//log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
+	//log.Infof("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
 	if len(cname.Cnames) > 0 {
 		saveCnameFile(cname, cnamePath)
 	}

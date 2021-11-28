@@ -4,8 +4,8 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"github.com/valyala/fasthttp"
-	"log"
 	"ptake/config"
 	"strings"
 	"time"
@@ -34,7 +34,7 @@ func getPDNSResponse(url string, timeout int, addHeaders map[string]string) (bod
 	}
 	jsonErr := json.Unmarshal(b, &body)
 	if jsonErr != nil {
-		log.Printf("[PDNS API - getPDNSResponse] %s: %s\n", url, jsonErr)
+		log.Errorf("[PDNS API - getPDNSResponse] %s: %s", url, jsonErr)
 		return body, true
 	}
 	return body, false
@@ -54,7 +54,7 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 		if retryFlag == false {
 			break
 		}
-		log.Printf("[PDNS API - subdomain] No response! Retrying %s...", domain)
+		log.Warningf("[PDNS API - subdomain] No response! Retrying %s...", domain)
 		time.Sleep(1 * time.Second)
 	}
 
@@ -114,7 +114,7 @@ func getCnamesFromPDNS(domain string, timeout int, retries int, conf config.Conf
 		if retryFlag == false {
 			break
 		}
-		log.Printf("[PDNS API - CNAME] No response! Retrying %s...", domain)
+		log.Warningf("[PDNS API - CNAME] No response! Retrying %s...", domain)
 		time.Sleep(1 * time.Second)
 	}
 

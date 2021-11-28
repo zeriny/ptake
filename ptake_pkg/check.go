@@ -2,9 +2,8 @@ package ptake_pkg
 
 import (
 	"bytes"
-	"fmt"
 	"github.com/patrickmn/go-cache"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"path"
 	"ptake/config"
 	"strings"
@@ -217,14 +216,12 @@ func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 		if domainStatus.VulnerableLevel > 0 {
 			vulnerablePath := path.Join(o.OutputPath, "vulnerable.txt")
 			saveDomainStatus(domainStatus, vulnerablePath)
-			log.Printf("Check subdomains: (%s) %s \n", domain.Domain, domainStatus.Type)
-			fmt.Printf("Check subdomains: (%s) %s \n", domain.Domain, domainStatus.Type)
+			log.Infof("Check subdomains: (%s) %s", domain.Domain, domainStatus.Type)
 		} else if o.Verbose {
 			domainStatus.Type = "NotVulnerable"
 			normalPath := path.Join(o.OutputPath, "normal.txt")
 			saveDomainStatus(domainStatus, normalPath)
-			log.Printf("Check subdomains: (%s) %s \n", domain.Domain, domainStatus.Type)
-			fmt.Printf("Check subdomains: (%s) %s \n", domain.Domain, domainStatus.Type)
+			log.Infof("Check subdomains: (%s) %s", domain.Domain, domainStatus.Type)
 		}
 	}
 

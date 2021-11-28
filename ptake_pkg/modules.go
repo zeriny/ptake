@@ -3,6 +3,7 @@ package ptake_pkg
 import (
 	"encoding/json"
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"os"
 	"path"
 	"ptake/config"
@@ -95,8 +96,7 @@ func StartChecker(o *config.GlobalConfig) {
 	if os.IsNotExist(err) {
 		err := os.MkdirAll(o.OutputPath, os.ModePerm)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Fatal(err)
 		}
 	}
 

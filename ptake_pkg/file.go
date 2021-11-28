@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"log"
+	log "github.com/sirupsen/logrus"
 	"os"
 	"strings"
 )
@@ -116,7 +116,7 @@ func saveCnameFile(cname CNAME, path string) {
 	results, _ := json.Marshal(cname)
 	wf, err := os.OpenFile(path, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0600)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	defer wf.Close()
 	wf.Write(results)
@@ -145,7 +145,7 @@ func readDomainStatus(path string) (fqdns []string, Error error) {
 func saveDomainStatus(domainStatus DomainStatus, output string) {
 	wf, err := os.OpenFile(output, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0600)
 	if err != nil {
-		log.Println(err)
+		log.Fatal(err)
 	}
 	defer wf.Close()
 	status, _ := json.Marshal(domainStatus)
