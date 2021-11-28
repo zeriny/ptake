@@ -149,8 +149,8 @@ func getCnames(subdomain string, o *config.GlobalConfig) {
 }
 
 // TODO: check NXDOMAIN
-func nxdomain(nameserver string) bool {
-	if _, err := net.LookupHost(nameserver); err != nil {
+func isNxdomain(domain string) bool {
+	if _, err := net.LookupHost(domain); err != nil {
 		if strings.Contains(fmt.Sprintln(err), "no such host") {
 			return true
 		}

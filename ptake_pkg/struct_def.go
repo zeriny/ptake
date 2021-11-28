@@ -1,20 +1,22 @@
 package ptake_pkg
 
-type MatchedService struct {
-	Service             string   `json:"service"`
-	MatchedPatterns     []string `json:"matched_patterns"`
-	MatchedFingerprints []string `json:"matched_fingerprints"`
-}
+import "ptake/config"
+
+//type MatchedService struct {
+//	Service             string   `json:"service"`
+//	MatchedPatterns     []string `json:"matched_patterns"`
+//	MatchedFingerprints []string `json:"matched_fingerprints"`
+//}
 
 type DomainStatus struct {
 	Domain          string `json:"domain"`
 	VulnerableLevel int    `json:"vulnerable_level"` // The highest threat level of Domain
 	// level 0: Not vulnerable
 	// level 1: MatchServicePattern
-	// level 2: Available
+	// level 2: Available/AbandonedService
 	Type string `json:"type"` // Vulnerable types: Available, MatchServicePattern, CnameVulnerable, AbandonedService
 	//AvailableCnames []string `json:"available_cnames"` // Set if Type is CnameAvailable
-	MatchedServices []MatchedService `json:"matched_services"` // Set if Type is MatchServicePattern
+	MatchedServices []config.Service `json:"matched_services"` // Set if Type is MatchServicePattern
 	//MatchServiceFps []string `json:"match_service_fps"` // Set if Vulnerable is 2
 	VulCnames []DomainStatus `json:"vul_cnames"` // Set when Type is CnameVulnerable
 	CheckTime string `json:"check_time"` // Checking Time

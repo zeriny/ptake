@@ -126,6 +126,7 @@ func getCnamesFromPDNS(domain string, timeout int, retries int, conf config.Conf
 	var cnameList []string
 	for i := range data {
 		rdata := strings.TrimRight(data[i].Rdata, ";")
+		rdata = strings.TrimRight(rdata, ".")
 		if data[i].Count > conf.CnameAccess {
 			cnameList = append(cnameList, rdata)
 		}

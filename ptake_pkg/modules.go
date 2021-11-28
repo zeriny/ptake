@@ -3,6 +3,7 @@ package ptake_pkg
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"path"
 	"ptake/config"
 	"sync"
@@ -89,6 +90,15 @@ func StartGetCnames(o *config.GlobalConfig) {
 func StartChecker(o *config.GlobalConfig) {
 	var cnameList []string
 	var subdomainCache map[string]int
+
+	_, err := os.Stat(o.OutputPath)
+	if os.IsNotExist(err) {
+		err := os.MkdirAll(o.OutputPath, os.ModePerm)
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}
 
 	// Load CNAME chains to be checked.
 	cnamePath := path.Join(o.InputPath, "cname.txt")
