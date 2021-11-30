@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"os"
 	"strings"
+
 )
 
 func readCache(file string) (cacheMap map[string]int) {
@@ -119,8 +120,7 @@ func saveCnameFile(cname CNAME, path string) {
 		log.Fatal(err)
 	}
 	defer wf.Close()
-	wf.Write(results)
-	wf.WriteString("\n")
+	wf.WriteString(string(results)+"\n")
 }
 
 func readDomainStatus(path string) (fqdns []string, Error error) {
@@ -149,8 +149,7 @@ func saveDomainStatus(domainStatus DomainStatus, output string) {
 	}
 	defer wf.Close()
 	status, _ := json.Marshal(domainStatus)
-	wf.Write(status)
-	wf.WriteString("\n")
+	wf.WriteString(string(status)+"\n")
 }
 
 //func saveJson(serviceInfo, subdomain, output string) {
