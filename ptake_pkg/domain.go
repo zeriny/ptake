@@ -164,6 +164,9 @@ func isNxdomain(domain string) bool {
 // isAvailable returns true if the domain to be checked can be registerd
 func isAvailable(domain string) bool {
 	// Using an API implemented by golang: https://github.com/haccer/available.
+	// The package has been modified:
+	// 1. fingerprint.go: change the fingerprint of "ca" to "Not Found"
+	// 2. check.go: remove the special condition for "ca" [line79], and line88 should be 'else if'
 	available := available.Domain(domain)
 	return available
 }

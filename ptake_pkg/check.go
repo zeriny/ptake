@@ -118,9 +118,12 @@ func checkFingerprints(subdomain string, cnames []CNAME, domainStatus DomainStat
 func checkServicePattern(domain string, allServices []config.Service) (matchedServices []config.Service) {
 	for i := range allServices {
 		namePatterns := allServices[i].NamePatterns
-		for j := range namePatterns {
-			if matchServicePattern(domain, namePatterns[j]) {
-				matchedServices = append(matchedServices, allServices[i])
+		isVulnerable := allServices[i].IsVulnerable
+		if isVulnerable{
+			for j := range namePatterns {
+				if matchServicePattern(domain, namePatterns[j]) {
+					matchedServices = append(matchedServices, allServices[i])
+				}
 			}
 		}
 	}

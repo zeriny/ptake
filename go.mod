@@ -28,8 +28,6 @@ require (
 
 replace ptake/ptake_pkg => ./ptake_pkg
 
-replace ptake/modules => ./modules
-
 replace github.com/haccer/available => ../github.com/haccer/available
 
 replace github.com/valyala/fasthttp => ../github.com/valyala/fasthttp
