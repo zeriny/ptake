@@ -4,5 +4,5 @@ cname_list_size: 10
 recursive_depth: 5
 
 pdns_subdomain_url: "https://api.secrank.cn/flint/rrset/*.%s?mode=6&start=20210101000000&end=20211130235959&limit=10000"
-pdns_cname_url: "https://api.secrank.cn/flint/rrset/%s?start=20210101000000&end=20211130235959&rtype=5&limit=1000"
+pdns_cname_url: "https://api.secrank.cn/flint/rrset/%s?start=%s&end=%s&rtype=5&limit=1000"
 pdns_api_token: "1bf55ed07a5c8aec4b1b0962178fe9fe"

@@ -97,12 +97,18 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 // Get CNAME records via PDN API.
 // TODO:
 // 1. set parameters by configurations. (done)
-// 2. filter CNAME records by access count and last_seen time, ensuring the records are still alive.
+// 2. filter CNAME records by access count, ensuring the records are still alive (done).
 func getCnamesFromPDNS(domain string, timeout int, retries int, conf config.Conf) (cnames []string) {
 	//limit := 200
 	//minAccess := 200
 
-	url := fmt.Sprintf(conf.PdnsCnameUrl, domain)
+	// Only get cname chains during the recent 7 days.
+	now := time.Now()
+	sd, _ := time.ParseDuration("-24h")
+	endtime := now.Format("20060102150405")
+	starttime := now.Add(sd*7).Format("20060102150405")
+
+	url := fmt.Sprintf(conf.PdnsCnameUrl, domain, starttime, endtime)
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
 
