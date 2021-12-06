@@ -84,25 +84,26 @@ func matchServicePattern(domain string, patterns string) (match bool) {
 	return false
 }
 // checkFingerprints is the interface to check whether web contents contain vulnerable services' fingerprints.
-func checkFingerprints(subdomain string, cnames []CNAME, domainStatus DomainStatus, forceSSL bool, timeout int) (newDomainStatus DomainStatus) {
+func checkFingerprints(domain CNAME, domainStatus DomainStatus, forceSSL bool, timeout int) (newDomainStatus DomainStatus) {
 
-	url := "http://" + subdomain
-	if forceSSL {
-		url = "https://" + subdomain
+	header, body := get(domain.Domain, timeout, false)
+	if body == nil {
+		header, body = get(domain.Domain, timeout, true)
 	}
-	header, body := get(url, timeout)
 	header = strings.ToLower(header)
 
 	matchedServices := domainStatus.MatchedServices
 	match := false
 
 	// Check fingerprints to see if the given domain is matched to an abandoned service.
-	match = matchAllFps(body, header, cnames, matchedServices)
+	match = matchAllFps(body, header, domain.Cnames, matchedServices)
 	if match == false && domainStatus.Type == "CnameVulnerable" {
 		for i := range domainStatus.VulCnames {
 			cnameStatus := domainStatus.VulCnames[i]
-			match = matchAllFps(body, header, cnames, cnameStatus.MatchedServices)
-			if match {break}
+			match = matchAllFps(body, header, domain.Cnames, cnameStatus.MatchedServices)
+			if match {
+				break
+			}
 		}
 	}
 	if match {
@@ -196,7 +197,7 @@ func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 	// If we find some service patterns are matched, while the domain name is not expired yet
 	if domainStatus.VulnerableLevel == 1 {
 		// Check whether HttpBody/HttpHeaders/DnsChains match any fingerprints of vulnerable services.
-		domainStatus = checkFingerprints(domain.Domain, domain.Cnames, domainStatus, o.Ssl, o.Timeout)
+		domainStatus = checkFingerprints(domain, domainStatus, o.Ssl, o.Timeout)
 	}
 
 	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")

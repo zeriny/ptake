@@ -6,9 +6,14 @@ import (
 	"time"
 )
 
-func get(url string, timeout int) (header string, body []byte) {
+func get(domain string, timeout int, forceSSL bool) (header string, body []byte) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
+
+	url := "http://" + domain
+	if forceSSL {
+		url = "https://" + domain
+	}
 
 	req.SetRequestURI(url)
 	req.Header.Add("Connection", "close")
