@@ -144,3 +144,43 @@ func getCnamesFromPDNS(domain string, timeout int, retries int, conf config.Conf
 
 	return cnames
 }
+
+
+func getNsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (ns NSType) {
+
+	// Only get NSs in the recent 1 day.
+	now := time.Now()
+	sd, _ := time.ParseDuration("-24h")
+	endtime := now.Format("20060102150405")
+	starttime := now.Add(sd*1).Format("20060102150405")
+
+	url := fmt.Sprintf(conf.PdnsNsUrl, domain, starttime, endtime)
+	tokenHeader := make(map[string]string)
+	tokenHeader["fdp-token"] = conf.PdnsApiToken
+
+	var respBody PDNSResponse
+	var retryFlag bool
+
+	for i := 1; i <= retries; i++ {
+		respBody, retryFlag = getPDNSResponse(url, timeout, tokenHeader)
+		if retryFlag == false {
+			break
+		}
+		log.Warningf("[PDNS API - NS] No response! Retrying %s...", domain)
+		time.Sleep(1 * time.Second)
+	}
+
+	if respBody.StatusCode != 200 {
+		return ns
+	}
+
+	data := respBody.Data
+	ns.Domain = domain
+	for i := range data {
+		rdata := strings.TrimRight(data[i].Rdata, ";")
+		rdata = strings.TrimRight(rdata, ".")
+		ns.NameServers = append(ns.NameServers, rdata)
+	}
+
+	return ns
+}

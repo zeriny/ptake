@@ -151,6 +151,24 @@ func getCnames(subdomain string, o *config.GlobalConfig) {
 	saveCache(cname.Domain, cacheFile)
 }
 
+
+func getNS(subdomain string, o *config.GlobalConfig) {
+	isLegal := isLegalDomain(subdomain)
+	if isLegal == false {
+		//log.Printf("[-] '%s' is not in legal format.\n", subdomain)
+		log.Warningf("[-] '%s' is not in legal format.", subdomain)
+		return
+	}
+	ns := getNsFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
+	ns.NameServers = domainFilter(ns.NameServers)
+
+	// Output results and save caches.
+	nsPath := path.Join(o.InputPath, "ns.txt")
+	if len(ns.NameServers) > 0 {
+		saveNsFile(ns, nsPath)
+	}
+}
+
 // TODO: check NXDOMAIN
 func isNxdomain(domain string) bool {
 	if _, err := net.LookupHost(domain); err != nil {

@@ -220,6 +220,7 @@ func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 		if domainStatus.VulnerableLevel > 0 {
 			vulnerablePath := path.Join(o.OutputPath, "vulnerable.txt")
 			saveDomainStatus(domainStatus, vulnerablePath)
+			getNS(domain.Domain, o) // Get the current name servers of vulnerable domain names
 			log.Infof("Check subdomains: (%s) %s", domain.Domain, domainStatus.Type)
 		} else if o.Verbose {
 			domainStatus.Type = "NotVulnerable"
