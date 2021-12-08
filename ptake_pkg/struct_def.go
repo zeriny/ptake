@@ -33,13 +33,18 @@ type PDNSRecord struct {
 	RRName string `json:"rrname"`
 	RRType string `json:"rrtype"`
 	Rdata  string `json:"rdata,omitempty"`
-	//TimeFirst int64 `json:"time_first"`
-	//TimeLast int64 `json:"time_last"`
+	TimeFirst int64 `json:"time_first"`
+	TimeLast int64 `json:"time_last"`
 }
 
 type CNAME struct {
 	Domain string  `json:"domain"`
 	Cnames []CNAME `json:"cnames"`
+}
+
+type NSType struct {
+	Domain string `json:"domain"`
+	NameServers []string `json:"name_servers"`
 }
 
 type Results struct {

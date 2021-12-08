@@ -54,7 +54,7 @@ func StartGetCnames(o *config.GlobalConfig) {
 	subdomainCache := make(map[string]int)
 
 	// Load FQDNs to be handled.
-	fqdnPath := path.Join(o.InputPath, "fqdn.txt")
+	fqdnPath := path.Join(o.OutputPath, "fqdn.txt")
 	subdomainList = readFqdnFile(fqdnPath, 1)
 
 	cacheFile := path.Join(o.CachePath, "fqdn_cache.txt")
@@ -101,7 +101,7 @@ func StartChecker(o *config.GlobalConfig) {
 	}
 
 	// Load CNAME chains to be checked.
-	cnamePath := path.Join(o.InputPath, "cname.txt")
+	cnamePath := path.Join(o.OutputPath, "cname.txt")
 	cnameList = readFile(cnamePath)
 
 	// Load Subdomains that have been checked.

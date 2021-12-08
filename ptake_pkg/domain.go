@@ -80,7 +80,7 @@ func getSubdomains(sld string, o *config.GlobalConfig) {
 	filteredSubdomains := domainFilter(subdomains)
 
 	// Output results and save caches.
-	fqdnFile := path.Join(o.InputPath, "fqdn.txt")
+	fqdnFile := path.Join(o.OutputPath, "fqdn.txt")
 	cacheFile := path.Join(o.CachePath, "sld_cache.txt")
 
 	if o.Verbose {
@@ -141,7 +141,7 @@ func getCnames(subdomain string, o *config.GlobalConfig) {
 	cname := getCnamesRecursive(subdomain, o, domainCache, 1)
 
 	// Output results and save caches.
-	cnamePath := path.Join(o.InputPath, "cname.txt")
+	cnamePath := path.Join(o.OutputPath, "cname.txt")
 	cacheFile := path.Join(o.CachePath, "fqdn_cache.txt")
 	//log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
 	//log.Infof("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
@@ -163,7 +163,7 @@ func getNS(subdomain string, o *config.GlobalConfig) {
 	ns.NameServers = domainFilter(ns.NameServers)
 
 	// Output results and save caches.
-	nsPath := path.Join(o.InputPath, "ns.txt")
+	nsPath := path.Join(o.OutputPath, "ns.txt")
 	if len(ns.NameServers) > 0 {
 		saveNsFile(ns, nsPath)
 	}
