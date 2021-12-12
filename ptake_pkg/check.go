@@ -118,19 +118,21 @@ func checkFingerprints(domain CNAME, domainStatus DomainStatus, forceSSL bool, t
 
 //checkServicePattern is the interface to check whether there are CNAME matching vulnerable service cname patterns.
 //Returning Matched Service list.
-func checkServicePattern(domain string, allServices []config.Service) (matchedServices []config.Service) {
+func checkServicePattern(domain string, allServices []config.Service) (matchedServices []config.Service, matchVulnerableService bool) {
+	matchVulnerableService = false
 	for i := range allServices {
 		namePatterns := allServices[i].NamePatterns
 		isVulnerable := allServices[i].IsVulnerable
 		if isVulnerable{
-			for j := range namePatterns {
-				if matchServicePattern(domain, namePatterns[j]) {
-					matchedServices = append(matchedServices, allServices[i])
-				}
+			matchVulnerableService = true
+		}
+		for j := range namePatterns {
+			if matchServicePattern(domain, namePatterns[j]) {
+				matchedServices = append(matchedServices, allServices[i])
 			}
 		}
 	}
-	return matchedServices
+	return matchedServices, matchVulnerableService
 }
 
 
@@ -155,11 +157,15 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 	}
 
 	// Check whether subdomain matches any domain patterns of vulnerable services.
-	matchedServices := checkServicePattern(domain.Domain, services)
+	matchedServices, matchVulService := checkServicePattern(domain.Domain, services)
 	if matchedServices != nil {
 		domainStatus.MatchedServices = matchedServices
-		domainStatus.Type = "MatchServicePattern"
-		domainStatus.VulnerableLevel = 1
+		if matchVulService {
+			domainStatus.Type = "MatchServicePattern"
+			domainStatus.VulnerableLevel = 1
+		} else {
+			domainStatus.Type = "MatchNotVulServicePattern"
+		}
 	}
 
 	// Recursively check whether the CNAMEs are vulnerable:
