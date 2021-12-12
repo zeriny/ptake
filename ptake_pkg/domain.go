@@ -179,6 +179,7 @@ func isNxdomain(domain string) bool {
 	return false
 }
 
+
 // isAvailable returns true if the domain to be checked can be registerd
 func isAvailable(domain string) bool {
 	// Using an API implemented by golang: https://github.com/haccer/available.

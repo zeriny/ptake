@@ -77,12 +77,14 @@ func matchAllFps(body []byte, header string, cnames []CNAME, matchedServices []c
 
 // TODO: change to regexp
 // Automatically generate regexp: https://regex-generator.olafneumann.org/
-func matchServicePattern(domain string, patterns string) (match bool) {
-	if strings.Contains(domain, patterns) {
+func matchServicePattern(domain string, pattern string) (match bool) {
+	if strings.HasSuffix(domain, pattern) {
 		return true
 	}
 	return false
 }
+
+
 // checkFingerprints is the interface to check whether web contents contain vulnerable services' fingerprints.
 func checkFingerprints(domain CNAME, domainStatus DomainStatus, forceSSL bool, timeout int) (newDomainStatus DomainStatus) {
 
