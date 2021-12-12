@@ -4,9 +4,9 @@ import sys
 def splitFile(sldFile, outputBase, l):
     with open(sldFile, 'r') as fd:
         for i, line in enumerate(fd):
-            if i < 10000:
+            if i < 500000:
                 continue
-            if i == 100000:
+            if i == 1000000:
                 break
             outputPath = os.path.join(outputBase, "alexa_{}0k".format(int(i/l) + 1))
             if not os.path.exists(outputPath):

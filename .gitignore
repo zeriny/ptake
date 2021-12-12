@@ -4,3 +4,6 @@ config/*
 bin/*
 results/*
 *.sh
+case/*
+temp/*
+scripts/*

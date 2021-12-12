@@ -6,3 +6,4 @@ chery.cn,tiggo8.chery.cn
 bcebos.com,noexisit.bj.bcebos.com
 baidu.com,appse.baidu.com
 baidu.com,f12.baidu.com
+nymag.com,stats.nymag.com

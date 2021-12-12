@@ -1,7 +1,8 @@
-{"domain":"www.outfitter.ramtrucks.com","cnames":[{"domain":"prod.magentocloud.map.fastly.net","cnames":null}]}
-{"domain":"imap.mercedes-benz.com.cn","cnames":[{"domain":"imap.c5.corpease.net","cnames":[{"domain":"c2.icoermail.net","cnames":null}]}]}
-{"domain":"pop.mercedes-benz.com.cn","cnames":[{"domain":"pop.c5.corpease.net","cnames":[{"domain":"c2.icoermail.net","cnames":null}]}]}
-{"domain":"merriam-webster.myshopify.com","cnames":[{"domain":"shops.myshopify.com","cnames":[{"domain":"shops.com","cnames":null},{"domain":"shops.shops.myshopify.com","cnames":null}]}]}
+{"domain":"stats.nymag.com","cnames":[{"domain":"e2.shared.us-eu.fastly.net","cnames":null}]}
 {"domain":"tiggo8.chery.cn","cnames":[{"domain":"chery.cloudrove.net","cnames":null}]}
 {"domain":"appse.baidu.com","cnames":[{"domain":"appse.e.shifen.com","cnames":null}]}
+{"domain":"www.outfitter.ramtrucks.com","cnames":[{"domain":"prod.magentocloud.map.fastly.net","cnames":null}]}
 {"domain":"f12.baidu.com","cnames":[{"domain":"f12.baidu.com.a.bdydns.com","cnames":[{"domain":"opencdnbdsimage.jomodns.com","cnames":null}]}]}
+{"domain":"pop.mercedes-benz.com.cn","cnames":[{"domain":"pop.c5.corpease.net","cnames":[{"domain":"c2.icoermail.net","cnames":null}]}]}
+{"domain":"imap.mercedes-benz.com.cn","cnames":[{"domain":"imap.c5.corpease.net","cnames":[{"domain":"c2.icoermail.net","cnames":null}]}]}
+{"domain":"merriam-webster.myshopify.com","cnames":[{"domain":"shops.myshopify.com","cnames":[{"domain":"shops.com","cnames":null},{"domain":"shops.shops.myshopify.com","cnames":null}]}]}

@@ -15,7 +15,6 @@ def checkAndSave(strings, outputFile):
                 out_fd.write(strings[i])
 
 def filter(inputFile, outputFile, groupSize):
-    print(inputFile, outputFile, groupSize)
     start = time.time()
     strings = []
     with open(inputFile, 'r') as fd:

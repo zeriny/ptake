@@ -1,26 +1,54 @@
 {
-  "domain": "imap.mercedes-benz.com.cn",
+  "domain": "bkfiles.cooco.net.cn",
   "vulnerable_level": 2,
-  "type": "CnameVulnerable",
+  "type": "AbandonedService",
   "matched_services": null,
   "vul_cnames": [
     {
-      "domain": "imap.c5.corpease.net",
-      "vulnerable_level": 2,
+      "domain": "coocobbk.obs.cn-east-3.myhuaweicloud.com",
+      "vulnerable_level": 1,
       "type": "CnameVulnerable",
-      "matched_services": null,
-      "vul_cnames": [
+      "matched_services": [
         {
-          "domain": "c2.icoermail.net",
-          "vulnerable_level": 2,
-          "type": "Available",
-          "matched_services": null,
-          "vul_cnames": null,
-          "timestamp": 1637912206
+          "service": "huawei_cloud_storage",
+          "name_patterns": [
+            "rds.myhuaweicloud.com",
+            "myhuaweicloud.com"
+          ],
+          "fingerprint": [
+            "NoSuchBucket"
+          ],
+          "http_fingerprint": [
+            "Server: OBS"
+          ]
         }
       ],
-      "timestamp": 1637912206
+      "vul_cnames": [
+        {
+          "domain": "obs.lz02.cn-east-3.myhuaweicloud.com",
+          "vulnerable_level": 1,
+          "type": "MatchServicePattern",
+          "matched_services": [
+            {
+              "service": "huawei_cloud_storage",
+              "name_patterns": [
+                "rds.myhuaweicloud.com",
+                "myhuaweicloud.com"
+              ],
+              "fingerprint": [
+                "NoSuchBucket"
+              ],
+              "http_fingerprint": [
+                "Server: OBS"
+              ]
+            }
+          ],
+          "vul_cnames": null,
+          "check_time": "2021-11-30 19:50:59"
+        }
+      ],
+      "check_time": "2021-11-30 19:50:58"
     }
   ],
-  "timestamp": 1637912207
+  "check_time": "2021-11-30 19:51:02"
 }
