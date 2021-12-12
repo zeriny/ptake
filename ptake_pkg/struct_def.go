@@ -44,7 +44,7 @@ type CNAME struct {
 
 type NSType struct {
 	Domain string `json:"domain"`
-	NameServers []string `json:"name_servers"`
+	NameServers []PDNSRecord `json:"name_servers"`
 }
 
 type Results struct {

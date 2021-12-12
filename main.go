@@ -24,6 +24,7 @@ func main() {
 	flag.StringVar(&gc.Dataset, "dataset", "", "Dataset name.")
 	flag.StringVar(&gc.InputPath, "data-path", "", "Path to Dataset.")
 	flag.StringVar(&gc.OutputPath, "result-path", "", "Output results (json object) to a .txt file (Default: ./results/<dataset>/).")
+	flag.StringVar(&gc.ScanDate, "date", "20001212", "Date string of scanning.")
 	flag.BoolVar(&gc.CheckAvailable, "check-status", false, "Check whether CNAMEs are available (can be registered).")
 	flag.BoolVar(&gc.CheckFull, "check-full", false, "Check full DNS chains no matter whether any cname is vulnerable.")
 	flag.BoolVar(&gc.Fresh, "fresh", false, "Start a fresh scan. If the flag set, a new scan will be "+

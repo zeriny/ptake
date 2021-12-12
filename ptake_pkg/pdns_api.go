@@ -42,7 +42,11 @@ func getPDNSResponse(url string, timeout int, addHeaders map[string]string) (bod
 
 func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.Conf) (subdomains []string) {
 	domain2Count := make(map[string]int)
-	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain)
+
+	now := time.Now()
+	endtime := now.Format("20060102150405")
+	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain, endtime)
+
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
 
@@ -150,11 +154,11 @@ func getNsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (n
 
 	// Only get NSs in the recent 1 day.
 	now := time.Now()
-	sd, _ := time.ParseDuration("-24h")
+	//sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*1).Format("20060102150405")
+	//starttime := now.Add(sd*1).Format("20060102150405")
 
-	url := fmt.Sprintf(conf.PdnsNsUrl, domain, starttime, endtime)
+	url := fmt.Sprintf(conf.PdnsNsUrl, domain, endtime)
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
 
@@ -177,9 +181,9 @@ func getNsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (n
 	data := respBody.Data
 	ns.Domain = domain
 	for i := range data {
-		rdata := strings.TrimRight(data[i].Rdata, ";")
-		rdata = strings.TrimRight(rdata, ".")
-		ns.NameServers = append(ns.NameServers, rdata)
+		//rdata := strings.TrimRight(data[i].Rdata, ";")
+		//rdata = strings.TrimRight(rdata, ".")
+		ns.NameServers = append(ns.NameServers, data[i])
 	}
 
 	return ns

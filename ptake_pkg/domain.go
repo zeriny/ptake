@@ -159,8 +159,8 @@ func getNS(subdomain string, o *config.GlobalConfig) {
 		log.Warningf("[-] '%s' is not in legal format.", subdomain)
 		return
 	}
+	// TODO: get base domain
 	ns := getNsFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
-	ns.NameServers = domainFilter(ns.NameServers)
 
 	// Output results and save caches.
 	nsPath := path.Join(o.OutputPath, "ns.txt")
