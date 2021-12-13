@@ -6,6 +6,7 @@ import (
 	"github.com/miekg/dns"
 	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/publicsuffix"
 	"net"
 	"path"
 	"ptake/config"
@@ -160,7 +161,8 @@ func getNS(subdomain string, o *config.GlobalConfig) {
 		return
 	}
 	// TODO: get base domain
-	ns := getNsFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
+	baseDomain := getBaseDomain(subdomain)
+	ns := getNsFromPDNS(baseDomain, o.Timeout, o.Retries, o.Config)
 
 	// Output results and save caches.
 	nsPath := path.Join(o.OutputPath, "ns.txt")
@@ -188,4 +190,9 @@ func isAvailable(domain string) bool {
 	// 2. check.go: remove the special condition for "ca" [line79], and line88 should be 'else if'
 	available := available.Domain(domain)
 	return available
+}
+
+func getBaseDomain(domain string) (base string) {
+	base, _ = publicsuffix.EffectiveTLDPlusOne(domain)
+	return base
 }
