@@ -4,6 +4,8 @@ config/*
 bin/*
 results/*
 *.sh
+*.py
 case/*
 temp/*
 scripts/*
+.DS_Store
