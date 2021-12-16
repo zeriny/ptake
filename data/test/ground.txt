@@ -1,6 +1,0 @@
-[AbandonedService] merriam-webster.myshopify.com -> shops.myshopify.com -> shops.shops.myshopify.com
-[FASTLY] www.outfitter.ramtrucks.com -> prod.magentocloud.map.fastly.net
-[Available] pop.mercedes-benz.com.cn -> pop.c5.corpease.net -> c2.icoermail.net
-[Available] imap.mercedes-benz.com.cn -> imap.c5.corpease.net -> c2.icoermail.net
-[Available] tiggo8.chery.cn -> chery.cloudrove.net
-[AbandonedService] noexisit.bj.bcebos.com -> bj.bcebos.com -> bos.bj.baidubce.n.shifen.com

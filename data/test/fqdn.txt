@@ -1,9 +1,0 @@
-myshopify.com,merriam-webster.myshopify.com
-ramtrucks.com,www.outfitter.ramtrucks.com
-mercedes-benz.com.cn,pop.mercedes-benz.com.cn
-mercedes-benz.com.cn,imap.mercedes-benz.com.cn
-chery.cn,tiggo8.chery.cn
-bcebos.com,noexisit.bj.bcebos.com
-baidu.com,appse.baidu.com
-baidu.com,f12.baidu.com
-nymag.com,stats.nymag.com
