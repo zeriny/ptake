@@ -99,7 +99,7 @@ func checkFingerprints(domain CNAME, domainStatus DomainStatus, forceSSL bool, t
 
 	// Check fingerprints to see if the given domain is matched to an abandoned service.
 	match = matchAllFps(body, header, domain.Cnames, matchedServices)
-	if match == false && domainStatus.Type == "CnameVulnerable" {
+	if match == false && len(domainStatus.VulCnames)>0 {
 		for i := range domainStatus.VulCnames {
 			cnameStatus := domainStatus.VulCnames[i]
 			match = matchAllFps(body, header, domain.Cnames, cnameStatus.MatchedServices)
@@ -109,7 +109,7 @@ func checkFingerprints(domain CNAME, domainStatus DomainStatus, forceSSL bool, t
 		}
 	}
 	if match {
-		domainStatus.VulnerableLevel = 2
+		domainStatus.VulnerableLevel = 4
 		domainStatus.Type = "AbandonedService"
 	}
 	return domainStatus
@@ -123,10 +123,10 @@ func checkServicePattern(domain string, allServices []config.Service) (matchedSe
 	for i := range allServices {
 		namePatterns := allServices[i].NamePatterns
 		isVulnerable := allServices[i].IsVulnerable
-		if isVulnerable{
-			for j := range namePatterns {
-				if matchServicePattern(domain, namePatterns[j]) {
-					matchedServices = append(matchedServices, allServices[i])
+		for j := range namePatterns {
+			if matchServicePattern(domain, namePatterns[j]) {
+				matchedServices = append(matchedServices, allServices[i])
+				if isVulnerable {
 					matchVulnerableService = true
 				}
 			}
@@ -144,6 +144,7 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 	}
 	services := o.ServiceList
 	domainStatus.VulnerableLevel = 0
+	domainStatus.Type = "NotVulnerable"
 	domainStatus.Domain = domain.Domain
 	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")
 
@@ -151,7 +152,7 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 	if o.CheckAvailable {
 		available := isAvailable(domain.Domain)
 		if available {
-			domainStatus.VulnerableLevel = 2
+			domainStatus.VulnerableLevel = 1
 			domainStatus.Type = "Available"
 		}
 	}
@@ -160,18 +161,19 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 	matchedServices, matchVulService := checkServicePattern(domain.Domain, services)
 	if matchedServices != nil {
 		domainStatus.MatchedServices = matchedServices
+		domainStatus.Type = "MatchNotVulServicePattern"
+		domainStatus.VulnerableLevel = 2
 		if matchVulService {
-			domainStatus.Type = "MatchServicePattern"
-			domainStatus.VulnerableLevel = 1
-		} else {
-			domainStatus.Type = "MatchNotVulServicePattern"
+			domainStatus.Type = "MatchVulServicePattern"
+			domainStatus.VulnerableLevel = 3
 		}
 	}
 
 	// Recursively check whether the CNAMEs are vulnerable:
 	// (1) if the CheckFull option is set, or
-	// (2) if the current domain is not vulnerable
-	if o.CheckFull || domainStatus.VulnerableLevel == 0 {
+	// (2) if the current domain is not vulnerable, or
+	// (3) if the current domain matchs non-vulnerable service patterns
+	if o.CheckFull || domainStatus.VulnerableLevel == 0 || domainStatus.VulnerableLevel == 2{
 
 		// Get CNAME records
 		cnames := domain.Cnames
@@ -187,7 +189,7 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 				if cnameStatus.VulnerableLevel >= domainStatus.VulnerableLevel {
 					// set the highest threat level in the DNS chain.
 					domainStatus.VulnerableLevel = cnameStatus.VulnerableLevel
-					domainStatus.Type = "CnameVulnerable"
+					domainStatus.Type = cnameStatus.Type
 					domainStatus.VulCnames = append(domainStatus.VulCnames, cnameStatus)
 				}
 			}
@@ -204,26 +206,12 @@ func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 	domainStatus := recursive(domain, o, domainCache)
 
 	// If we find some service patterns are matched, while the domain name is not expired yet
-	if domainStatus.VulnerableLevel == 1 {
+	if domainStatus.VulnerableLevel == 3 {
 		// Check whether HttpBody/HttpHeaders/DnsChains match any fingerprints of vulnerable services.
 		domainStatus = checkFingerprints(domain, domainStatus, o.Ssl, o.Timeout)
 	}
 
 	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")
-
-	// Output vulnerable result.
-	//checkInfo := getCheckInfo(domainStatus, o)
-	//if checkInfo == "" {
-	//	fmt.Println("[+] " + domain.Domain)
-	//	fmt.Println(domainStatus)
-	//} else{
-	//	if domainStatus.VulnerableLevel >= 1 {
-	//		fmt.Println("[+] " + domain.Domain)
-	//		fmt.Println(checkInfo)
-	//	} else if o.Verbose {
-	//		fmt.Println(checkInfo)
-	//	}
-	//}
 
 	if o.OutputPath != "" {
 		if domainStatus.VulnerableLevel > 0 {
