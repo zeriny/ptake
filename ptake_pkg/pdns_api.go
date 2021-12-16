@@ -188,3 +188,49 @@ func getNsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (n
 
 	return ns
 }
+
+
+func getRCnameFromPDNS(domain string, timeout int, retries int, conf config.Conf) (rcnames []string) {
+
+	// Only get chains during the recent 7 days.
+	now := time.Now()
+	sd, _ := time.ParseDuration("-24h")
+	endtime := now.Format("20060102150405")
+	starttime := now.Add(sd*7).Format("20060102150405")
+
+	url := fmt.Sprintf(conf.PdnsReverseCnameUrl, domain, starttime, endtime)
+	tokenHeader := make(map[string]string)
+	tokenHeader["fdp-token"] = conf.PdnsApiToken
+
+	var respBody PDNSResponse
+	var retryFlag bool
+
+	for i := 1; i <= retries; i++ {
+		respBody, retryFlag = getPDNSResponse(url, timeout, tokenHeader)
+		if retryFlag == false {
+			break
+		}
+		log.Warningf("[PDNS API - CNAME] No response! Retrying %s...", domain)
+		time.Sleep(1 * time.Second)
+	}
+
+	if respBody.StatusCode != 200 {
+		return rcnames
+	}
+
+	data := respBody.Data
+	var rcnameList []string
+	for i := range data {
+		rrname := strings.TrimRight(data[i].RRName, ";")
+		rrname = strings.TrimRight(rrname, ".")
+		if data[i].Count > conf.CnameAccess {
+			rcnameList = append(rcnameList, rrname)
+		}
+	}
+
+	for i := range rcnameList {
+		rcnames = append(rcnames, rcnameList[i])
+	}
+
+	return rcnames
+}

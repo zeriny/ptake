@@ -196,3 +196,60 @@ func getBaseDomain(domain string) (base string) {
 	base, _ = publicsuffix.EffectiveTLDPlusOne(domain)
 	return base
 }
+
+
+func getRCnameRecuresive(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (rcname CNAME) {
+	// The subdomain has been handled
+	if item, found := domainCache.Get(subdomain); found {
+		return item.(CNAME)
+	}
+
+	// The max recursive depth.
+	if depth > o.Config.RecursiveDepth {
+		domainCache.Set(subdomain, rcname, cache.NoExpiration)
+		return rcname
+	}
+
+	rcname.Domain = subdomain
+	var cnames []string
+	// Recursively get reversed CNAME records via passive DNS API.
+	cnames = getRCnameFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
+	cnames = domainFilter(cnames)
+
+	// Only leave the first <cnameLimit> cnames
+	cnameLimit := Min(len(cnames), o.Config.CnameListSize)
+	for i := range cnames[:cnameLimit] {
+		if cnames[i] == subdomain {
+			continue
+		}
+		curr := getRCnameRecuresive(cnames[i], o, domainCache, depth+1)
+		rcname.Cnames = append(rcname.Cnames, curr)
+	}
+	if o.Verbose {
+		log.Infof("Reverse Look up: %s (depth: %d, cname:%d)", subdomain, depth, len(rcname.Cnames))
+	}
+	domainCache.Set(subdomain, rcname, cache.NoExpiration)
+	return rcname
+}
+
+func getRCnames(subdomain string, o *config.GlobalConfig) {
+	isLegal := isLegalDomain(subdomain)
+	if isLegal == false {
+		//log.Printf("[-] '%s' is not in legal format.\n", subdomain)
+		log.Warningf("[-] '%s' is not in legal format.", subdomain)
+		return
+	}
+
+	domainCache := cache.New(30*time.Second, 10*time.Second)
+	rcname := getRCnameRecuresive(subdomain, o, domainCache, 1)
+
+	// Output results and save caches.
+	rcnamePath := path.Join(o.OutputPath, "vulnerable_rcname.txt")
+	cacheFile := path.Join(o.CachePath, "reverse_cache.txt")
+	//log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
+	//log.Infof("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
+	if len(rcname.Cnames) > 0 {
+		saveCnameFile(rcname, rcnamePath)
+	}
+	saveCache(rcname.Domain, cacheFile)
+}

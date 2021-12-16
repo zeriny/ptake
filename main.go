@@ -69,6 +69,9 @@ func main() {
 		case "check":
 			fmt.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartChecker(&gc)
+		case "rcname":
+			fmt.Printf("[+] Start module: %s\n", modules[i])
+			ptake_pkg.StartGetRerverseCnames(&gc)
 		default:
 			fmt.Println("[-] Please select modules (-module 'subdomain,cname,check').")
 		}

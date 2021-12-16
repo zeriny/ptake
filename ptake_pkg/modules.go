@@ -137,3 +137,43 @@ func StartChecker(o *config.GlobalConfig) {
 	wg.Wait()
 	fmt.Println("Check CNAMEs over!")
 }
+
+
+func StartGetRerverseCnames(o *config.GlobalConfig) {
+	var fqdnList []string
+	domainCache := make(map[string]int)
+
+	// Load domain names to be handled.
+	fqdnPath := path.Join(o.OutputPath, "vulnerable_fqdn.txt")
+	fqdnList = readFile(fqdnPath)
+
+	cacheFile := path.Join(o.CachePath, "reverse_cache.txt")
+	domainCache = readCache(cacheFile) // Load domain names that have been handled.
+
+	chanStream := make(chan string, o.Threads*10)
+	wg := new(sync.WaitGroup)
+
+	// Consumer
+	for i := 0; i < o.Threads; i++ {
+		wg.Add(1)
+		go func() {
+			for subdomain := range chanStream {
+				getRCnames(subdomain, o)
+			}
+			wg.Done()
+		}()
+	}
+
+	// Producer
+	for i := 0; i < len(fqdnList); i++ {
+		_, ok := domainCache[fqdnList[i]]
+		if ok {
+			continue
+		}
+		chanStream <- fqdnList[i]
+	}
+
+	close(chanStream)
+	wg.Wait()
+	fmt.Println("[+] Get reverse chains over!")
+}
