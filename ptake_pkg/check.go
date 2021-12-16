@@ -124,11 +124,11 @@ func checkServicePattern(domain string, allServices []config.Service) (matchedSe
 		namePatterns := allServices[i].NamePatterns
 		isVulnerable := allServices[i].IsVulnerable
 		if isVulnerable{
-			matchVulnerableService = true
-		}
-		for j := range namePatterns {
-			if matchServicePattern(domain, namePatterns[j]) {
-				matchedServices = append(matchedServices, allServices[i])
+			for j := range namePatterns {
+				if matchServicePattern(domain, namePatterns[j]) {
+					matchedServices = append(matchedServices, allServices[i])
+					matchVulnerableService = true
+				}
 			}
 		}
 	}
@@ -199,6 +199,7 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 
 // This function is the interface to check whether a subdomain can be taken over via vulnerable services.
 func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
+	log.Infof("Check: %s", domain.Domain)
 	domainCache := cache.New(30*time.Second, 10*time.Second)
 	domainStatus := recursive(domain, o, domainCache)
 
@@ -229,12 +230,12 @@ func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 			vulnerablePath := path.Join(o.OutputPath, "vulnerable.txt")
 			saveDomainStatus(domainStatus, vulnerablePath)
 			getNS(domain.Domain, o) // Get the current name servers of vulnerable domain names
-			log.Infof("Check subdomains: (%s) %s", domain.Domain, domainStatus.Type)
+			log.Infof("Check results: (%s) %s", domain.Domain, domainStatus.Type)
 		} else if o.Verbose {
 			domainStatus.Type = "NotVulnerable"
 			normalPath := path.Join(o.OutputPath, "normal.txt")
 			saveDomainStatus(domainStatus, normalPath)
-			log.Infof("Check subdomains: (%s) %s", domain.Domain, domainStatus.Type)
+			log.Infof("Check results: (%s) %s", domain.Domain, domainStatus.Type)
 		}
 	}
 
