@@ -38,14 +38,14 @@ func isLegalDomain(domain string) (flag bool) {
 		return false
 	}
 
-	illegalCharacters := "~!@#$%^&*()+*/<>,[]\\/"
+	illegalCharacters := "~!@#$%^&()+/<>,[]\\/"
 	for i := range illegalCharacters {
 		ch := string(illegalCharacters[i])
 		if strings.Contains(domain, ch) {
 			return false
 		}
 	}
-	illegalPrefixes := "_-."
+	illegalPrefixes := "."
 	for i := range illegalPrefixes {
 		ch := string(illegalPrefixes[i])
 		if strings.HasPrefix(domain, ch) {
@@ -55,16 +55,16 @@ func isLegalDomain(domain string) (flag bool) {
 	return true
 }
 
-// Filter algo-generated domains
-// TODO: Identify random-looking subdomains
+// Filter out domain names in illegal format.
 func domainFilter(subdomains []string) (filteredSubdomains []string) {
-	if len(subdomains)==0{
+	if len(subdomains) == 0 {
 		return subdomains
 	}
 	for i := range subdomains {
 		fqdn := subdomains[i]
 		isLegal := isLegalDomain(fqdn)
 		if isLegal == false {
+			saveCache(fqdn, "illegal_domain.txt")
 			continue
 		}
 		filteredSubdomains = append(filteredSubdomains, fqdn)
@@ -79,6 +79,7 @@ func getSubdomains(sld string, o *config.GlobalConfig) {
 
 	//TODO: Filter algorithm-generated subdomains
 	filteredSubdomains := domainFilter(subdomains)
+	//filteredSubdomains :=removeDuplicates(subdomains)
 
 	// Output results and save caches.
 	fqdnFile := path.Join(o.OutputPath, "fqdn.txt")
@@ -152,7 +153,6 @@ func getCnames(subdomain string, o *config.GlobalConfig) {
 	saveCache(cname.Domain, cacheFile)
 }
 
-
 func getNS(subdomain string, o *config.GlobalConfig) {
 	isLegal := isLegalDomain(subdomain)
 	if isLegal == false {
@@ -181,22 +181,20 @@ func isNxdomain(domain string) bool {
 	return false
 }
 
-
 // isAvailable returns true if the domain to be checked can be registerd
 func isAvailable(domain string) bool {
 	// Using an API implemented by golang: https://github.com/haccer/available.
 	// The package has been modified:
 	// 1. fingerprint.go: change the fingerprint of "ca" to "Not Found"
 	// 2. check.go: remove the special condition for "ca" [line79], and line88 should be 'else if'
-	available := available.Domain(domain)
-	return available
+	flag := available.Domain(domain)
+	return flag
 }
 
 func getBaseDomain(domain string) (base string) {
 	base, _ = publicsuffix.EffectiveTLDPlusOne(domain)
 	return base
 }
-
 
 func getRCnameRecuresive(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (rcname CNAME) {
 	// The subdomain has been handled
@@ -233,13 +231,6 @@ func getRCnameRecuresive(subdomain string, o *config.GlobalConfig, domainCache *
 }
 
 func getRCnames(subdomain string, o *config.GlobalConfig) {
-	isLegal := isLegalDomain(subdomain)
-	if isLegal == false {
-		//log.Printf("[-] '%s' is not in legal format.\n", subdomain)
-		log.Warningf("[-] '%s' is not in legal format.", subdomain)
-		return
-	}
-
 	domainCache := cache.New(30*time.Second, 10*time.Second)
 	rcname := getRCnameRecuresive(subdomain, o, domainCache, 1)
 
