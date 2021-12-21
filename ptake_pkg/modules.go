@@ -49,7 +49,7 @@ func StartGetSubdomains(o *config.GlobalConfig) {
 	fmt.Println("[+] Get subdomains over!")
 }
 
-func StartGetCnames(o *config.GlobalConfig) {
+func StartGetChains(o *config.GlobalConfig) {
 	var subdomainList []string
 	subdomainCache := make(map[string]int)
 
@@ -68,7 +68,7 @@ func StartGetCnames(o *config.GlobalConfig) {
 		wg.Add(1)
 		go func() {
 			for subdomain := range chanStream {
-				getCnames(subdomain, o)
+				getChains(subdomain, o)
 			}
 			wg.Done()
 		}()
@@ -85,11 +85,11 @@ func StartGetCnames(o *config.GlobalConfig) {
 
 	close(chanStream)
 	wg.Wait()
-	fmt.Println("[+] Get cnames over!")
+	fmt.Println("[+] Get chains over!")
 }
 
 func StartChecker(o *config.GlobalConfig) {
-	var cnameList []string
+	var chainsList []string
 	var subdomainCache map[string]int
 
 	_, err := os.Stat(o.OutputPath)
@@ -101,36 +101,36 @@ func StartChecker(o *config.GlobalConfig) {
 	}
 
 	// Load CNAME chains to be checked.
-	cnamePath := path.Join(o.OutputPath, "cname.txt")
-	cnameList = readFile(cnamePath)
+	chainPath := path.Join(o.OutputPath, "chain.txt")
+	chainsList = readFile(chainPath)
 
 	// Load Subdomains that have been checked.
 	cacheFile := path.Join(o.CachePath, "check_cache.txt")
 	subdomainCache = readCache(cacheFile)
 
-	chanStream := make(chan CNAME, o.Threads*10)
+	chanStream := make(chan DnsChain, o.Threads*10)
 	wg := new(sync.WaitGroup)
 
 	// Consumer
 	for i := 0; i < o.Threads; i++ {
 		wg.Add(1)
 		go func() {
-			for cname := range chanStream {
-				checkService(cname, cacheFile, o)
+			for chain := range chanStream {
+				checkService(chain, cacheFile, o)
 			}
 			wg.Done()
 		}()
 	}
 
 	// Producer
-	for i := 0; i < len(cnameList); i++ {
-		var cname CNAME
-		json.Unmarshal([]byte(cnameList[i]), &cname)
-		_, ok := subdomainCache[cname.Domain]
+	for i := 0; i < len(chainsList); i++ {
+		var chain DnsChain
+		json.Unmarshal([]byte(chainsList[i]), &chain)
+		_, ok := subdomainCache[chain.Name]
 		if ok {
 			continue
 		}
-		chanStream <- cname
+		chanStream <- chain
 	}
 
 	close(chanStream)
@@ -139,7 +139,7 @@ func StartChecker(o *config.GlobalConfig) {
 }
 
 
-func StartGetRerverseCnames(o *config.GlobalConfig) {
+func StartGetReverseCnames(o *config.GlobalConfig) {
 	var fqdnList []string
 	domainCache := make(map[string]int)
 

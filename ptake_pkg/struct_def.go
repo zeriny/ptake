@@ -11,11 +11,7 @@ import "ptake/config"
 type DomainStatus struct {
 	Domain          string `json:"domain"`
 	VulnerableLevel int    `json:"vulnerable_level"` // The highest threat level of Domain
-	// level 0: Not vulnerable
-	// level 1: MatchServicePattern
-	// level 2: Available/AbandonedService
-	Type string `json:"type"` // Vulnerable types: Available, MatchServicePattern, CnameVulnerable, AbandonedService
-	//AvailableCnames []string `json:"available_cnames"` // Set if Type is CnameAvailable
+	Type string `json:"type"`
 	MatchedServices []config.Service `json:"matched_services"` // Set if Type is MatchServicePattern
 	//MatchServiceFps []string `json:"match_service_fps"` // Set if Vulnerable is 2
 	VulCnames []DomainStatus `json:"vul_cnames"` // Set when Type is CnameVulnerable
@@ -42,6 +38,10 @@ type CNAME struct {
 	Cnames []CNAME `json:"cnames"`
 }
 
+type DnsChain struct {
+	Name string  `json:"name"`
+	Chains []DnsChain `json:"chains"`
+}
 type NSType struct {
 	Domain string `json:"domain"`
 	NameServers []PDNSRecord `json:"name_servers"`

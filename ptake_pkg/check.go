@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// web content fingerprint to determine an abandoned service
 func matchHttpBodyFp(body []byte, fp []byte) (match bool){
 	match = false
 	if bytes.Contains(body, fp) {
@@ -19,6 +20,7 @@ func matchHttpBodyFp(body []byte, fp []byte) (match bool){
 	return match
 }
 
+// http header fingerprint to determine an abandoned service
 func matchHttpHeaderFp(header string, fp string) (match bool){
 	if strings.Contains(header, strings.ToLower(fp)){
 		return true
@@ -26,31 +28,37 @@ func matchHttpHeaderFp(header string, fp string) (match bool){
 	return false
 }
 
-func matchDnsFp(cnames []CNAME, fp string)(match bool) {
+// dns fingerprint (CNAME, NS) to determine an abandoned service
+func matchDnsFp(cnames []DnsChain, fp string)(match bool) {
 	for i := range cnames{
-		if  cnames[i].Domain == fp{
+		if  cnames[i].Name == fp {
 			return true
 		}
 	}
 	return false
 }
 
-func matchNxEndpoint(cnames []CNAME) (match bool) {
-	for i := range cnames {
-		if isNxdomain(cnames[i].Domain) {
+// non-exist CNAME to determine an abandoned service
+func matchNxEndpoint(chains []DnsChain) (match bool) {
+	for i := range chains {
+		if isIP(chains[i].Name) {
+			continue
+		}
+		if isNxdomain(chains[i].Name) {
 			return true
 		}
 	}
 	return false
 }
 
-func matchAllFps(body []byte, header string, cnames []CNAME, matchedServices []config.Service) (match bool){
+// all types of fingerprints to determine an abandoned service
+func matchAllFps(body []byte, header string, chains []DnsChain, matchedServices []config.Service) (match bool){
 	for i := range matchedServices {
 		currService := matchedServices[i]
 
-		// cname should be an nxdomain
+		// domain should point to a nxdomain
 		if currService.NXDomain {
-			match = matchNxEndpoint(cnames)
+			match = matchNxEndpoint(chains)
 			if match {break}
 		}
 
@@ -66,9 +74,9 @@ func matchAllFps(body []byte, header string, cnames []CNAME, matchedServices []c
 			if match {break}
 		}
 
-		// cname chains
+		// match specific CNAME/NS
 		for j := range currService.DnsFingerprint{
-			match = matchDnsFp(cnames, currService.DnsFingerprint[j])
+			match = matchDnsFp(chains, currService.DnsFingerprint[j])
 			if match {break}
 		}
 	}
@@ -86,11 +94,11 @@ func matchServicePattern(domain string, pattern string) (match bool) {
 
 
 // checkFingerprints is the interface to check whether web contents contain vulnerable services' fingerprints.
-func checkFingerprints(domain CNAME, domainStatus DomainStatus, forceSSL bool, timeout int) (newDomainStatus DomainStatus) {
+func checkFingerprints(domain DnsChain, domainStatus DomainStatus, forceSSL bool, timeout int) (newDomainStatus DomainStatus) {
 
-	header, body := get(domain.Domain, timeout, false)
+	header, body := get(domain.Name, timeout, false)
 	if body == nil {
-		header, body = get(domain.Domain, timeout, true)
+		header, body = get(domain.Name, timeout, true)
 	}
 	header = strings.ToLower(header)
 
@@ -98,11 +106,11 @@ func checkFingerprints(domain CNAME, domainStatus DomainStatus, forceSSL bool, t
 	match := false
 
 	// Check fingerprints to see if the given domain is matched to an abandoned service.
-	match = matchAllFps(body, header, domain.Cnames, matchedServices)
+	match = matchAllFps(body, header, domain.Chains, matchedServices)
 	if match == false && len(domainStatus.VulCnames)>0 {
 		for i := range domainStatus.VulCnames {
 			cnameStatus := domainStatus.VulCnames[i]
-			match = matchAllFps(body, header, domain.Cnames, cnameStatus.MatchedServices)
+			match = matchAllFps(body, header, domain.Chains, cnameStatus.MatchedServices)
 			if match {
 				break
 			}
@@ -138,19 +146,19 @@ func checkServicePattern(domain string, allServices []config.Service) (matchedSe
 
 // recursive is the function to check the status of all domain names in DNS chains, and check whether they are matched
 // with some service name patterns.
-func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (domainStatus DomainStatus) {
-	if status, found := domainCache.Get(domain.Domain); found {
+func recursive(domain DnsChain, o *config.GlobalConfig, domainCache *cache.Cache) (domainStatus DomainStatus) {
+	if status, found := domainCache.Get(domain.Name); found {
 		return status.(DomainStatus)
 	}
 	services := o.ServiceList
 	domainStatus.VulnerableLevel = 0
 	domainStatus.Type = "NotVulnerable"
-	domainStatus.Domain = domain.Domain
+	domainStatus.Domain = domain.Name
 	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")
 
 	// Check whether subdomain is expired and can be registered.
 	if o.CheckAvailable {
-		available := isAvailable(domain.Domain)
+		available := isAvailable(domain.Name)
 		if available {
 			domainStatus.VulnerableLevel = 1
 			domainStatus.Type = "Available"
@@ -158,7 +166,7 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 	}
 
 	// Check whether subdomain matches any domain patterns of vulnerable services.
-	matchedServices, matchVulService := checkServicePattern(domain.Domain, services)
+	matchedServices, matchVulService := checkServicePattern(domain.Name, services)
 	if matchedServices != nil {
 		domainStatus.MatchedServices = matchedServices
 		domainStatus.Type = "MatchNotVulServicePattern"
@@ -172,14 +180,14 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 	// Recursively check whether the CNAMEs are vulnerable:
 	// (1) if the CheckFull option is set, or
 	// (2) if the current domain is not vulnerable, or
-	// (3) if the current domain matchs non-vulnerable service patterns
+	// (3) if the current domain matches non-vulnerable service patterns
 	if o.CheckFull || domainStatus.VulnerableLevel == 0 || domainStatus.VulnerableLevel == 2{
 
 		// Get CNAME records
-		cnames := domain.Cnames
-		if cnames != nil {
-			for i := range cnames {
-				cnameStatus := recursive(cnames[i], o, domainCache)
+		chains := domain.Chains
+		if chains != nil {
+			for i := range chains {
+				cnameStatus := recursive(chains[i], o, domainCache)
 				if cnameStatus.VulnerableLevel == 0 {
 					continue
 				}
@@ -195,13 +203,13 @@ func recursive(domain CNAME, o *config.GlobalConfig, domainCache *cache.Cache) (
 			}
 		}
 	}
-	domainCache.Set(domain.Domain, domainStatus, cache.NoExpiration)
+	domainCache.Set(domain.Name, domainStatus, cache.NoExpiration)
 	return domainStatus
 }
 
 // This function is the interface to check whether a subdomain can be taken over via vulnerable services.
-func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
-	log.Infof("Check: %s", domain.Domain)
+func checkService(domain DnsChain, cacheFile string, o *config.GlobalConfig) {
+	log.Infof("Check: %s", domain.Name)
 	domainCache := cache.New(30*time.Second, 10*time.Second)
 	domainStatus := recursive(domain, o, domainCache)
 
@@ -217,55 +225,15 @@ func checkService(domain CNAME, cacheFile string, o *config.GlobalConfig) {
 		if domainStatus.VulnerableLevel > 0 {
 			vulnerablePath := path.Join(o.OutputPath, "vulnerable.txt")
 			saveDomainStatus(domainStatus, vulnerablePath)
-			getNS(domain.Domain, o) // Get the current name servers of vulnerable domain names
-			log.Infof("Check results: (%s) %s", domain.Domain, domainStatus.Type)
+			getNS(domain.Name, o) // Get the current name servers of vulnerable domain names
+			log.Infof("Check results: (%s) %s", domain.Name, domainStatus.Type)
 		} else if o.Verbose {
 			domainStatus.Type = "NotVulnerable"
 			normalPath := path.Join(o.OutputPath, "normal.txt")
 			saveDomainStatus(domainStatus, normalPath)
-			log.Infof("Check results: (%s) %s", domain.Domain, domainStatus.Type)
+			log.Infof("Check results: (%s) %s", domain.Name, domainStatus.Type)
 		}
 	}
 
-	saveCache(domain.Domain, cacheFile)
+	saveCache(domain.Name, cacheFile)
 }
-
-//func getCheckInfo(status DomainStatus, o *config.GlobalConfig) (resultStr string) {
-//
-//	if status.VulnerableLevel != 0 {
-//		switch status.Type {
-//		case "Available":
-//			resultStr = fmt.Sprintf("[Available]  %s\n", status.Domain)
-//		case "MatchServicePattern":
-//			resultStr = fmt.Sprintf("[MatchServicePattern] %s", status.Domain)
-//			for i := range status.MatchedServices {
-//				matchedService := status.MatchedServices[i]
-//				resultStr += fmt.Sprintf(" -(%s)", strings.ToUpper(matchedService.Service))
-//			}
-//			//resultStr = fmt.Sprintf("[%s]%s", status.MatchServiceCnames, status.Domain)
-//		case "AbandonedService":
-//			resultStr = fmt.Sprintf("[AbandonedService] %s ", status.Domain)
-//			for i := range status.MatchedServices {
-//				matchedService := status.MatchedServices[i]
-//				resultStr += fmt.Sprintf(" -(%s)\n", strings.ToUpper(matchedService.Service))
-//			}
-//
-//			for i := range status.VulCnames {
-//				resultStr += fmt.Sprintf("[CnameVulnerable]  %s -> %s\n", status.Domain, status.VulCnames[i].Domain) + getCheckInfo(status.VulCnames[i], o)
-//			}
-//
-//		case "CnameVulnerable":
-//			resultStr = ""
-//			for i := range status.VulCnames {
-//				resultStr += fmt.Sprintf("[CnameVulnerable]  %s -> %s\n", status.Domain, status.VulCnames[i].Domain) + getCheckInfo(status.VulCnames[i], o)
-//			}
-//		default:
-//			resultStr = fmt.Sprintf("[Vulnerable]%s", status.Domain)
-//		}
-//	}
-//
-//	if status.VulnerableLevel == 0 && o.Verbose {
-//		resultStr = fmt.Sprintf("[NotVulnerable]%s", status.Domain)
-//	}
-//	return resultStr
-//}

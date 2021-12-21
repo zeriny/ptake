@@ -55,6 +55,16 @@ func isLegalDomain(domain string) (flag bool) {
 	return true
 }
 
+func isIP(s string) (flag bool) {
+	address := net.ParseIP(s)
+	if address == nil {
+		flag = false
+	}else {
+		flag = true
+	}
+	return flag
+}
+
 // Filter out domain names in illegal format.
 func domainFilter(subdomains []string) (filteredSubdomains []string) {
 	if len(subdomains) == 0 {
@@ -94,63 +104,77 @@ func getSubdomains(sld string, o *config.GlobalConfig) {
 	saveCache(sld, cacheFile)
 }
 
-func getCnamesRecursive(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (cname CNAME) {
+func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (chain DnsChain) {
 	// The subdomain has been handled
 	if item, found := domainCache.Get(subdomain); found {
-		return item.(CNAME)
+		return item.(DnsChain)
 	}
 
 	// The max recursive depth.
 	if depth > o.Config.RecursiveDepth {
-		domainCache.Set(subdomain, cname, cache.NoExpiration)
-		return cname
+		domainCache.Set(subdomain, chain, cache.NoExpiration)
+		return chain
 	}
 
-	cname.Domain = subdomain
-	var cnames []string
+	chain.Name = subdomain
+	var metaList []PDNSRecord
 	// Recursively get CNAME records via passive DNS API.
-	cnames = getCnamesFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
-	cnames = domainFilter(cnames)
+	metaList = getChainsFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
+	//cnames = domainFilter(cnames)
 
 	// Only leave the first <cnameLimit> cnames
-	cnameLimit := Min(len(cnames), o.Config.CnameListSize)
-	for i := range cnames[:cnameLimit] {
-		if cnames[i] == subdomain {
+	cnameLimit := Min(len(metaList), o.Config.CnameListSize)
+	for i := range metaList[:cnameLimit] {
+		rdata := strings.TrimRight(metaList[i].Rdata, ";")
+		rdata = strings.TrimRight(rdata, ".")
+		rtype := metaList[i].RRType
+
+		if rdata == subdomain {
 			continue
 		}
-		// TODO: Identify random-looking CNAMEs
-		curr := getCnamesRecursive(cnames[i], o, domainCache, depth+1)
-		cname.Cnames = append(cname.Cnames, curr)
+
+		if rdata == "" {
+			continue
+		}
+
+		var curr DnsChain
+
+		if rtype == "CNAME" {
+			curr = getChainsRecursive(rdata, o, domainCache, depth+1)
+		} else if (rtype == "A") || (rtype == "NS") {
+			curr.Name = rdata
+			curr.Chains = nil
+		}
+		chain.Chains = append(chain.Chains, curr)
 	}
+
 	if o.Verbose {
-		log.Infof("Look up: %s (depth: %d, cname:%d)", subdomain, depth, len(cname.Cnames))
+		log.Infof("Look up: %s (depth: %d, results:%d)", subdomain, depth, len(chain.Chains))
 	}
-	domainCache.Set(subdomain, cname, cache.NoExpiration)
-	return cname
+	domainCache.Set(subdomain, chain, cache.NoExpiration)
+	return chain
 }
 
 // Resolve subdomain and fetch CNAME records
 // Output CNAME object: {domain: "domain", cnames: []CNAME}
-func getCnames(subdomain string, o *config.GlobalConfig) {
+func getChains(subdomain string, o *config.GlobalConfig) {
 	isLegal := isLegalDomain(subdomain)
 	if isLegal == false {
-		//log.Printf("[-] '%s' is not in legal format.\n", subdomain)
 		log.Warningf("[-] '%s' is not in legal format.", subdomain)
 		return
 	}
 
 	domainCache := cache.New(30*time.Second, 10*time.Second)
-	cname := getCnamesRecursive(subdomain, o, domainCache, 1)
+	chain := getChainsRecursive(subdomain, o, domainCache, 1)
 
 	// Output results and save caches.
-	cnamePath := path.Join(o.OutputPath, "cname.txt")
+	chainPath := path.Join(o.OutputPath, "chain.txt")
 	cacheFile := path.Join(o.CachePath, "fqdn_cache.txt")
-	//log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
-	//log.Infof("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
-	if len(cname.Cnames) > 0 {
-		saveCnameFile(cname, cnamePath)
+
+	if len(chain.Chains) > 0 {
+		saveChainFile(chain, chainPath)
 	}
-	saveCache(cname.Domain, cacheFile)
+	saveCache(chain.Name, cacheFile)
 }
 
 func getNS(subdomain string, o *config.GlobalConfig) {

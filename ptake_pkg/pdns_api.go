@@ -102,17 +102,14 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 // TODO:
 // 1. set parameters by configurations. (done)
 // 2. filter CNAME records by access count, ensuring the records are still alive (done).
-func getCnamesFromPDNS(domain string, timeout int, retries int, conf config.Conf) (cnames []string) {
-	//limit := 200
-	//minAccess := 200
-
+func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (chains []PDNSRecord) {
 	// Only get cname chains during the recent 7 days.
 	now := time.Now()
 	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
 	starttime := now.Add(sd*7).Format("20060102150405")
 
-	url := fmt.Sprintf(conf.PdnsCnameUrl, domain, starttime, endtime)
+	url := fmt.Sprintf(conf.PdnsChainUrl, domain, starttime, endtime)
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
 
@@ -129,24 +126,22 @@ func getCnamesFromPDNS(domain string, timeout int, retries int, conf config.Conf
 	}
 
 	if respBody.StatusCode != 200 {
-		return cnames
+		return chains
 	}
 
 	data := respBody.Data
-	var cnameList []string
+	var metaList []PDNSRecord
 	for i := range data {
-		rdata := strings.TrimRight(data[i].Rdata, ";")
-		rdata = strings.TrimRight(rdata, ".")
 		if data[i].Count > conf.CnameAccess {
-			cnameList = append(cnameList, rdata)
+			metaList = append(metaList, data[i])
 		}
 	}
 
-	for i := range cnameList {
-		cnames = append(cnames, cnameList[i])
+	for i := range metaList {
+		chains = append(chains, metaList[i])
 	}
 
-	return cnames
+	return chains
 }
 
 
@@ -210,7 +205,7 @@ func getRCnameFromPDNS(domain string, timeout int, retries int, conf config.Conf
 		if retryFlag == false {
 			break
 		}
-		log.Warningf("[PDNS API - CNAME] No response! Retrying %s...", domain)
+		log.Warningf("[PDNS API - RCNAME] No response! Retrying %s...", domain)
 		time.Sleep(1 * time.Second)
 	}
 

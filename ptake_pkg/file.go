@@ -124,6 +124,16 @@ func saveCnameFile(cname CNAME, path string) {
 	file.WriteString(string(results)+"\n")
 }
 
+func saveChainFile(chain DnsChain, path string) {
+	results, _ := json.Marshal(chain)
+	file, err := os.OpenFile(path, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0600)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+	file.WriteString(string(results)+"\n")
+}
+
 
 func saveNsFile(ns NSType, path string) {
 	results, _ := json.Marshal(ns)
