@@ -1,0 +1,1798 @@
+[
+  {
+    "service": "fastly",
+    "name_patterns": [
+      ".map.fastly.net",
+      ".global.prod.fastly.net",
+      ".fastly.net"
+    ],
+    "fingerprint": [
+      "Fastly error: unknown domain",
+      "404 Not Found"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [
+      "Server: fastly_test",
+      "Status-Code: 301"
+    ],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "github",
+    "name_patterns": [
+      ".github.io"
+    ],
+    "fingerprint": [
+      "There isn't a GitHub Pages site here."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "heroku",
+    "name_patterns": [
+      ".herokuapp.com",
+      ".herokussl.com"
+    ],
+    "fingerprint": [
+      "herokucdn.com/error-pages/no-such-app.html"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "cloudflare_enterprise",
+    "name_patterns": [
+      ".cdn.cloudflare.net"
+    ],
+    "fingerprint": [
+      "Error 1001",
+      "DNS resolution error",
+      "Cloudflare is currently unable to resolve your requested domain"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [
+      "409 Conflict"
+    ],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "pantheon",
+    "name_patterns": [
+      ".pantheonsite.io"
+    ],
+    "fingerprint": [
+      "The gods are wise, but do not know of the site which you seek.",
+      "Unknown site"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [
+      "Server: Pantheon",
+      "X-pantheon-fun-extended: Please double-check that you are using the correct url. If so, make sure it matches your dashboard's custom domain settings, and try again in 2 minutes.",
+      "X-pantheon-fun-reason: The gods are wise, but do not know of the site which you seek."
+    ],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "tumblr",
+    "name_patterns": [
+      ".domains.tumblr.com"
+    ],
+    "fingerprint": [
+      "Whatever you were looking for doesn't currently exist at this address."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "wordpress",
+    "name_patterns": [
+      "ns1.wordpress.com", 
+      "ns2.wordpress.com", 
+      "ns3.wordpress.com",
+      ".wordpress.com"
+    ],
+    "fingerprint": [
+      "Do you want to register",
+      "doesn't have an active domain connection",
+      "your plan or domain may have expired",
+      "You can't get there from here",
+      "site_id mismatch error",
+      "doesn't exist"
+    ],
+    "dns_fingerprint": ["ns1.wordpress.com", "ns2.wordpress.com", "ns3.wordpress.com"],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "teamwork",
+    "name_patterns": [
+      ".teamwork.com"
+    ],
+    "fingerprint": [
+      "Oops - We didn't find your site."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "helpjuice",
+    "name_patterns": [
+      ".helpjuice.com"
+    ],
+    "fingerprint": [
+      "We could not find what you're looking for."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "helpscout",
+    "name_patterns": [
+      ".helpscoutdocs.com"
+    ],
+    "fingerprint": [
+      "No settings were found for this company:"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "amazon_s3",
+    "name_patterns": [
+      ".s3-accelerate.amazonaws.com",
+      ".s3-fips.ca-central-1.amazonaws.com",
+      ".s3-fips.dualstack.ca-central-1.amazonaws.com",
+      ".s3-fips.dualstack.us-east-1.amazonaws.com",
+      ".s3-fips.dualstack.us-east-2.amazonaws.com",
+      ".s3-fips.dualstack.us-gov-east-1.amazonaws.com",
+      ".s3-fips.dualstack.us-gov-west-1.amazonaws.com",
+      ".s3-fips.dualstack.us-west-1.amazonaws.com",
+      ".s3-fips.us-east-1.amazonaws.com",
+      ".s3-fips.us-east-2.amazonaws.com",
+      ".s3-fips.us-gov-east-1.amazonaws.com",
+      ".s3-fips.us-gov-west-1.amazonaws.com",
+      ".s3-fips.us-west-1.amazonaws.com",
+      ".s3.af-south-1.amazonaws.com",
+      ".s3.amazonaws.com",
+      ".s3.ap-east-1.amazonaws.com",
+      ".s3.ap-northeast-1.amazonaws.com",
+      ".s3.ap-northeast-2.amazonaws.com",
+      ".s3.ap-northeast-3.amazonaws.com",
+      ".s3.ap-south-1.amazonaws.com",
+      ".s3.ap-southeast-1.amazonaws.com",
+      ".s3.ap-southeast-2.amazonaws.com",
+      ".s3.ca-central-1.amazonaws.com",
+      ".s3.cn-north-1.amazonaws.com.cn",
+      ".s3.cn-northwest-1.amazonaws.com.cn",
+      ".s3.dualstack.af-south-1.amazonaws.com",
+      ".s3.dualstack.ap-east-1.amazonaws.com",
+      ".s3.dualstack.ap-northeast-1.amazonaws.com",
+      ".s3.dualstack.ap-northeast-2.amazonaws.com",
+      ".s3.dualstack.ap-northeast-3.amazonaws.com",
+      ".s3.dualstack.ap-south-1.amazonaws.com",
+      ".s3.dualstack.ap-southeast-1.amazonaws.com",
+      ".s3.dualstack.ap-southeast-2.amazonaws.com",
+      ".s3.dualstack.ca-central-1.amazonaws.com",
+      ".s3.dualstack.cn-north-1.amazonaws.com.cn",
+      ".s3.dualstack.cn-northwest-1.amazonaws.com.cn",
+      ".s3.dualstack.eu-central-1.amazonaws.com",
+      ".s3.dualstack.eu-north-1.amazonaws.com",
+      ".s3.dualstack.eu-south-1.amazonaws.com",
+      ".s3.dualstack.eu-west-1.amazonaws.com",
+      ".s3.dualstack.eu-west-2.amazonaws.com",
+      ".s3.dualstack.eu-west-3.amazonaws.com",
+      ".s3.dualstack.me-south-1.amazonaws.com",
+      ".s3.dualstack.sa-east-1.amazonaws.com",
+      ".s3.dualstack.us-east-1.amazonaws.com",
+      ".s3.dualstack.us-east-2.amazonaws.com",
+      ".s3.dualstack.us-gov-east-1.amazonaws.com",
+      ".s3.dualstack.us-gov-west-1.amazonaws.com",
+      ".s3.dualstack.us-west-1.amazonaws.com",
+      ".s3.dualstack.us-west-2.amazonaws.com",
+      ".s3.eu-central-1.amazonaws.com",
+      ".s3.eu-north-1.amazonaws.com",
+      ".s3.eu-south-1.amazonaws.com",
+      ".s3.eu-west-1.amazonaws.com",
+      ".s3.eu-west-2.amazonaws.com",
+      ".s3.eu-west-3.amazonaws.com",
+      ".s3.me-south-1.amazonaws.com",
+      ".s3.sa-east-1.amazonaws.com",
+      ".s3.us-east-1.amazonaws.com",
+      ".s3.us-east-2.amazonaws.com",
+      ".s3.us-gov-east-1.amazonaws.com",
+      ".s3.us-gov-west-1.amazonaws.com",
+      ".s3.us-west-1.amazonaws.com",
+      ".s3.us-west-2.amazonaws.com"
+    ],
+    "fingerprint": [
+      "The specified bucket does not exist",
+      "NoSuchBucket",
+      "randombucket-assets"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "amazon_s3_accesspoint",
+    "name_patterns": [
+      ".s3.ap-southeast-1.amazonaws.com"
+    ],
+    "fingerprint": [
+      "The specified bucket does not exist",
+      "NoSuchBucket"  
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "amazon_s3_website",
+    "name_patterns": [
+      ".s3-website-ap-northeast-1.amazonaws.com",
+      ".s3-website-ap-southeast-1.amazonaws.com",
+      ".s3-website-ap-southeast-2.amazonaws.com",
+      ".s3-website-eu-west-1.amazonaws.com",
+      ".s3-website-sa-east-1.amazonaws.com",
+      ".s3-website-us-east-1.amazonaws.com",
+      ".s3-website-us-gov-west-1.amazonaws.com",
+      ".s3-website-us-west-1.amazonaws.com",
+      ".s3-website-us-west-2.amazonaws.com",
+      ".s3-website.af-south-1.amazonaws.com",
+      ".s3-website.ap-east-1.amazonaws.com",
+      ".s3-website.ap-northeast-2.amazonaws.com",
+      ".s3-website.ap-northeast-3.amazonaws.com",
+      ".s3-website.ap-south-1.amazonaws.com",
+      ".s3-website.ca-central-1.amazonaws.com",
+      ".s3-website.cn-northwest-1.amazonaws.com.cn",
+      ".s3-website.eu-central-1.amazonaws.com",
+      ".s3-website.eu-north-1.amazonaws.com",
+      ".s3-website.eu-south-1.amazonaws.com",
+      ".s3-website.eu-west-2.amazonaws.com",
+      ".s3-website.eu-west-3.amazonaws.com",
+      ".s3-website.me-south-1.amazonaws.com",
+      ".s3-website.us-gov-east-1.amazonaws.com"
+    ],
+    "fingerprint": [
+      "The specified bucket does not exist",
+      "NoSuchBucket"  
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "ghost",
+    "name_patterns": [
+      ".ghost.io"
+    ],
+    "fingerprint": [
+      "The thing you were looking for is no longer here, or never was"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "shopify",
+    "name_patterns": [
+      "shops.myshopify.com",
+      ".myshopify.com"
+    ],
+    "fingerprint": [
+      "Connect existing domain",
+      "Only one step left"
+    ],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "uservoice",
+    "name_patterns": [
+      ".uservoice.com"
+    ],
+    "fingerprint": [
+      "This UserVoice subdomain is currently available!"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "surge",
+    "name_patterns": [
+      ".surge.sh"
+    ],
+    "fingerprint": [
+      "project not found"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "bitbucket",
+    "name_patterns": [
+      ".bitbucket.io"
+    ],
+    "fingerprint": [
+      "Repository not found"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "intercom",
+    "name_patterns": [
+      ".custom.intercom.help"
+    ],
+    "fingerprint": [
+      "This page is reserved for artistic dogs.",
+      "<h1 class=\"headline\"Uh oh. That page doesn't exist.</h1>"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "webflow",
+    "name_patterns": [
+      ".proxy.webflow.com",
+      ".proxy-ssl.webflow.com"
+    ],
+    "fingerprint": [
+      "The page you are looking for doesn't exist or has been moved"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "wishpond",
+    "name_patterns": [
+      ".wishpond.com"
+    ],
+    "fingerprint": [
+      "https://www.wishpond.com/404?campaign=true"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "aftership",
+    "name_patterns": [
+      ".aftership.com"
+    ],
+    "fingerprint": [
+      "Oops.</h2><p class=\"text-muted text-tight\">The page you're looking for doesn't exist."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "aha",
+    "name_patterns": [
+      ".ideas.aha.io"
+    ],
+    "fingerprint": [
+      "There is no portal here"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "tictail",
+    "name_patterns": [
+      ".domains.tictail.com"
+    ],
+    "fingerprint": [
+      "to target URL: <a href=\"https://tictail.com",
+      "Start selling on Tictail."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "brightcove",
+    "name_patterns": [
+      ".bcvp0rtal.com",
+      ".brightcovegallery.com",
+      ".gallery.video"
+    ],
+    "fingerprint": [
+      "<p class=\"bc-gallery-error-code\">Error Code: 404</p>"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "bigcartel",
+    "name_patterns": [
+      ".bigcartel.com"
+    ],
+    "fingerprint": [
+      "<h1>Oops! We could&#8217;t find that page.</h1>"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "campaignmonitor",
+    "name_patterns": [
+      ".createsend.com"
+    ],
+    "fingerprint": [
+      "Double check the URL or <a href=\"mailto:help@createsend.com"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "acquia",
+    "name_patterns": [
+      ".acquia-test.co"
+    ],
+    "fingerprint": [
+      "The site you are looking for could not be found."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "simplebooklet",
+    "name_patterns": [
+      ".simplebooklet.com"
+    ],
+    "fingerprint": [
+      "We can't find this <a href=\"https://simplebooklet.com"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "getresponse",
+    "name_patterns": [
+      ".gr8.com"
+    ],
+    "fingerprint": [
+      "With GetResponse Landing Pages, lead generation has never been easier"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "vend",
+    "name_patterns": [
+      ".vendecommerce.com"
+    ],
+    "fingerprint": [
+      "Looks like you've traveled too far into cyberspace"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "jetbrains",
+    "name_patterns": [
+      ".myjetbrains.com"
+    ],
+    "fingerprint": [
+      "is not a registered InCloud YouTrack."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "azure",
+    "name_patterns": [
+      ".azurewebsites.net",
+      ".azure-api.net",
+      ".azurehdinsight.net",
+      ".azureedge.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "azure_web_app",
+    "name_patterns": [
+      ".azurewebsites.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "azure_data_lake_storage",
+    "name_patterns": [
+      ".azuredatalakestore.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "azure_storage_account",
+    "name_patterns": [
+      ".blob.core.windows.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "azure_trafficmanager",
+    "name_patterns": [
+      ".trafficmanager.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "azure_china",
+    "name_patterns": [
+      ".blob.core.chinacloudapi.cn",
+      ".web.core.chinacloudapi.cn",
+      ".engineering.core.chinacloudapi.cn",
+      ".queue.core.chinacloudapi.cn",
+      ".table.core.chinacloudapi.cn",
+      ".dfs.core.chinacloudapi.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "azure_cloud_service",
+    "name_patterns": [
+      ".cloudapp.net",
+      ".cloudapp.azure.com"
+    ],
+    "fingerprint": [
+      "404 Web Site not found"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "zendesk",
+    "name_patterns": [
+      ".zendesk.com"
+    ],
+    "fingerprint": [
+      "Help Center Closed"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "readme",
+    "name_patterns": [
+      ".readme.io"
+    ],
+    "fingerprint": [
+      "Project doesnt exist"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "apigee",
+    "name_patterns": [
+      "-portal.apigee.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "smugmug",
+    "name_patterns": [
+      ".domains.smugmug.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "worksites.net",
+    "name_patterns": [
+      ".worksites.net"
+    ],
+    "fingerprint": [
+      "Hello! Sorry, but the website you&rsquo;re looking for doesn&rsquo;t exist.</p>\n<a href=\"https://worksites.net/\">Learn more about Worksites.net"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "bcebos",
+    "name_patterns": [
+      ".bcebos.com"
+    ],
+    "fingerprint": [
+      "NoSuchBucket"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "qiniuyun_cdn",
+    "name_patterns": [
+      ".qiniudns.com",
+      ".glb.qiniudns.com"
+    ],
+    "fingerprint": [
+      "No Such Domain",
+      "no such domain"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": true
+  },
+  {
+    "service": "qiniuyun_oss",
+    "name_patterns": [
+      "iovip-z0.qbox.me",
+      "iovip-z1.qbox.me",
+      "iovip-z2.qbox.me",
+      "iovip-na0.qbox.me",
+      "iovip-as0.qbox.me"
+    ],
+    "fingerprint": [
+      "No Such Domain",
+      "no such domain"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": true,
+    "nxdomain": false
+  },
+  {
+    "service": "shangxianle",
+    "name_patterns": [
+      ".g.sxldns.com",
+      ".s.sxldns.com",
+      ".t.sxldns.com"
+    ],
+    "fingerprint": [
+      "The website is currently inaccessible",
+      "页面不存在"
+    ],
+    "http_fingerprint": ["404 Not Found"],
+    "dns_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "aicdn",
+    "name_patterns": [
+      ".s1.aicdn.com",
+      ".s0.aicdn.com",
+      ".b0.aicdn.com",
+      "nx.aicdn.com"
+    ],
+    "fingerprint": [
+      "Unable to connect"
+    ],
+    "dns_fingerprint": ["nx.aicdn.com"],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "aws_elasticbeanstalk",
+    "name_patterns": [
+      ".elasticbeanstalk.com"
+    ],
+    "fingerprint": [
+      "This site can’t be reached"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "baidu_someservice1",
+    "name_patterns": [
+      ".s2.bdy.smp06.cn",
+      ".g2.bdy.smp06.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "baidu_someservice2",
+    "name_patterns": [
+      ".baidu-itm.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "baidu_someservice3",
+    "name_patterns": [
+      ".bdy.pgdns.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "baidu_bos",
+    "name_patterns": [
+      ".bj.bcebos.com",
+      ".hkg.bcebos.com",
+      ".gz.bcebos.com",
+      ".bcebos.com"
+    ],
+    "fingerprint": [
+      "NoSuchBucket",
+      "The specified bucket does not exist"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "baidu_yunjiasu",
+    "name_patterns": [
+      ".cname.yunjiasu-cdn.net"
+    ],
+    "fingerprint": [
+      "网站维护中",
+      "网关错误，连接源站失败"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": true
+  },
+  {
+    "service": "baidu_bch",
+    "name_patterns": [
+      ".bj01.bdysite.com",
+      ".bj.bdysite.com",
+      ".hkg03.bdysite.com"
+    ],
+    "fingerprint": [
+      "403 Forbidden",
+      "对不起，您访问的页面或站点不存在"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "baidu_cdn",
+    "name_patterns": [
+      ".a.bdydns.com",
+      ".g.bdydns.com",
+      ".h.bdydns.com"
+    ],
+    "fingerprint": [
+      "This page isn’t working",
+      "We’re having trouble finding that site."
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "huawei_cloud_storage",
+    "name_patterns": [
+      ".rds.myhuaweicloud.com",
+      ".myhuaweicloud.com"
+    ],
+    "fingerprint": [
+      "NoSuchBucket"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [
+      "Server: OBS"
+    ],
+    "is_vulnerable": true,
+    "cname_access": true,
+    "nxdomain": false
+  },
+  {
+    "service": "huawei_cloud_waf",
+    "name_patterns": [
+      ".huaweicloudwaf.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  }, 
+  {
+    "service": "huawei_cdn",
+    "name_patterns": [
+      ".c.cdnhwc1.com",
+      ".c.cdnhwc6.com",
+      ".c.cdnhwc3.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "netlify",
+    "name_patterns": [
+      ".netlify.app"
+    ],
+    "fingerprint": [
+      "Not Found"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [
+      "Server: Netlify"
+    ],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "tencent_cdn",
+    "name_patterns": [
+      ".dnsv1.com",
+      ".sp.sched.tdnsv8.com",
+      ".tdnsv5.com",
+      ".cdntip.com",
+      ".ovscdns.com"
+    ],
+    "fingerprint": [
+      "Document not found",
+      "No webpage was found for the web address"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "tencent_someservice1",
+    "name_patterns": [
+      ".tegsea.tc.qq.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "tencent_someservice2",
+    "name_patterns": [
+      ".myqcloud.com",
+      ".tlivecdn.com",
+      ".dcloudlive.com",
+      ".gz.apigwtencent.com",
+      ".tegsea.tc.qq.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "psicdn",
+    "name_patterns": [
+      ".psicdn.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "alimama",
+    "name_patterns": [
+      ".wagbridge.alibaba.tanx.com",
+      ".wagbridge.advertisement.tanx.com",
+      ".wagbridge.alibaba-work.tanx.com",
+      ".wagbridge.alsc-prd.tanx.com",
+      ".wagbridge.aserver-ae.tanx.com",
+      ".wagbridge.aserver-heyi-inner.tanx.com",
+      ".wagbridge.aserver-olympic-pre.tanx.com",
+      ".wagbridge.aserver-pre.tanx.com",
+      ".wagbridge.tanx.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "ks-cdn",
+    "name_patterns": [
+      ".ks-cdn.com",
+      ".gslb.ks-cdn.com",
+      ".download.ks-cdn.com",
+      ".hdlvcloud.ks-cdn.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "meicheng",
+    "name_patterns": [
+      ".cndns5.com",
+      ".ezcname.com",
+      ".isitestar.vip",
+      ".websitecname.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "fun_cdn",
+    "name_patterns": [
+      ".cdn.fun"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "tlive_cdn",
+    "name_patterns": [
+      ".tlivecdn.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": true
+  },
+  {
+    "service": "baishan_cdn",
+    "name_patterns": [
+      ".bsclink.cn",
+      ".trpcdn.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "wangsu_cdn",
+    "name_patterns": [
+      ".wswebpic.com",
+      ".wscdns.com",
+      ".cdn20.com",
+      ".wsdvs.com",
+      ".wswebcdn",
+      ".wssec.com",
+      ".wsglb0.com",
+      ".wtxcdn.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "jdcloud_oss",
+    "name_patterns": [
+      ".jdcloud-oss.com",
+      ".s3-ipv6.cn-north-1.jdcloud-oss.com",
+      ".s3.cn-north-1.jdcloud-oss.com"
+    ],
+    "fingerprint": ["NoSuchBucket"],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": true,
+    "nxdomain": false
+  },
+  {
+    "service": "fly.io",
+    "name_patterns": [
+      ".fly.dev"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "webflow",
+    "name_patterns": [
+      ".webflow.io",
+      ".webflow.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "uberflip",
+    "name_patterns": [
+      ".uberflip.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "aliyun_oss",
+    "name_patterns": [
+      ".oss-acc.aliyuncs.com",
+      ".oss-accelerate-overseas.aliyuncs.com",
+      ".oss-accelerate.aliyuncs.com",
+      ".oss-ap-northeast-1.aliyuncs.com",
+      ".oss-ap-south-1.aliyuncs.com",
+      ".oss-ap-southeast-1.aliyuncs.com",
+      ".oss-ap-southeast-2.aliyuncs.com",
+      ".oss-ap-southeast-3.aliyuncs.com",
+      ".oss-ap-southeast-5.aliyuncs.com",
+      ".oss-ap-southeast-6.aliyuncs.com",
+      ".oss-cn-beijing-internal.aliyuncs.com",
+      ".oss-cn-beijing.aliyuncs.com",
+      ".oss-cn-chengdu.aliyuncs.com",
+      ".oss-cn-guangzhou.aliyuncs.com",
+      ".oss-cn-hangzhou.aliyuncs.com",
+      ".oss-cn-heyuan.aliyuncs.com",
+      ".oss-cn-hongkong-internal.aliyuncs.com",
+      ".oss-cn-hongkong.aliyuncs.com",
+      ".oss-cn-huhehaote.aliyuncs.com",
+      ".oss-cn-hzfinance.aliyuncs.com",
+      ".oss-cn-north-2-gov-1.aliyuncs.com",
+      ".oss-cn-qingdao.aliyuncs.com",
+      ".oss-cn-shanghai-finance-1-pub.aliyuncs.com",
+      ".oss-cn-shanghai.aliyuncs.com",
+      ".oss-cn-shenzhen.aliyuncs.com",
+      ".oss-cn-szfinance.aliyuncs.com",
+      ".oss-cn-wulanchabu.aliyuncs.com",
+      ".oss-cn-zhangjiakou.aliyuncs.com",
+      ".oss-enet.aliyuncs.com",
+      ".oss-eu-central-1.aliyuncs.com",
+      ".oss-eu-west-1.aliyuncs.com",
+      ".oss-me-east-1.aliyuncs.com",
+      ".oss-us-east-1.aliyuncs.com",
+      ".oss-us-west-1.aliyuncs.com"
+    ],
+    "fingerprint": ["NoSuchBucket"],
+    "dns_fingerprint": [],
+    "http_fingerprint": ["404 Not Found"],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": true
+  },
+  {
+    "service": "bizcn",
+    "name_patterns": [
+      ".vhs.71e.com"
+    ],
+    "fingerprint": [
+      "Service Unavailable", 
+      "Invalid Hostname"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": ["404 Not Found"],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "anheng_waf",
+    "name_patterns": [
+      ".cmzj.dbappwaf.cn",
+      ".cname.dbappwaf.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "anheng_xuanwu_waf",
+    "name_patterns": [
+      ".htu.cname12.saaswaf.com",
+      ".cname.saaswaf.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "jinke",
+    "name_patterns": [
+      ".gslb.cdn86.net",
+      ".xlsbz.cdn86.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "jingan",
+    "name_patterns": [
+      ".cloudvhost.cn",
+      ".cloudvhost.top"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "kuaikuai",
+    "name_patterns": [
+      ".youxidun.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "laoxuezhuji",
+    "name_patterns": [
+      ".laoxuezhuji.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "35hulian",
+    "name_patterns": [
+      ".35.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "tianhushuju",
+    "name_patterns": [
+      ".idchz.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "xibushuma",
+    "name_patterns": [
+      ".vhostgo.com",
+      ".abc188.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "yundunanquan",
+    "name_patterns": [
+      ".cname.yunduncdn.com",
+      ".yundunwaf1.com",
+      ".yundunwaf2.com",
+      ".yundunwaf3.com",
+      ".yundunwaf4.com",
+      ".yundunwaf5.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "yunmeng",
+    "name_patterns": [
+      ".wezhan.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "zhidaochuangyu",
+    "name_patterns": [
+      ".cname.365cyd.cn",
+      ".cdn.jiashule.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "zhongjingyun",
+    "name_patterns": [
+      ".chuangcdn.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "zhongkangkeji",
+    "name_patterns": [
+      ".whecloud.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "zhongqidongli",
+    "name_patterns": [
+      ".cdn.site.cdn300.cn",
+      ".cdn.img.fmsite.cdn300.cn",
+      ".cdn.fsite.cdn300.cn",        
+      ".cdn.msite.cdn300.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "akamai",
+    "name_patterns": [
+      ".edgekey.net",
+      ".edgesuite.net",
+      ".akamaized.net",
+      ".akamai.net",
+      ".akadns.net",
+      ".akamaiedge.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+
+    "service": "aliyun_alb",
+    "name_patterns": [
+      ".alb.aliyuncs.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "aliyun_unknown",
+    "name_patterns": [
+      ".gds.alibabadns.com",
+      ".wagbridge.aliyun.aliyun.com",
+      ".waf.aliyun.com",
+      ".img-cn-beijing.aliyuncs.com",
+      ".img-cn-hangzhou.aliyuncs.com",
+      ".img-cn-qingdao.aliyuncs.com",
+      ".img-cn-shanghai.aliyuncs.com",
+      ".img-cn-shenzhen.aliyuncs.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "aliyun_cdn",
+    "name_patterns": [
+      ".w.cdngslb.com",
+      ".cdngslb.com",
+      ".kunluncan.com",
+      ".kunlunca.com",
+      ".kunlunno.com",
+      ".kunlunpi.com",
+      ".kunlungr.com",
+      ".kunlunsl.com",
+      ".kunlunea.com",
+      ".kunlunle.com",
+      ".kunlunhuf.com",
+      ".alikunlun.com",
+      ".alikunlun.com",
+      ".kunlunar.com",
+      ".kunlunaq.com",
+      ".kunlunso.com",
+      ".alikunlun.net",
+      ".alikunlun.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "aliyun_rds",
+    "name_patterns": [
+      ".rds.aliyuncs.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "amazon_aws",
+    "name_patterns": [
+      ".compute-1.amazonaws.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "cloudfront",
+    "name_patterns": [
+      ".cloudfront.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false,
+    "note": "random_prefix_label"
+  },
+  {
+    "service": "amazon_global_accelerator",
+    "name_patterns": [
+      ".awsglobalaccelerator.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false,
+    "note": "random_prefix_label"
+  },
+  {
+    "service": "amazon_elb",
+    "name_patterns": [
+      ".elb.us-east-2.amazonaws.com",
+      ".elb.us-east-1.amazonaws.com",
+      ".elb.us-west-1.amazonaws.com",
+      ".elb.us-west-2.amazonaws.com",
+      ".elb.af-south-1.amazonaws.com",
+      ".elb.ap-east-1.amazonaws.com",
+      ".elb.ap-southeast-3.amazonaws.com",
+      ".elb.ap-south-1.amazonaws.com",
+      ".elb.ap-northeast-3.amazonaws.com",
+      ".elb.ap-northeast-2.amazonaws.com",
+      ".elb.ap-southeast-1.amazonaws.com",
+      ".elb.ap-southeast-2.amazonaws.com",
+      ".elb.ap-northeast-1.amazonaws.com",
+      ".elb.ca-central-1.amazonaws.com",
+      ".elb.cn-north-1.amazonaws.com",
+      ".elb.cn-northwest-1.amazonaws.com",
+      ".elb.eu-central-1.amazonaws.com",
+      ".elb.eu-west-1.amazonaws.com",
+      ".elb.eu-west-2.amazonaws.com",
+      ".elb.eu-south-1.amazonaws.com",
+      ".elb.eu-west-3.amazonaws.com",
+      ".elb.eu-north-1.amazonaws.com",
+      ".elb.me-south-1.amazonaws.com",
+      ".elb.sa-east-1.amazonaws.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false,
+    "note": "random_prefix_label"
+  },
+  {
+    "service": "baidu_yjs",
+    "name_patterns": [
+      ".yjs-cdn.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false,
+    "note": "dov(ns,cname)"
+  },
+  {
+    "service": "baidu_hme",
+    "name_patterns": [
+      ".hme.bdysite.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "baidu_aipage",
+    "name_patterns": [
+      ".aipage.bdysite.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "cdn77",
+    "name_patterns": [
+      ".rsc.cdn77.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "google_hosting_service",
+    "name_patterns": [
+      ".ghs.google.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "jdcloud_cdn",
+    "name_patterns": [
+      ".jcloudgslb.com",
+      ".b.galileo.jcloud-cdn.com",
+      ".dy.galileo.jcloud-cdn.com",
+      ".s.galileo.jcloud-cdn.com",
+      ".vod.galileo.jcloud-cdn.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "jdcloud_waf",
+    "name_patterns": [
+      ".jdcloudwaf.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "stackpath_cdn",
+    "name_patterns": [
+      ".hwcdn.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "ucloud",
+    "name_patterns": [
+      ".cdn.ucloud.com.cn",
+      ".hls.ucloud.com.cn",
+      ".publish.ucloud.com.cn",
+      ".rtmp.ucloud.com.cn",
+      ".ucloud.com.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "ksyun_cdn",
+    "name_patterns": [
+      ".ksyuncdn.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "fanke",
+    "name_patterns": [
+      ".faipod.com",
+      ".icoc.cn",
+      ".jzm.fkw.com",
+      ".faidns.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "wix",
+    "name_patterns": [
+      ".wixdns.net"
+    ],
+    "fingerprint": [
+      "Looks Like This Domain Isn't", 
+      "Connected To A Website Yet!",
+      "Error ConnectYourDomain occurred",
+      "Regardless, we recommend you to"
+    ],
+    "dns_fingerprint": [],
+    "http_fingerprint": ["404 Not Found"],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "tilda.cc",
+    "name_patterns": [
+      "185.215.4.67",
+      "185.215.4.73",
+      ".tilda.ws"
+    ],
+    "fingerprint": ["Domain has been assigned"],
+    "http_fingerprint": ["404 Not Found"],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  }
+]
