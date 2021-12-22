@@ -124,7 +124,11 @@ func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 
 	// Only leave the first <cnameLimit> cnames
 	cnameLimit := Min(len(metaList), o.Config.CnameListSize)
-	for i := range metaList[:cnameLimit] {
+	currCnameCount := 0
+	for i := range metaList {
+		if currCnameCount > cnameLimit{
+			break
+		}
 		rdata := strings.TrimRight(metaList[i].Rdata, ";")
 		rdata = strings.TrimRight(rdata, ".")
 		rtype := metaList[i].RRType
@@ -140,6 +144,7 @@ func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 		var curr DnsChain
 
 		if rtype == "CNAME" {
+			currCnameCount += 1
 			curr = getChainsRecursive(rdata, o, domainCache, depth+1)
 		} else if (rtype == "A") || (rtype == "NS") {
 			curr.Name = rdata

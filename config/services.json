@@ -105,7 +105,9 @@
       "ns1.wordpress.com", 
       "ns2.wordpress.com", 
       "ns3.wordpress.com",
-      ".wordpress.com"
+      ".wordpress.com",
+      "192.0.78.24",
+      "192.0.78.25"
     ],
     "fingerprint": [
       "Do you want to register",
@@ -115,7 +117,7 @@
       "site_id mismatch error",
       "doesn't exist"
     ],
-    "dns_fingerprint": ["ns1.wordpress.com", "ns2.wordpress.com", "ns3.wordpress.com"],
+    "dns_fingerprint": [],
     "http_fingerprint": [],
     "nxdomain": false,
     "is_vulnerable": true,

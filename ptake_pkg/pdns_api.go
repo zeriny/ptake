@@ -98,10 +98,10 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 	return subdomains
 }
 
-// Get CNAME records via PDN API.
+// Get DNS records via PDN API.
 // TODO:
 // 1. set parameters by configurations. (done)
-// 2. filter CNAME records by access count, ensuring the records are still alive (done).
+// 2. filter DNS records by access count, ensuring the records are still alive (done).
 func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (chains []PDNSRecord) {
 	// Only get cname chains during the recent 7 days.
 	now := time.Now()

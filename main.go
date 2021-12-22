@@ -63,7 +63,7 @@ func main() {
 		case "subdomain":
 			fmt.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartGetSubdomains(&gc)
-		case "cname":
+		case "chain":
 			fmt.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartGetChains(&gc)
 		case "check":
