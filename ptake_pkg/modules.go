@@ -8,6 +8,7 @@ import (
 	"path"
 	"ptake/config"
 	"sync"
+	"bufio"
 )
 
 func StartGetSubdomains(o *config.GlobalConfig) {
@@ -89,8 +90,8 @@ func StartGetChains(o *config.GlobalConfig) {
 }
 
 func StartChecker(o *config.GlobalConfig) {
-	var chainsList []string
 	var subdomainCache map[string]int
+	chainPath := path.Join(o.OutputPath, "chain.txt")
 
 	_, err := os.Stat(o.OutputPath)
 	if os.IsNotExist(err) {
@@ -99,10 +100,6 @@ func StartChecker(o *config.GlobalConfig) {
 			log.Fatal(err)
 		}
 	}
-
-	// Load CNAME chains to be checked.
-	chainPath := path.Join(o.OutputPath, "chain.txt")
-	chainsList = readFile(chainPath)
 
 	// Load Subdomains that have been checked.
 	cacheFile := path.Join(o.CachePath, "check_cache.txt")
@@ -122,16 +119,30 @@ func StartChecker(o *config.GlobalConfig) {
 		}()
 	}
 
-	// Producer
-	for i := 0; i < len(chainsList); i++ {
+	// Producer: Load CNAME chains to be checked.
+	file, err := os.Open(chainPath)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	scanner.Buffer([]byte{}, bufio.MaxScanTokenSize*10)
+	for scanner.Scan() {
 		var chain DnsChain
-		json.Unmarshal([]byte(chainsList[i]), &chain)
+
+		line := scanner.Text()
+		json.Unmarshal([]byte(line), &chain)
 		_, ok := subdomainCache[chain.Name]
 		if ok {
 			continue
 		}
 		chanStream <- chain
+
 	}
+	if scanner.Err() != nil {
+		log.Fatalln(scanner.Err())
+	}
+
 
 	close(chanStream)
 	wg.Wait()
