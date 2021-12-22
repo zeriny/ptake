@@ -1796,5 +1796,21 @@
     "is_vulnerable": true,
     "cname_access": false,
     "nxdomain": false
+  },
+  {
+    "service": "duba",
+    "name_patterns": [
+      "s.multiscreensite.com"
+    ],
+    "fingerprint": [
+      "Site not found",
+      "This site is not published",
+      "does not have a domain assigned to it",
+      "If you have any questions"
+    ],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
   }
 ]
