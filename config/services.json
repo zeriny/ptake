@@ -1798,7 +1798,7 @@
     "nxdomain": false
   },
   {
-    "service": "duba",
+    "service": "duda",
     "name_patterns": [
       "s.multiscreensite.com"
     ],
@@ -1807,6 +1807,20 @@
       "This site is not published",
       "does not have a domain assigned to it",
       "If you have any questions"
+    ],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "Jimbo",
+    "name_patterns": [
+      "web.jimdosite.com"
+    ],
+    "fingerprint": [
+      "Not Found",
+      "The requested resource was not found on this server"
     ],
     "http_fingerprint": [],
     "is_vulnerable": true,
