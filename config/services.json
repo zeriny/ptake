@@ -88,9 +88,11 @@
   {
     "service": "tumblr",
     "name_patterns": [
-      ".domains.tumblr.com"
+      "66.6.44.4",
+      "domains.tumblr.com"
     ],
     "fingerprint": [
+      "There's nothing here",
       "Whatever you were looking for doesn't currently exist at this address."
     ],
     "dns_fingerprint": [],
@@ -375,21 +377,6 @@
     "fingerprint": [
       "This page is reserved for artistic dogs.",
       "<h1 class=\"headline\"Uh oh. That page doesn't exist.</h1>"
-    ],
-    "dns_fingerprint": [],
-    "http_fingerprint": [],
-    "nxdomain": false,
-    "is_vulnerable": true,
-    "cname_access": false
-  },
-  {
-    "service": "webflow",
-    "name_patterns": [
-      ".proxy.webflow.com",
-      ".proxy-ssl.webflow.com"
-    ],
-    "fingerprint": [
-      "The page you are looking for doesn't exist or has been moved"
     ],
     "dns_fingerprint": [],
     "http_fingerprint": [],
@@ -1184,9 +1171,17 @@
     "service": "webflow",
     "name_patterns": [
       ".webflow.io",
-      ".webflow.com"
+      ".webflow.com",
+      "proxy.webflow.com",
+      "proxy-ssl.webflow.com",
+      "75.2.70.75",
+      "99.83.190.102"
     ],
-    "fingerprint": [],
+    "fingerprint": [
+      "Page not found",
+      "doesn't exist or has been moved",
+      "This site can't provide a secure connection"
+    ],
     "dns_fingerprint": [],
     "http_fingerprint": [],
     "nxdomain": false,
@@ -1821,6 +1816,37 @@
     "fingerprint": [
       "Not Found",
       "The requested resource was not found on this server"
+    ],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "unbounce",
+    "name_patterns": [
+      "unbouncepages.com"
+    ],
+    "fingerprint": [
+      "Not Found",
+      "The requested URL was not found on this server"
+    ],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "wp_engine",
+    "name_patterns": [
+      ".wpengine.com",
+      "34.70.173.137",
+      "35.188.42.192"
+    ],
+    "fingerprint": [
+      "The site you were looking for couldn't be found",
+      "not configured for an account",
+      ""
     ],
     "http_fingerprint": [],
     "is_vulnerable": true,
