@@ -969,9 +969,7 @@
       "Not Found"
     ],
     "dns_fingerprint": [],
-    "http_fingerprint": [
-      "Server: Netlify"
-    ],
+    "http_fingerprint": [],
     "nxdomain": false,
     "is_vulnerable": true,
     "cname_access": false
@@ -1846,6 +1844,22 @@
     "fingerprint": [
       "The site you were looking for couldn't be found",
       "not configured for an account",
+      ""
+    ],
+    "http_fingerprint": [],
+    "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "",
+    "name_patterns": [
+      "162.159.153.4",
+      "162.159.152.4"
+    ],
+    "fingerprint": [
+      "Error 1001",
+      "DNS resolution error",
       ""
     ],
     "http_fingerprint": [],
