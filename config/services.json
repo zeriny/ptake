@@ -185,13 +185,6 @@
       ".s3-fips.us-west-1.amazonaws.com",
       ".s3.af-south-1.amazonaws.com",
       ".s3.amazonaws.com",
-      ".s3.ap-east-1.amazonaws.com",
-      ".s3.ap-northeast-1.amazonaws.com",
-      ".s3.ap-northeast-2.amazonaws.com",
-      ".s3.ap-northeast-3.amazonaws.com",
-      ".s3.ap-south-1.amazonaws.com",
-      ".s3.ap-southeast-1.amazonaws.com",
-      ".s3.ap-southeast-2.amazonaws.com",
       ".s3.ca-central-1.amazonaws.com",
       ".s3.cn-north-1.amazonaws.com.cn",
       ".s3.cn-northwest-1.amazonaws.com.cn",
@@ -249,7 +242,13 @@
   {
     "service": "amazon_s3_accesspoint",
     "name_patterns": [
-      ".s3.ap-southeast-1.amazonaws.com"
+      ".s3.ap-east-1.amazonaws.com",
+      ".s3.ap-northeast-1.amazonaws.com",
+      ".s3.ap-northeast-2.amazonaws.com",
+      ".s3.ap-northeast-3.amazonaws.com",
+      ".s3.ap-south-1.amazonaws.com",
+      ".s3.ap-southeast-1.amazonaws.com",
+      ".s3.ap-southeast-2.amazonaws.com"
     ],
     "fingerprint": [
       "The specified bucket does not exist",
@@ -558,7 +557,6 @@
   {
     "service": "azure",
     "name_patterns": [
-      ".azurewebsites.net",
       ".azure-api.net",
       ".azurehdinsight.net",
       ".azureedge.net"
@@ -709,20 +707,6 @@
     ],
     "fingerprint": [
       "Hello! Sorry, but the website you&rsquo;re looking for doesn&rsquo;t exist.</p>\n<a href=\"https://worksites.net/\">Learn more about Worksites.net"
-    ],
-    "dns_fingerprint": [],
-    "http_fingerprint": [],
-    "nxdomain": false,
-    "is_vulnerable": true,
-    "cname_access": false
-  },
-  {
-    "service": "bcebos",
-    "name_patterns": [
-      ".bcebos.com"
-    ],
-    "fingerprint": [
-      "NoSuchBucket"
     ],
     "dns_fingerprint": [],
     "http_fingerprint": [],
@@ -888,7 +872,18 @@
     "name_patterns": [
       ".bj01.bdysite.com",
       ".bj.bdysite.com",
-      ".hkg03.bdysite.com"
+      ".hkg03.bdysite.com",
+      ".bj01.bdysite.com",
+      ".bj.bdysite.com",
+      ".hkg03.bdysite.com",
+      ".fc.bdysite.com",
+      ".fc01.bdysite.com",
+      ".fr.bdysite.com",
+      ".gz01.bdysite.com",
+      ".hk.bdysite.com",
+      ".hk01.bdysite.com",
+      ".hkg03.bdysite.com",
+      ".bdysite.com"
     ],
     "fingerprint": [
       "403 Forbidden",
@@ -1852,15 +1847,14 @@
     "nxdomain": false
   },
   {
-    "service": "",
+    "service": "medium",
     "name_patterns": [
       "162.159.153.4",
       "162.159.152.4"
     ],
     "fingerprint": [
       "Error 1001",
-      "DNS resolution error",
-      ""
+      "DNS resolution error"
     ],
     "http_fingerprint": [],
     "is_vulnerable": true,
