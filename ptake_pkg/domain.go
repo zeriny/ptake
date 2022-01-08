@@ -3,7 +3,6 @@ package ptake_pkg
 import (
 	"fmt"
 	"github.com/haccer/available"
-	"github.com/miekg/dns"
 	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/publicsuffix"
@@ -13,23 +12,6 @@ import (
 	"strings"
 	"time"
 )
-
-func resolve(domain string) (res []string) {
-	d := new(dns.Msg)
-	d.SetQuestion(domain+".", dns.TypeCNAME)
-	ret, err := dns.Exchange(d, "8.8.8.8:53")
-	if err != nil {
-		return
-	}
-
-	for _, a := range ret.Answer {
-		if t, ok := a.(*dns.CNAME); ok {
-			var cname = t.Target
-			res = append(res, cname)
-		}
-	}
-	return res
-}
 
 // Judge whether a domain has a legal format.
 // TODO: more constraints.
@@ -76,6 +58,9 @@ func domainFilter(subdomains []string) (filteredSubdomains []string) {
 		if isLegal == false {
 			saveCache(fqdn, "illegal_domain.txt")
 			continue
+		}
+		if strings.HasPrefix(fqdn, "*."){
+			fqdn = strings.Replace(fqdn, "*", "randomsub_10236", -1)
 		}
 		filteredSubdomains = append(filteredSubdomains, fqdn)
 	}
