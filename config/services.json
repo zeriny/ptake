@@ -7,13 +7,11 @@
       ".fastly.net"
     ],
     "fingerprint": [
-      "Fastly error: unknown domain",
-      "404 Not Found"
+      "Fastly error: unknown domain"
     ],
     "dns_fingerprint": [],
     "http_fingerprint": [
-      "Server: fastly_test",
-      "Status-Code: 301"
+      "X-Cache: MISS from"
     ],
     "nxdomain": false,
     "is_vulnerable": true,
@@ -37,7 +35,8 @@
     "service": "heroku",
     "name_patterns": [
       ".herokuapp.com",
-      ".herokussl.com"
+      ".herokussl.com",
+      ".herokudns.com"
     ],
     "fingerprint": [
       "herokucdn.com/error-pages/no-such-app.html"
@@ -77,12 +76,11 @@
     ],
     "dns_fingerprint": [],
     "http_fingerprint": [
-      "Server: Pantheon",
       "X-pantheon-fun-extended: Please double-check that you are using the correct url. If so, make sure it matches your dashboard's custom domain settings, and try again in 2 minutes.",
       "X-pantheon-fun-reason: The gods are wise, but do not know of the site which you seek."
     ],
     "nxdomain": false,
-    "is_vulnerable": true,
+    "is_vulnerable": false,
     "cname_access": false
   },
   {
@@ -341,20 +339,6 @@
     "cname_access": false
   },
   {
-    "service": "surge",
-    "name_patterns": [
-      ".surge.sh"
-    ],
-    "fingerprint": [
-      "project not found"
-    ],
-    "dns_fingerprint": [],
-    "http_fingerprint": [],
-    "nxdomain": false,
-    "is_vulnerable": true,
-    "cname_access": false
-  },
-  {
     "service": "bitbucket",
     "name_patterns": [
       ".bitbucket.io"
@@ -557,9 +541,20 @@
   {
     "service": "azure",
     "name_patterns": [
-      ".azure-api.net",
       ".azurehdinsight.net",
       ".azureedge.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "azure_api_management",
+    "name_patterns": [
+      ".azure-api.net"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -569,7 +564,7 @@
     "cname_access": false
   },
   {
-    "service": "azure_web_app",
+    "service": "azure_app_service",
     "name_patterns": [
       ".azurewebsites.net"
     ],
@@ -584,6 +579,18 @@
     "service": "azure_data_lake_storage",
     "name_patterns": [
       ".azuredatalakestore.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "azure_cdn",
+    "name_patterns": [
+      ".azureedge.net"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -659,7 +666,7 @@
     "dns_fingerprint": [],
     "http_fingerprint": [],
     "nxdomain": false,
-    "is_vulnerable": true,
+    "is_vulnerable": false,
     "cname_access": false
   },
   {
@@ -772,7 +779,8 @@
       ".s1.aicdn.com",
       ".s0.aicdn.com",
       ".b0.aicdn.com",
-      "nx.aicdn.com"
+      "nx.aicdn.com",
+      "aicdn.com"
     ],
     "fingerprint": [
       "Unable to connect"
@@ -847,7 +855,7 @@
       "The specified bucket does not exist"
     ],
     "dns_fingerprint": [],
-    "http_fingerprint": [],
+    "http_fingerprint": ["404 Not Found"],
     "nxdomain": false,
     "is_vulnerable": true,
     "cname_access": false
@@ -922,9 +930,7 @@
       "NoSuchBucket"
     ],
     "dns_fingerprint": [],
-    "http_fingerprint": [
-      "Server: OBS"
-    ],
+    "http_fingerprint": [],
     "is_vulnerable": true,
     "cname_access": true,
     "nxdomain": false
@@ -961,7 +967,7 @@
       ".netlify.app"
     ],
     "fingerprint": [
-      "Not Found"
+      "Not Found - Request ID:"
     ],
     "dns_fingerprint": [],
     "http_fingerprint": [],
@@ -980,9 +986,10 @@
     ],
     "fingerprint": [
       "Document not found",
-      "No webpage was found for the web address"
+      "No webpage was found for the web address",
+      "was not found on this server"
     ],
-    "dns_fingerprint": [],
+    "dns_fingerprint": ["cdn.dispatch.spcdntip.com"],
     "http_fingerprint": [],
     "is_vulnerable": true,
     "cname_access": false,
@@ -996,7 +1003,7 @@
     "fingerprint": [],
     "dns_fingerprint": [],
     "http_fingerprint": [],
-    "is_vulnerable": true,
+    "is_vulnerable": false,
     "cname_access": false,
     "nxdomain": false
   },
@@ -1044,7 +1051,7 @@
     "fingerprint": [],
     "dns_fingerprint": [],
     "http_fingerprint": [],
-    "is_vulnerable": true,
+    "is_vulnerable": false,
     "cname_access": false,
     "nxdomain": false
   },
@@ -1059,7 +1066,7 @@
     "fingerprint": [],
     "dns_fingerprint": [],
     "http_fingerprint": [],
-    "is_vulnerable": true,
+    "is_vulnerable": false,
     "cname_access": false,
     "nxdomain": false
   },
@@ -1088,7 +1095,7 @@
     "http_fingerprint": [],
     "is_vulnerable": true,
     "cname_access": false,
-    "nxdomain": false
+    "nxdomain": true
   },
   {
     "service": "tlive_cdn",
@@ -1141,24 +1148,12 @@
       ".s3-ipv6.cn-north-1.jdcloud-oss.com",
       ".s3.cn-north-1.jdcloud-oss.com"
     ],
-    "fingerprint": ["NoSuchBucket"],
+    "fingerprint": ["NoSuchBucket","NoSuchDomain"],
     "dns_fingerprint": [],
     "http_fingerprint": [],
     "is_vulnerable": true,
     "cname_access": true,
     "nxdomain": false
-  },
-  {
-    "service": "fly.io",
-    "name_patterns": [
-      ".fly.dev"
-    ],
-    "fingerprint": [],
-    "dns_fingerprint": [],
-    "http_fingerprint": [],
-    "nxdomain": false,
-    "is_vulnerable": true,
-    "cname_access": false
   },
   {
     "service": "webflow",
@@ -1175,18 +1170,6 @@
       "doesn't exist or has been moved",
       "This site can't provide a secure connection"
     ],
-    "dns_fingerprint": [],
-    "http_fingerprint": [],
-    "nxdomain": false,
-    "is_vulnerable": true,
-    "cname_access": false
-  },
-  {
-    "service": "uberflip",
-    "name_patterns": [
-      ".uberflip.com"
-    ],
-    "fingerprint": [],
     "dns_fingerprint": [],
     "http_fingerprint": [],
     "nxdomain": false,
@@ -1788,7 +1771,9 @@
   {
     "service": "duda",
     "name_patterns": [
-      "s.multiscreensite.com"
+      "s.multiscreensite.com",
+      "35.172.94.1",
+      "100.24.208.97"
     ],
     "fingerprint": [
       "Site not found",
@@ -1838,8 +1823,7 @@
     ],
     "fingerprint": [
       "The site you were looking for couldn't be found",
-      "not configured for an account",
-      ""
+      "not configured for an account"
     ],
     "http_fingerprint": [],
     "is_vulnerable": true,
