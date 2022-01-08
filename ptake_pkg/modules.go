@@ -1,14 +1,16 @@
 package ptake_pkg
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
 	log "github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"path"
 	"ptake/config"
 	"sync"
-	"bufio"
 )
 
 func StartGetSubdomains(o *config.GlobalConfig) {
@@ -125,24 +127,24 @@ func StartChecker(o *config.GlobalConfig) {
 		log.Fatalln(err)
 	}
 	defer file.Close()
-	scanner := bufio.NewScanner(file)
-	scanner.Buffer([]byte{}, bufio.MaxScanTokenSize*10)
-	for scanner.Scan() {
+	reader := bufio.NewReader(file)
+	for {
 		var chain DnsChain
-
-		line := scanner.Text()
-		json.Unmarshal([]byte(line), &chain)
+		lineBytes, err := reader.ReadBytes('\n')
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Println("Error: %s\n", err.Error())
+		}
+		lineBytes = bytes.TrimRight(lineBytes, "\n")
+		json.Unmarshal(lineBytes, &chain)
 		_, ok := subdomainCache[chain.Name]
 		if ok {
 			continue
 		}
 		chanStream <- chain
-
 	}
-	if scanner.Err() != nil {
-		log.Fatalln(scanner.Err())
-	}
-
 
 	close(chanStream)
 	wg.Wait()
