@@ -80,7 +80,7 @@
       "X-pantheon-fun-reason: The gods are wise, but do not know of the site which you seek."
     ],
     "nxdomain": false,
-    "is_vulnerable": false,
+    "is_vulnerable": true,
     "cname_access": false
   },
   {
