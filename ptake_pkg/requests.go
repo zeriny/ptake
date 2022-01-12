@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func get(domain string, timeout int, forceSSL bool) (header string, body []byte) {
+func Get(domain string, timeout int, forceSSL bool) (header string, body []byte) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 

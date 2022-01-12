@@ -96,9 +96,9 @@ func matchServicePattern(domain string, pattern string) (match bool) {
 // checkFingerprints is the interface to check whether web contents contain vulnerable services' fingerprints.
 func checkFingerprints(domain DnsChain, domainStatus DomainStatus, forceSSL bool, timeout int) (newDomainStatus DomainStatus) {
 
-	header, body := get(domain.Name, timeout, false)
+	header, body := Get(domain.Name, timeout, false)
 	if body == nil {
-		header, body = get(domain.Name, timeout, true)
+		header, body = Get(domain.Name, timeout, true)
 	}
 	header = strings.ToLower(header)
 

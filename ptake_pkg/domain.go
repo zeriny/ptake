@@ -205,56 +205,79 @@ func isAvailable(domain string) bool {
 	return flag
 }
 
+func IsAvailable(domain string) bool {
+	// Using an API implemented by golang: https://github.com/haccer/available.
+	// The package has been modified:
+	// 1. fingerprint.go: change the fingerprint of "ca" to "Not Found"
+	// 2. check.go: remove the special condition for "ca" [line79], and line88 should be 'else if'
+	flag := available.Domain(domain)
+	return flag
+}
+
 func getBaseDomain(domain string) (base string) {
 	base, _ = publicsuffix.EffectiveTLDPlusOne(domain)
 	return base
 }
 
-func getRCnameRecuresive(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (rcname CNAME) {
+func getRCnameRecuresive(subdomain string, o *config.GlobalConfig, rcnameCache *cache.Cache, domainList map[string]int, depth int) (rcname CNAME) {
 	// The subdomain has been handled
-	if item, found := domainCache.Get(subdomain); found {
+	if item, found := rcnameCache.Get(subdomain); found {
 		return item.(CNAME)
 	}
 
 	// The max recursive depth.
 	if depth > o.Config.RecursiveDepth {
-		domainCache.Set(subdomain, rcname, cache.NoExpiration)
+		rcnameCache.Set(subdomain, rcname, cache.NoExpiration)
 		return rcname
 	}
 
 	rcname.Domain = subdomain
+	if depth > 1{
+		domainList[subdomain] = 1
+	}
+
 	var cnames []string
 	// Recursively get reversed CNAME records via passive DNS API.
 	cnames = getRCnameFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
 	cnames = domainFilter(cnames)
 
 	// Only leave the first <cnameLimit> cnames
-	cnameLimit := Min(len(cnames), o.Config.CnameListSize)
+	//cnameLimit := Min(len(cnames), o.Config.CnameListSize)
+	cnameLimit := len(cnames)
 	for i := range cnames[:cnameLimit] {
 		if cnames[i] == subdomain {
 			continue
 		}
-		curr := getRCnameRecuresive(cnames[i], o, domainCache, depth+1)
+		curr := getRCnameRecuresive(cnames[i], o, rcnameCache, domainList, depth+1)
 		rcname.Cnames = append(rcname.Cnames, curr)
 	}
 	if o.Verbose {
 		log.Infof("Reverse Look up: %s (depth: %d, cname:%d)", subdomain, depth, len(rcname.Cnames))
 	}
-	domainCache.Set(subdomain, rcname, cache.NoExpiration)
+	rcnameCache.Set(subdomain, rcname, cache.NoExpiration)
 	return rcname
 }
 
 func getRCnames(subdomain string, o *config.GlobalConfig) {
-	domainCache := cache.New(30*time.Second, 10*time.Second)
-	rcname := getRCnameRecuresive(subdomain, o, domainCache, 1)
+	rcnameCache := cache.New(30*time.Second, 10*time.Second)
+	domainList := make(map[string]int)
+	rcname := getRCnameRecuresive(subdomain, o, rcnameCache, domainList, 1)
 
 	// Output results and save caches.
 	rcnamePath := path.Join(o.OutputPath, "vulnerable_rcname.txt")
+	rdomainPath := path.Join(o.OutputPath+"_reverse", "fqdn.txt")
 	cacheFile := path.Join(o.CachePath, "reverse_cache.txt")
 	//log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
 	//log.Infof("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
 	if len(rcname.Cnames) > 0 {
 		saveCnameFile(rcname, rcnamePath)
+	}
+	for fqdn := range domainList {
+		sld := getBaseDomain(fqdn)
+		if sld != "" {
+			currFqdnList := []string{fqdn}
+			saveFqdnFile(sld, currFqdnList, rdomainPath)
+		}
 	}
 	saveCache(rcname.Domain, cacheFile)
 }
