@@ -31,7 +31,7 @@ func main() {
 		"start, and the cache file of the last scan will be totally removed.")
 
 	flag.IntVar(&gc.Threads, "threads", 100, "Number of concurrent go threads.")
-	flag.IntVar(&gc.Timeout, "timeout", 10, "Seconds to wait before connection timeout.")
+	flag.IntVar(&gc.Timeout, "timeout", 2, "Seconds to wait before connection timeout.")
 	flag.IntVar(&gc.Retries, "retry", 3, "Retry the request if it's failed.")
 	flag.IntVar(&gc.GoMaxProcs, "go-processes", 0, "Number of CPUs (GOMAXPROCS)")
 

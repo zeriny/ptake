@@ -12,6 +12,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -190,14 +191,16 @@ func Initialize(o *GlobalConfig) {
 	defaultOutputPath := "./results/"
 
 	// Data Path
-	if o.InputPath == "" {
-		o.InputPath = path.Join(defaultDataPath, o.Dataset)
-		fmt.Printf("[+] Input data path: %s\n", o.InputPath)
-	}
-	_, err := os.Stat(o.InputPath)
-	if os.IsNotExist(err) {
-		fmt.Println(err)
-		os.Exit(1)
+	if strings.Contains(o.Modules, "subdomain"){
+		if o.InputPath == "" {
+			o.InputPath = path.Join(defaultDataPath, o.Dataset)
+			fmt.Printf("[+] Input data path: %s\n", o.InputPath)
+		}
+		_, err := os.Stat(o.InputPath)
+		if os.IsNotExist(err) {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	}
 
 	// Result Path

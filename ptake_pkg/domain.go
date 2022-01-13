@@ -7,6 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/publicsuffix"
 	"net"
+	"os"
 	"path"
 	"ptake/config"
 	"strings"
@@ -187,6 +188,9 @@ func getNS(subdomain string, o *config.GlobalConfig) {
 
 // TODO: check NXDOMAIN
 func isNxdomain(domain string) bool {
+	if domain == ""{
+		return false
+	}
 	if _, err := net.LookupHost(domain); err != nil {
 		if strings.Contains(fmt.Sprintln(err), "no such host") {
 			return true
@@ -265,18 +269,27 @@ func getRCnames(subdomain string, o *config.GlobalConfig) {
 
 	// Output results and save caches.
 	rcnamePath := path.Join(o.OutputPath, "vulnerable_rcname.txt")
-	rdomainPath := path.Join(o.OutputPath+"_reverse", "fqdn.txt")
+	rdomainPath := o.OutputPath+"_reverse"
+	rdomainFile := path.Join(rdomainPath, "fqdn.txt")
 	cacheFile := path.Join(o.CachePath, "reverse_cache.txt")
 	//log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
 	//log.Infof("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
 	if len(rcname.Cnames) > 0 {
 		saveCnameFile(rcname, rcnamePath)
 	}
+	_, err := os.Stat(rdomainPath)
+	if os.IsNotExist(err) {
+		err := os.MkdirAll(rdomainPath, os.ModePerm)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
 	for fqdn := range domainList {
 		sld := getBaseDomain(fqdn)
 		if sld != "" {
 			currFqdnList := []string{fqdn}
-			saveFqdnFile(sld, currFqdnList, rdomainPath)
+			saveFqdnFile(sld, currFqdnList, rdomainFile)
 		}
 	}
 	saveCache(rcname.Domain, cacheFile)
