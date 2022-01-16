@@ -44,8 +44,11 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 	domain2Count := make(map[string]int)
 
 	now := time.Now()
+	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain, endtime)
+	starttime := now.Add(sd*7).Format("20060102150405") // only fetch 7-day data
+
+	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain, starttime, endtime)
 
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
@@ -103,11 +106,11 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 // 1. set parameters by configurations. (done)
 // 2. filter DNS records by access count, ensuring the records are still alive (done).
 func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (chains []PDNSRecord) {
-	// Only get cname chains during the recent 7 days.
+	// Only get cname chains appeared on the detection day.
 	now := time.Now()
 	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*7).Format("20060102150405")
+	starttime := now.Add(sd*1).Format("20060102150405") // only fetch one-day data
 
 	url := fmt.Sprintf(conf.PdnsChainUrl, domain, starttime, endtime)
 	tokenHeader := make(map[string]string)

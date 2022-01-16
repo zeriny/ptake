@@ -2,6 +2,7 @@ package ptake_pkg
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
 	"path"
@@ -11,76 +12,89 @@ import (
 )
 
 // web content fingerprint to determine an abandoned service
-func matchHttpBodyFp(body []byte, fp []byte) (match bool){
+func matchHttpBodyFp(body []byte, fp []byte) (match bool, matchedFp string){
 	match = false
 	if bytes.Contains(body, fp) {
 		// TODO: change to regexp
 		match = true
+		matchedFp = string(fp)
 	}
-	return match
+	return match, matchedFp
 }
 
 // http header fingerprint to determine an abandoned service
-func matchHttpHeaderFp(header string, fp string) (match bool){
+func matchHttpHeaderFp(header string, fp string) (match bool, matchedFp string){
 	if strings.Contains(header, strings.ToLower(fp)){
-		return true
+		return true, strings.ToLower(fp)
 	}
-	return false
+	return false, matchedFp
 }
 
 // dns fingerprint (CNAME, NS) to determine an abandoned service
-func matchDnsFp(cnames []DnsChain, fp string)(match bool) {
-	for i := range cnames{
-		if  cnames[i].Name == fp {
-			return true
-		}
+func matchDnsFp(cname DnsChain, fp string)(match bool, matchedFp string) {
+	if  cname.Name == fp {
+		return true, fp
 	}
-	return false
+	return false, matchedFp
 }
 
 // non-exist CNAME to determine an abandoned service
-func matchNxEndpoint(chains []DnsChain) (match bool) {
-	for i := range chains {
-		if isIP(chains[i].Name) {
-			continue
-		}
-		if isNxdomain(chains[i].Name) {
-			return true
-		}
+func matchNxEndpoint(chain DnsChain) (match bool, nxdomain string) {
+	if isIP(chain.Name) {
+		return false, nxdomain
 	}
-	return false
+	if isNxdomain(chain.Name) {
+		return true, chain.Name
+	}
+	return false, nxdomain
 }
 
 // all types of fingerprints to determine an abandoned service
-func matchAllFps(body []byte, header string, chains []DnsChain, matchedServices []config.Service) (match bool){
+func matchAllFps(body []byte, header string, chain DnsChain, matchedServices []config.Service) (match bool, matchedFp string){
 	for i := range matchedServices {
 		currService := matchedServices[i]
 
 		// domain should point to a nxdomain
 		if currService.NXDomain {
-			match = matchNxEndpoint(chains)
-			if match {break}
+			var nxdomain string
+			match, nxdomain = matchNxEndpoint(chain)
+			if match {
+				matchedFp = "[NXDOMAIN] " + nxdomain
+				break
+			}
 		}
 
 		// HTTP response body
 		for j := range currService.Fingerprint {
-			match = matchHttpBodyFp(body, []byte(currService.Fingerprint[j]))
-			if match {break}
+			var bodyFp string
+			match, bodyFp = matchHttpBodyFp(body, []byte(currService.Fingerprint[j]))
+			if match {
+				matchedFp = "[Body] " + bodyFp
+				break
+			}
 		}
 
 		//// HTTP response header
 		for j := range currService.HttpFingerprint {
-			match = matchHttpHeaderFp(header, currService.HttpFingerprint[j])
-			if match {break}
+			var headerFp string
+			match, headerFp = matchHttpHeaderFp(header, currService.HttpFingerprint[j])
+			if match {
+				matchedFp = "[Header] " + headerFp
+				break
+			}
 		}
 
 		// match specific CNAME/NS
 		for j := range currService.DnsFingerprint{
-			match = matchDnsFp(chains, currService.DnsFingerprint[j])
-			if match {break}
+			var dnsFp string
+			match, dnsFp = matchDnsFp(chain, currService.DnsFingerprint[j])
+			if match {
+				matchedFp = "[DNS] " + dnsFp
+				break
+			}
 		}
 	}
-	return match
+	return match, matchedFp
 }
 
 // TODO: change to regexp
@@ -104,21 +118,32 @@ func checkFingerprints(domain DnsChain, domainStatus DomainStatus, forceSSL bool
 
 	matchedServices := domainStatus.MatchedServices
 	match := false
+	matchedFp := ""
 
 	// Check fingerprints to see if the given domain is matched to an abandoned service.
-	match = matchAllFps(body, header, domain.Chains, matchedServices)
-	if match == false && len(domainStatus.VulCnames)>0 {
-		for i := range domainStatus.VulCnames {
-			cnameStatus := domainStatus.VulCnames[i]
-			match = matchAllFps(body, header, domain.Chains, cnameStatus.MatchedServices)
-			if match {
-				break
+	match, matchedFp = matchAllFps(body, header, domain, matchedServices)
+	if match == false && len(domainStatus.Cnames)>0 {
+		for i := range domainStatus.Cnames {
+			cnameStatus := domainStatus.Cnames[i]
+			cnameFQDN := domainStatus.Domain
+
+			chains := domain.Chains
+			if chains != nil {
+				for j := range chains {
+					if chains[j].Name == cnameFQDN{
+						match, matchedFp = matchAllFps(body, header, chains[j], cnameStatus.MatchedServices)
+						if match {
+							break
+						}
+					}
+				}
 			}
 		}
 	}
 	if match {
 		domainStatus.VulnerableLevel = 4
 		domainStatus.Type = "AbandonedService"
+		domainStatus.MatchedFp = matchedFp
 	}
 	return domainStatus
 }
@@ -129,11 +154,12 @@ func checkFingerprints(domain DnsChain, domainStatus DomainStatus, forceSSL bool
 func checkServicePattern(domain string, allServices []config.Service) (matchedServices []config.Service, matchVulnerableService bool) {
 	matchVulnerableService = false
 	for i := range allServices {
-		namePatterns := allServices[i].NamePatterns
-		isVulnerable := allServices[i].IsVulnerable
+		currService := allServices[i]
+		namePatterns := currService.NamePatterns
+		isVulnerable := currService.IsVulnerable
 		for j := range namePatterns {
 			if matchServicePattern(domain, namePatterns[j]) {
-				matchedServices = append(matchedServices, allServices[i])
+				matchedServices = append(matchedServices, currService)
 				if isVulnerable {
 					matchVulnerableService = true
 				}
@@ -168,10 +194,12 @@ func recursive(domain DnsChain, o *config.GlobalConfig, domainCache *cache.Cache
 	// Check whether subdomain matches any domain patterns of vulnerable services.
 	matchedServices, matchVulService := checkServicePattern(domain.Name, services)
 	if matchedServices != nil {
+		// Match Services
 		domainStatus.MatchedServices = matchedServices
 		domainStatus.Type = "MatchNotVulServicePattern"
 		domainStatus.VulnerableLevel = 2
 		if matchVulService {
+			// Match Vulnerable Services
 			domainStatus.Type = "MatchVulServicePattern"
 			domainStatus.VulnerableLevel = 3
 		}
@@ -188,9 +216,9 @@ func recursive(domain DnsChain, o *config.GlobalConfig, domainCache *cache.Cache
 		if chains != nil {
 			for i := range chains {
 				cnameStatus := recursive(chains[i], o, domainCache)
-				if cnameStatus.VulnerableLevel == 0 {
-					continue
-				}
+				//if cnameStatus.VulnerableLevel == 0 {
+				//	continue
+				//}
 				// If the current domain is innocent but some cnames are vulnerable,
 				// the vulnerable Type of the current domain is set with CnameVulnerable,
 				// and the details of vulnerable CNAMEs are appended to VulCnames.
@@ -198,8 +226,8 @@ func recursive(domain DnsChain, o *config.GlobalConfig, domainCache *cache.Cache
 					// set the highest threat level in the DNS chain.
 					domainStatus.VulnerableLevel = cnameStatus.VulnerableLevel
 					domainStatus.Type = cnameStatus.Type
-					domainStatus.VulCnames = append(domainStatus.VulCnames, cnameStatus)
 				}
+				domainStatus.Cnames = append(domainStatus.Cnames, cnameStatus)
 			}
 		}
 	}
@@ -219,6 +247,7 @@ func checkService(domain DnsChain, cacheFile string, o *config.GlobalConfig) {
 		domainStatus = checkFingerprints(domain, domainStatus, o.Ssl, o.Timeout)
 	}
 
+	// Add check time to the outermost domain name.
 	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")
 
 	if o.OutputPath != "" {
@@ -233,6 +262,8 @@ func checkService(domain DnsChain, cacheFile string, o *config.GlobalConfig) {
 			saveDomainStatus(domainStatus, normalPath)
 			log.Infof("Check results: (%s) %s", domain.Name, domainStatus.Type)
 		}
+	} else {
+		fmt.Println(domainStatus.Domain, domainStatus.Type)
 	}
 
 	saveCache(domain.Name, cacheFile)

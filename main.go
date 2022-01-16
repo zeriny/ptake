@@ -11,13 +11,6 @@ import (
 )
 
 func main() {
-	//GOPATH := os.Getenv("GOPATH")
-	//Project := "/src/ptake/"
-	//configFile := "services.json"
-	//defaultConfig := GOPATH + Project + configFile
-	//defaultConfig := path.Join(GOPATH, Project, configFile)
-
-	//o := ptake_pkg.Options{}
 	var gc config.GlobalConfig
 
 	flag.StringVar(&gc.Modules, "module", "", "Selected modules (splitted by ,).")

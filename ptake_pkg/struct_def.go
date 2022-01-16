@@ -13,8 +13,8 @@ type DomainStatus struct {
 	VulnerableLevel int    `json:"vulnerable_level"` // The highest threat level of Domain
 	Type string `json:"type"`
 	MatchedServices []config.Service `json:"matched_services"` // Set if Type is MatchServicePattern
-	//MatchServiceFps []string `json:"match_service_fps"` // Set if Vulnerable is 2
-	VulCnames []DomainStatus `json:"vul_cnames"` // Set when Type is CnameVulnerable
+	MatchedFp string `json:"matched_fp"`
+	Cnames []DomainStatus `json:"cnames"`
 	CheckTime string `json:"check_time"` // Checking Time
 }
 

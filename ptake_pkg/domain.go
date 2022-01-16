@@ -188,7 +188,7 @@ func getNS(subdomain string, o *config.GlobalConfig) {
 
 // TODO: check NXDOMAIN
 func isNxdomain(domain string) bool {
-	if domain == ""{
+	if domain == "" {
 		return false
 	}
 	if _, err := net.LookupHost(domain); err != nil {
