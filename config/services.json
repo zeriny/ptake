@@ -10,9 +10,7 @@
       "Fastly error: unknown domain"
     ],
     "dns_fingerprint": [],
-    "http_fingerprint": [
-      "X-Cache: MISS from"
-    ],
+    "http_fingerprint": [],
     "nxdomain": false,
     "is_vulnerable": true,
     "cname_access": false
@@ -785,7 +783,7 @@
     "fingerprint": [
       "Unable to connect"
     ],
-    "dns_fingerprint": ["nx.aicdn.com"],
+    "dns_fingerprint": ["nx.aicdn.com", "127.0.0.1"],
     "http_fingerprint": [],
     "nxdomain": false,
     "is_vulnerable": true,
