@@ -110,7 +110,7 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 	now := time.Now()
 	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*1).Format("20060102150405") // only fetch one-day data
+	starttime := now.Add(sd*3).Format("20060102150405") // only fetch one-day data
 
 	url := fmt.Sprintf(conf.PdnsChainUrl, domain, starttime, endtime)
 	tokenHeader := make(map[string]string)
@@ -125,7 +125,7 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 			break
 		}
 		log.Warningf("[PDNS API - CNAME] No response! Retrying %s...", domain)
-		time.Sleep(1 * time.Second)
+		time.Sleep(2 * time.Second)
 	}
 
 	if respBody.StatusCode != 200 {
