@@ -8,3 +8,6 @@ case/*
 temp/*
 scripts/*
 .DS_Store
+checkReverseDomain.go
+test.go
+config/conf.yaml
