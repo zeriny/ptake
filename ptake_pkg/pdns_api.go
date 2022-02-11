@@ -106,11 +106,11 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 // 1. set parameters by configurations. (done)
 // 2. filter DNS records by access count, ensuring the records are still alive (done).
 func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (chains []PDNSRecord) {
-	// Only get cname chains appeared on the detection day.
+	// Only get cname chains appeared 3 days before the detection day.
 	now := time.Now()
 	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*3).Format("20060102150405") // only fetch one-day data
+	starttime := now.Add(sd*3).Format("20060102150405") // only fetch 3-day data
 
 	url := fmt.Sprintf(conf.PdnsChainUrl, domain, starttime, endtime)
 	tokenHeader := make(map[string]string)
