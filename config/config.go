@@ -26,6 +26,8 @@ type Conf struct {
 	PdnsNsUrl           string `yaml:"pdns_ns_url"`
 	PdnsReverseCnameUrl string `yaml:"pdns_reverse_cname_url"`
 	PdnsApiToken        string `yaml:"pdns_api_token"`
+	SubDuration			time.Duration    `yaml:"sub_duration"`
+	ChainDuration		time.Duration    `yaml:"chain_duration"`
 }
 
 type GlobalConfig struct {

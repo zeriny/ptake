@@ -46,9 +46,10 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 	now := time.Now()
 	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*7).Format("20060102150405") // only fetch 7-day data
+	starttime := now.Add(sd*conf.SubDuration).Format("20060102150405")
 
 	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain, starttime, endtime)
+	fmt.Println(url)
 
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
@@ -110,7 +111,7 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 	now := time.Now()
 	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*3).Format("20060102150405") // only fetch 3-day data
+	starttime := now.Add(sd*conf.ChainDuration).Format("20060102150405")
 
 	url := fmt.Sprintf(conf.PdnsChainUrl, domain, starttime, endtime)
 	tokenHeader := make(map[string]string)

@@ -11,3 +11,4 @@ scripts/*
 checkReverseDomain.go
 test.go
 config/conf.yaml
+.idea

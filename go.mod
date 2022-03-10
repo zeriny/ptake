@@ -7,6 +7,7 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	gopkg.in/yaml.v2 v2.4.0
 	ptake/ptake_pkg v0.0.0
+	ptake/config v0.0.0
 )
 
 require (
@@ -27,6 +28,8 @@ require (
 )
 
 replace ptake/ptake_pkg => ./ptake_pkg
+
+replace ptake/config => ./config
 
 replace github.com/haccer/available => ../github.com/haccer/available
 
