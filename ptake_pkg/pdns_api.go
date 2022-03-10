@@ -49,8 +49,6 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 	starttime := now.Add(sd*conf.SubDuration).Format("20060102150405")
 
 	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain, starttime, endtime)
-	fmt.Println(url)
-
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
 
