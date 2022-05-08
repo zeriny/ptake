@@ -90,6 +90,7 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 
 	// Filter by access count
 	for fqdn, count := range domain2Count {
+		//saveCache(fmt.Sprintf("%s;%s;%d", domain, fqdn, count), fmt.Sprintf("/root/ptake/results/evaluation/parameters/tranco10k_fqdn_tav.txt", ))
 		if count >= conf.SubAccess {
 			subdomains = append(subdomains, fqdn)
 		}
@@ -134,6 +135,8 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 	data := respBody.Data
 	var metaList []PDNSRecord
 	for i := range data {
+		//saveCache(fmt.Sprintf("%d", data[i].Count), "/root/ptake/results/evaluation/parameters/tranco10k_chain_dav.txt")
+
 		if data[i].Count > conf.CnameAccess {
 			metaList = append(metaList, data[i])
 		}

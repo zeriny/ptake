@@ -133,6 +133,7 @@ func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 			currCnameCount += 1
 			curr = getChainsRecursive(rdata, o, domainCache, depth+1)
 		} else if (rtype == "A") || (rtype == "NS") {
+			currCnameCount += 1
 			curr.Name = rdata
 			curr.Chains = nil
 		}
