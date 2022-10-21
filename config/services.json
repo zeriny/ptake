@@ -2,9 +2,7 @@
   {
     "service": "fastly",
     "name_patterns": [
-      ".map.fastly.net",
-      ".global.prod.fastly.net",
-      ".fastly.net"
+      ".global.prod.fastly.net"
     ],
     "fingerprint": [
       "Fastly error: unknown domain"
@@ -60,7 +58,7 @@
       "409 Conflict"
     ],
     "nxdomain": false,
-    "is_vulnerable": true,
+    "is_vulnerable": false,
     "cname_access": false
   },
   {
