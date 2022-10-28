@@ -17,13 +17,7 @@ func StartGetSubdomains(o *config.GlobalConfig) {
 	var sldList []string
 	var sldCache map[string]int
 
-	// Load SLDs to be handled.
-	sldFile := path.Join(o.InputPath, "sld.txt")
-	sldList = readFile(sldFile)
-
-	cacheFile := path.Join(o.CachePath, "sld_cache.txt")
-	sldCache = readCache(cacheFile) // Load SLDs that have been handled.
-
+	sldList, sldCache = getSldList(o)
 	chanStream := make(chan string, o.Threads*10)
 	wg := new(sync.WaitGroup)
 
@@ -56,13 +50,7 @@ func StartGetChains(o *config.GlobalConfig) {
 	var subdomainList []string
 	subdomainCache := make(map[string]int)
 
-	// Load FQDNs to be handled.
-	fqdnPath := path.Join(o.OutputPath, "fqdn.txt")
-	subdomainList = readFqdnFile(fqdnPath, 1)
-
-	cacheFile := path.Join(o.CachePath, "fqdn_cache.txt")
-	subdomainCache = readCache(cacheFile) // Load FQDNs that have been handled.
-
+	subdomainList, subdomainCache = getFqdnList(o)
 	chanStream := make(chan string, o.Threads*10)
 	wg := new(sync.WaitGroup)
 
@@ -93,20 +81,7 @@ func StartGetChains(o *config.GlobalConfig) {
 
 func StartChecker(o *config.GlobalConfig) {
 	var subdomainCache map[string]int
-	chainPath := path.Join(o.OutputPath, "chain.txt")
-
-	_, err := os.Stat(o.OutputPath)
-	if os.IsNotExist(err) {
-		err := os.MkdirAll(o.OutputPath, os.ModePerm)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-
-	// Load Subdomains that have been checked.
-	cacheFile := path.Join(o.CachePath, "check_cache.txt")
-	subdomainCache = readCache(cacheFile)
-
+	subdomainCache = getCheckerCache(o)
 	chanStream := make(chan DnsChain, o.Threads*10)
 	wg := new(sync.WaitGroup)
 
@@ -115,15 +90,17 @@ func StartChecker(o *config.GlobalConfig) {
 		wg.Add(1)
 		go func() {
 			for chain := range chanStream {
-				checkService(chain, cacheFile, o)
+				checkService(chain, o)
 			}
 			wg.Done()
 		}()
 	}
 
-	// Producer: Load CNAME chains to be checked.
+	// Producer: Load CNAME chains to be checked from file.
+	chainPath := path.Join(o.OutputDir, "chain.txt")
 	file, err := os.Open(chainPath)
 	if err != nil {
+		log.Println("There are no DNS chains obtained for the tested FQDNs.")
 		log.Fatalln(err)
 	}
 	defer file.Close()
@@ -156,13 +133,7 @@ func StartGetReverseCnames(o *config.GlobalConfig) {
 	var fqdnList []string
 	domainCache := make(map[string]int)
 
-	// Load domain names to be handled.
-	fqdnPath := path.Join(o.OutputPath, "vulnerable_fqdn.txt")
-	fqdnList = readFile(fqdnPath)
-
-	cacheFile := path.Join(o.CachePath, "reverse_cache.txt")
-	domainCache = readCache(cacheFile) // Load domain names that have been handled.
-
+	fqdnList, domainCache = getVulFqdnList(o)
 	chanStream := make(chan string, o.Threads*10)
 	wg := new(sync.WaitGroup)
 

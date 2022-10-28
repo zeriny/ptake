@@ -78,12 +78,10 @@ func getSubdomains(sld string, o *config.GlobalConfig) {
 	//filteredSubdomains :=removeDuplicates(subdomains)
 
 	// Output results and save caches.
-	fqdnFile := path.Join(o.OutputPath, "fqdn.txt")
+	fqdnFile := path.Join(o.OutputDir, "fqdn.txt")
 	cacheFile := path.Join(o.CachePath, "sld_cache.txt")
 
 	if o.Verbose {
-		//fmt.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
-		//log.Printf("Get subdomains: %s (%d)\n", sld, len(filteredSubdomains))
 		log.Infof("Get subdomains: %s (%d)", sld, len(filteredSubdomains))
 	}
 	saveFqdnFile(sld, filteredSubdomains, fqdnFile)
@@ -160,7 +158,7 @@ func getChains(subdomain string, o *config.GlobalConfig) {
 	chain := getChainsRecursive(subdomain, o, domainCache, 1)
 
 	// Output results and save caches.
-	chainPath := path.Join(o.OutputPath, "chain.txt")
+	chainPath := path.Join(o.OutputDir, "chain.txt")
 	cacheFile := path.Join(o.CachePath, "fqdn_cache.txt")
 
 	if len(chain.Chains) > 0 {
@@ -172,7 +170,6 @@ func getChains(subdomain string, o *config.GlobalConfig) {
 func getNS(subdomain string, o *config.GlobalConfig) {
 	isLegal := isLegalDomain(subdomain)
 	if isLegal == false {
-		//log.Printf("[-] '%s' is not in legal format.\n", subdomain)
 		log.Warningf("[-] '%s' is not in legal format.", subdomain)
 		return
 	}
@@ -181,7 +178,7 @@ func getNS(subdomain string, o *config.GlobalConfig) {
 	ns := getNsFromPDNS(baseDomain, o.Timeout, o.Retries, o.Config)
 
 	// Output results and save caches.
-	nsPath := path.Join(o.OutputPath, "ns.txt")
+	nsPath := path.Join(o.OutputDir, "ns.txt")
 	if len(ns.NameServers) > 0 {
 		saveNsFile(ns, nsPath)
 	}
@@ -269,12 +266,11 @@ func getRCnames(subdomain string, o *config.GlobalConfig) {
 	rcname := getRCnameRecuresive(subdomain, o, rcnameCache, domainList, 1)
 
 	// Output results and save caches.
-	rcnamePath := path.Join(o.OutputPath, "vulnerable_rcname.txt")
-	rdomainPath := o.OutputPath+"_reverse"
+	rcnamePath := path.Join(o.OutputDir, "vulnerable_rcname.txt")
+	rdomainPath := o.OutputDir+"_reverse"
 	rdomainFile := path.Join(rdomainPath, "fqdn.txt")
 	cacheFile := path.Join(o.CachePath, "reverse_cache.txt")
-	//log.Printf("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
-	//log.Infof("Get cnames: %s (%d)", subdomain, len(cname.Cnames))
+
 	if len(rcname.Cnames) > 0 {
 		saveCnameFile(rcname, rcnamePath)
 	}

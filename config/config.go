@@ -32,8 +32,9 @@ type Conf struct {
 
 type GlobalConfig struct {
 	Dataset        string
-	InputPath      string
-	OutputPath     string
+	SldFilePath      string
+	FqdnFilePath      string
+	OutputDir     string
 	ScanDate	   string
 	CheckAvailable bool
 	CheckFull      bool
@@ -192,13 +193,13 @@ func Initialize(o *GlobalConfig) {
 	defaultDataPath := "./data/"
 	defaultOutputPath := "./results/"
 
-	// Data Path
+	// SLD Path
 	if strings.Contains(o.Modules, "subdomain"){
-		if o.InputPath == "" {
-			o.InputPath = path.Join(defaultDataPath, o.Dataset)
-			fmt.Printf("[+] Input data path: %s\n", o.InputPath)
+		if o.SldFilePath == "" {
+			o.SldFilePath = path.Join(defaultDataPath, o.Dataset, "sld.txt")
+			fmt.Printf("[+] Input data path (SLD list): %s\n", o.SldFilePath)
 		}
-		_, err := os.Stat(o.InputPath)
+		_, err := os.Stat(o.SldFilePath)
 		if os.IsNotExist(err) {
 			fmt.Println(err)
 			os.Exit(1)
@@ -206,24 +207,38 @@ func Initialize(o *GlobalConfig) {
 	}
 
 	// Result Path
-	if o.OutputPath == "" {
+	if o.OutputDir == "" {
 		date := time.Now().Format("20060102")
 		if o.ScanDate != "20001212" {
 			date = o.ScanDate
 		}
-		o.OutputPath = path.Join(defaultOutputPath, date, o.Dataset)
-		fmt.Printf("[+] Output results path: %s\n", o.OutputPath)
+		o.OutputDir = path.Join(defaultOutputPath, date, o.Dataset)
+		fmt.Printf("[+] Output results path: %s\n", o.OutputDir)
+	}
+	//Create an output directory if it doesn't exist.
+	_, err := os.Stat(o.OutputDir)
+	if os.IsNotExist(err) {
+		err := os.MkdirAll(o.OutputDir, os.ModePerm)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	//FQDN Path
+	if o.FqdnFilePath == "" {
+		o.FqdnFilePath = path.Join(o.OutputDir, "fqdn.txt")
+		fmt.Printf("[+] Subdomain (fqdn) path: %s\n", o.FqdnFilePath)
 	}
 
 	// Cache Path
-	o.CachePath = path.Join(o.OutputPath, "cache")
+	o.CachePath = path.Join(o.OutputDir, "cache")
 	err1 := os.MkdirAll(o.CachePath, os.ModePerm)
 	if err1 != nil {
 		fmt.Println(err1)
 		os.Exit(1)
 	}
 
-	logPath := path.Join(o.OutputPath, "ptake.log")
+	logPath := path.Join(o.OutputDir, "ptake.log")
 	if o.Fresh {
 		fmt.Println("[!] A fresh scan will be start. It's going to remove cache files...")
 		dir, _ := ioutil.ReadDir(o.CachePath)

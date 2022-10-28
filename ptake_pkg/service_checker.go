@@ -236,7 +236,7 @@ func recursive(domain DnsChain, o *config.GlobalConfig, domainCache *cache.Cache
 }
 
 // This function is the interface to check whether a subdomain can be taken over via vulnerable services.
-func checkService(domain DnsChain, cacheFile string, o *config.GlobalConfig) {
+func checkService(domain DnsChain, o *config.GlobalConfig) {
 	log.Infof("Check: %s", domain.Name)
 	domainCache := cache.New(30*time.Second, 10*time.Second)
 	domainStatus := recursive(domain, o, domainCache)
@@ -250,15 +250,15 @@ func checkService(domain DnsChain, cacheFile string, o *config.GlobalConfig) {
 	// Add check time to the outermost domain name.
 	domainStatus.CheckTime = time.Now().Format("2006-01-02 15:04:05")
 
-	if o.OutputPath != "" {
+	if o.OutputDir != "" {
 		if domainStatus.VulnerableLevel > 0 {
-			vulnerablePath := path.Join(o.OutputPath, "vulnerable.txt")
+			vulnerablePath := path.Join(o.OutputDir, "vulnerable.txt")
 			saveDomainStatus(domainStatus, vulnerablePath)
 			getNS(domain.Name, o) // Get the current name servers of vulnerable domain names
 			log.Infof("Check results: (%s) %s", domain.Name, domainStatus.Type)
 		} else if o.Verbose {
 			domainStatus.Type = "NotVulnerable"
-			normalPath := path.Join(o.OutputPath, "normal.txt")
+			normalPath := path.Join(o.OutputDir, "normal.txt")
 			saveDomainStatus(domainStatus, normalPath)
 			log.Infof("Check results: (%s) %s", domain.Name, domainStatus.Type)
 		}
@@ -266,5 +266,6 @@ func checkService(domain DnsChain, cacheFile string, o *config.GlobalConfig) {
 		fmt.Println(domainStatus.Domain, domainStatus.Type)
 	}
 
+	cacheFile := path.Join(o.CachePath, "check_cache.txt")
 	saveCache(domain.Name, cacheFile)
 }

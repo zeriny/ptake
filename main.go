@@ -15,8 +15,9 @@ func main() {
 
 	flag.StringVar(&gc.Modules, "module", "", "Selected modules (splitted by ,).")
 	flag.StringVar(&gc.Dataset, "dataset", "", "Dataset name.")
-	flag.StringVar(&gc.InputPath, "data-path", "", "Path to Dataset.")
-	flag.StringVar(&gc.OutputPath, "result-path", "", "Output results (json object) to a .txt file (Default: ./results/<dataset>/).")
+	flag.StringVar(&gc.SldFilePath, "sld-file", "", "Path to SLD file.")
+	flag.StringVar(&gc.FqdnFilePath, "fqdn-file", "", "Path to Subdomain (fqdn) file.")
+	flag.StringVar(&gc.OutputDir, "output-dir", "", "Directory to save results (Default: ./results/<dataset>/).")
 	flag.StringVar(&gc.ScanDate, "date", "20001212", "Date string of scanning.")
 	flag.BoolVar(&gc.CheckAvailable, "check-status", false, "Check whether CNAMEs are available (can be registered).")
 	flag.BoolVar(&gc.CheckFull, "check-full", false, "Check full DNS chains no matter whether any cname is vulnerable.")
@@ -66,7 +67,7 @@ func main() {
 			fmt.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartGetReverseCnames(&gc)
 		default:
-			fmt.Println("[-] Please select modules (-module 'subdomain,cname,check').")
+			fmt.Println("[-] Please select modules (-module 'subdomain,chain,check').")
 		}
 	}
 	log.Infoln("Scan Over!")
