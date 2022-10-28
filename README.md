@@ -7,7 +7,7 @@ Usage of /Users/evelyn/Documents/code/gopath/bin/go_build_main_go:
   -check-full
         Check full DNS chains no matter whether any cname is vulnerable.
   -check-status
-        Check whether CNAMEs are available (can be registered).
+        Check whether CNAMEs are available (expired).
   -data-path string
         Path to sld.txt (e.g., dataset/sld.txt).
   -dataset string
