@@ -18,13 +18,14 @@ type DomainStatus struct {
 	CheckTime string `json:"check_time"` // Checking Time
 }
 
-type PDNSResponse struct {
+type FlintRRsetResponse struct {
 	StatusCode int          `json:"code"`
 	Status     string       `json:"status"`
-	Data       []PDNSRecord `json:"data,omitempty"`
+	Data       []FlintRRsetRecord `json:"data,omitempty"`
+	LastKey		string		`json:"lastkey,omitempty"`
 }
 
-type PDNSRecord struct {
+type FlintRRsetRecord struct {
 	Count  int    `json:"count"`
 	RRName string `json:"rrname"`
 	RRType string `json:"rrtype"`
@@ -32,6 +33,20 @@ type PDNSRecord struct {
 	TimeFirst int64 `json:"time_first"`
 	TimeLast int64 `json:"time_last"`
 }
+
+type DtreeSubdomainResponse struct {
+	StatusCode int          `json:"code"`
+	Status     string       `json:"status"`
+	Data       []DtreeSubdomainRecord `json:"data,omitempty"`
+	LastKey		string		`json:"lastKey,omitempty"`
+}
+
+type DtreeSubdomainRecord struct {
+	Domain string `json:"domain"`
+	TimeLast string `json:"lastSeen"`
+	NoError int8 `json:"noError"`
+}
+
 
 type CNAME struct {
 	Domain string  `json:"domain"`
@@ -44,7 +59,7 @@ type DnsChain struct {
 }
 type NSType struct {
 	Domain string `json:"domain"`
-	NameServers []PDNSRecord `json:"name_servers"`
+	NameServers []FlintRRsetRecord `json:"name_servers"`
 }
 
 type Results struct {

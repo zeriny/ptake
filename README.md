@@ -1,19 +1,19 @@
 ## Usage
 
 ```
-Usage of /Users/evelyn/Documents/code/gopath/bin/go_build_main_go:
+Usage of /var/folders/18/xmpy0xyd0wj4315wvln978240000gn/T/go-build3413329628/b001/exe/main:
   -c string
         Path to conf.yaml. (default "./config/conf.yaml")
   -check-full
         Check full DNS chains no matter whether any cname is vulnerable.
   -check-status
-        Check whether CNAMEs are available (expired).
-  -data-path string
-        Path to sld.txt (e.g., dataset/sld.txt).
+        Check whether CNAMEs are available (can be registered).
   -dataset string
         Dataset name.
   -date string
         Date string of scanning. (default "20001212")
+  -fqdn-file string
+        Path to Subdomain (fqdn) file.
   -fresh
         Start a fresh scan. If the flag set, a new scan will be start, and the cache file of the last scan will be totally removed.
   -go-processes int
@@ -21,13 +21,15 @@ Usage of /Users/evelyn/Documents/code/gopath/bin/go_build_main_go:
   -log string
         Path to a log file.
   -module string
-        Selected modules (splitted by ',' e.g., 'subdomain,chain,check').
-  -result-path string
-        Output results (json object) to a .txt file (Default: ./results/<dataset>/).
+        Selected modules (splitted by ,).
+  -output-dir string
+        Directory to save results (Default: ./results/<dataset>/).
   -retry int
         Retry the request if it's failed. (default 3)
   -service string
         Path to services.json file. (default "./config/services.json")
+  -sld-file string
+        Path to SLD file.
   -ssl
         Force HTTPS connections (May increase accuracy (Default: http://).
   -threads int
@@ -71,16 +73,23 @@ If there is no need for getting subdomain names (`subdomain` module), please put
 config/conf.yaml
 
 ```yaml
-sub_access: 10
+#sub_access: 10
+sub_access: 1
 cname_access: 200
 cname_list_size: 10
 recursive_depth: 5
 
-pdns_subdomain_url: "https://api.secrank.cn/flint/rrset/*.%s?mode=6&start=%s&end=%s&limit=10000"
-pdns_chain_url: "https://api.secrank.cn/flint/rrset/%s?start=%s&end=%s&rtype=-1&limit=1000"
+sub_duration: 3
+chain_duration: 3
+
+sub_max_fetch_count: 10 
+
+#pdns_subdomain_url: "https://api.secrank.cn/flint/rrset/*.%s?mode=6&start=%s&end=%s&limit=10000"
+pdns_subdomain_url: "https://api.secrank.cn/dtree/%s?start=%s&end=%s&limit=100"
+pdns_chain_url: "https://api.secrank.cn/flint/rrset/%s?start=%s&end=%s&rtype=-1&limit=10"
 pdns_reverse_cname_url: "https://api.secrank.cn/flint/rdata/%s?start=%s&end=%s&rtype=-1"
 pdns_ns_url: "https://api.secrank.cn/flint/rrset/%s?start=20210101000000&end=%s&rtype=2&limit=10"
-pdns_api_token: "replace with a real token"
+pdns_api_token: "1bf55ed07a5c8ae****************"
 ```
 
 

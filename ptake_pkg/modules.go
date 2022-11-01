@@ -26,7 +26,9 @@ func StartGetSubdomains(o *config.GlobalConfig) {
 		wg.Add(1)
 		go func() {
 			for sld := range chanStream {
-				getSubdomains(sld, o)
+				if sld != ""{
+					getSubdomains(sld, o)
+				}
 			}
 			wg.Done()
 		}()

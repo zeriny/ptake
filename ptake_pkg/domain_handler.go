@@ -101,7 +101,7 @@ func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 	}
 
 	chain.Name = subdomain
-	var metaList []PDNSRecord
+	var metaList []FlintRRsetRecord
 	// Recursively get CNAME records via passive DNS API.
 	metaList = getChainsFromPDNS(subdomain, o.Timeout, o.Retries, o.Config)
 	//cnames = domainFilter(cnames)

@@ -28,6 +28,7 @@ type Conf struct {
 	PdnsApiToken        string `yaml:"pdns_api_token"`
 	SubDuration			time.Duration    `yaml:"sub_duration"`
 	ChainDuration		time.Duration    `yaml:"chain_duration"`
+	MaxFetchCount	int		`yaml:"max_fetch_count"`
 }
 
 type GlobalConfig struct {
