@@ -41,39 +41,11 @@ Usage of /var/folders/18/xmpy0xyd0wj4315wvln978240000gn/T/go-build3413329628/b00
 ```
 
 
-
-#### Example
-
-Get subdomain names of the given SLD list:
-
-```shell
-$ go run main.go --module="subdomain" -v --data-path="./data/alexa1k/sld.txt" --result-path="./results/alexa1k/" --threads=100 --retry=1 --timeout=100 -check-full -check-status
-```
-
-Get DNS resolution chains via passive DNS API:
-
-```shell
-$ go run main.go --module="chain" --result-path="./results/alexa1k/" -v --threads=100 --retry=1 -check-full -check-status
-```
-
-Check domain status:
-
-```shell
-$ go run main.go --module="check" --result-path="./results/alexa1k/" -v --threads=100 --retry=1 --timeout=3 -check-full -check-status
-```
-
-
-
-If there is no need for getting subdomain names (`subdomain` module), please put the FQDN list in a file named fqdn.txt (`./results/alexa1k/fqdn.txt`). 
-
-
-
 ## Configuration
 
 config/conf.yaml
 
 ```yaml
-#sub_access: 10
 sub_access: 1
 cname_access: 200
 cname_list_size: 10
@@ -82,10 +54,8 @@ recursive_depth: 5
 sub_duration: 3
 chain_duration: 3
 
-sub_max_fetch_count: 10 
-
-#pdns_subdomain_url: "https://api.secrank.cn/flint/rrset/*.%s?mode=6&start=%s&end=%s&limit=10000"
-pdns_subdomain_url: "https://api.secrank.cn/dtree/%s?start=%s&end=%s&limit=100"
+max_fetch_count: 50 
+pdns_subdomain_url: "https://api.secrank.cn/dtree/%s"
 pdns_chain_url: "https://api.secrank.cn/flint/rrset/%s?start=%s&end=%s&rtype=-1&limit=10"
 pdns_reverse_cname_url: "https://api.secrank.cn/flint/rdata/%s?start=%s&end=%s&rtype=-1"
 pdns_ns_url: "https://api.secrank.cn/flint/rrset/%s?start=20210101000000&end=%s&rtype=2&limit=10"
@@ -98,3 +68,28 @@ pdns_api_token: "1bf55ed07a5c8ae****************"
 ```
 $ env GOOS=linux GOARCH=amd64 go build -o ./bin/ptake_amd64 main.go
 ```
+
+#### Example
+
+Get subdomain names of the given SLD list:
+
+```shell
+$ ./bin/ptake_amd64 --module="subdomain" -v --sld-file="./data/alexa1k/sld.txt" --output-dir="./results/alexa1k/" --threads=100 --retry=1 --timeout=100 -check-full -check-status
+```
+
+Get DNS resolution chains via passive DNS API:
+
+```shell
+$ ./bin/ptake_amd64 --module="chain" --fqdn-file="./results/alexa1k/fqdn.txt" --output-dir="./results/alexa1k/" -v --threads=100 --retry=1 -check-full -check-status
+```
+
+Check domain status:
+
+```shell
+$ ./bin/ptake_amd64 --module="check" --output-dir="./results/alexa1k/" -v --threads=100 --retry=1 --timeout=3 -check-full -check-status
+```
+
+
+
+If there is no need for getting subdomain names (`subdomain` module), please put the FQDN list in a file named fqdn.txt (`./results/alexa1k/fqdn.txt`). 
+
