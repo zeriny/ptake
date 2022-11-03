@@ -25,16 +25,16 @@ func getFlintResponse(url string, timeout int, addHeaders map[string]string) (re
 
 	resp := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseResponse(resp)
-
 	client := &fasthttp.Client{TLSConfig: &tls.Config{InsecureSkipVerify: true}}
 	client.DoTimeout(req, resp, time.Duration(timeout)*time.Second)
 	b := resp.Body()
-	jsonErr := json.Unmarshal(b, &respBody)
-	if jsonErr != nil {
-		log.Errorf("[PDNS API - getSubdomain] %s: %s", url, jsonErr)
-	}
 	if b == nil {
 		return respBody, true
+	} else {
+		jsonErr := json.Unmarshal(b, &respBody)
+		if jsonErr != nil {
+			log.Errorf("[PDNS Flint API] %s: %s", url, jsonErr)
+		}
 	}
 	return respBody, false
 }
@@ -57,28 +57,26 @@ func getDtreeResponse(url string, timeout int, addHeaders map[string]string) (re
 	client := &fasthttp.Client{TLSConfig: &tls.Config{InsecureSkipVerify: true}}
 	client.DoTimeout(req, resp, time.Duration(timeout)*time.Second)
 	b := resp.Body()
-	jsonErr := json.Unmarshal(b, &respBody)
-	if jsonErr != nil {
-		log.Errorf("[PDNS API - subdomain] %s: %s", jsonErr, url)
-	}
 
 	if b == nil {
 		return respBody, true
+	} else {
+		jsonErr := json.Unmarshal(b, &respBody)
+		if jsonErr != nil {
+			log.Errorf("[PDNS Dtree API] %s: %s", jsonErr, url)
+		}
 	}
 	return respBody, false
 }
 
 func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.Conf) (subdomains []string) {
-	domain2Count := make(map[string]int)
-
-
 	lastkey := ""
 	fetchCount := 0
-
+	domain2Count := make(map[string]int)
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
-	//url := fmt.Sprintf(c, domain, starttime, endtime)
 	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain)
+
 	// Iteratively fetch data from PDNS pages.
 	for {
 		var respBody DtreeSubdomainResponse
@@ -120,7 +118,7 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 			}
 		}
 
-		log.Printf("%s, %d", domain, fetchCount)
+		//log.Printf("%s, %d", domain, fetchCount)
 		// Stop iterative data fetch if no data is left or the fetchCount reaches the max number.
 		if lastkey == "" || fetchCount >= conf.MaxFetchCount {
 			break
@@ -164,7 +162,7 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 
 		currUrl := url
 		if lastkey != "" {
-			currUrl = url+"&lastkey="+lastkey
+			currUrl = url+fmt.Sprintf(`&lastkey='%s'`, lastkey)
 		}
 
 		for i := 1; i <= retries; i++ {
@@ -192,6 +190,7 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 		for i := range metaList {
 			chains = append(chains, metaList[i])
 		}
+		//log.Printf("%s, %d", domain, fetchCount)
 
 		if lastkey == "" || fetchCount >= conf.MaxFetchCount {
 			break
@@ -263,7 +262,7 @@ func getRCnameFromPDNS(domain string, timeout int, retries int, conf config.Conf
 		var retryFlag bool
 		currUrl := url
 		if lastkey != "" {
-			currUrl = url+"&lastkey="+lastkey
+			currUrl = url+fmt.Sprintf(`&lastkey='%s'`, lastkey)
 		}
 		for i := 1; i <= retries; i++ {
 			respBody, retryFlag = getFlintResponse(currUrl, timeout, tokenHeader)

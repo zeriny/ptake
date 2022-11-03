@@ -55,19 +55,19 @@ func main() {
 	for i := range modules {
 		switch modules[i] {
 		case "subdomain":
-			fmt.Printf("[+] Start module: %s\n", modules[i])
+			log.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartGetSubdomains(&gc)
 		case "chain":
-			fmt.Printf("[+] Start module: %s\n", modules[i])
+			log.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartGetChains(&gc)
 		case "check":
-			fmt.Printf("[+] Start module: %s\n", modules[i])
+			log.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartChecker(&gc)
 		case "rcname":
-			fmt.Printf("[+] Start module: %s\n", modules[i])
+			log.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartGetReverseCnames(&gc)
 		default:
-			fmt.Println("[-] Please select modules (-module 'subdomain,chain,check').")
+			log.Println("[-] Please select modules (-module 'subdomain,chain,check').")
 		}
 	}
 	log.Infoln("Scan Over!")

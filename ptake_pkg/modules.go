@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 	"ptake/config"
+	"strings"
 	"sync"
 )
 
@@ -49,10 +50,53 @@ func StartGetSubdomains(o *config.GlobalConfig) {
 }
 
 func StartGetChains(o *config.GlobalConfig) {
+	chanStream := make(chan string, o.Threads*10)
+	wg := new(sync.WaitGroup)
+
+	// Consumer
+	for i := 0; i < o.Threads; i++ {
+		wg.Add(1)
+		go func() {
+			for subdomain := range chanStream {
+				getChains(subdomain, o)
+			}
+			wg.Done()
+		}()
+	}
+
+	// Producer
+	file, err := os.Open(o.FqdnFilePath)
+	if err != nil {
+		log.Fatalln(err)
+		log.Println("There are no FQDNs obtained for the tested SLDs.")
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.Contains(line, ",") {
+			subdomain := strings.Split(line, ",")[1]
+			chanStream <- subdomain
+		} else {
+			chanStream <- line
+		}
+	}
+	if scanner.Err() != nil {
+		log.Fatalln(err)
+	}
+
+	close(chanStream)
+	wg.Wait()
+	fmt.Println("[+] Get chains over!")
+}
+
+
+func StartGetChains_bak(o *config.GlobalConfig) {
 	var subdomainList []string
 	subdomainCache := make(map[string]int)
 
 	subdomainList, subdomainCache = getFqdnList(o)
+	log.Infof("Read %d FQDNs", len(subdomainList))
 	chanStream := make(chan string, o.Threads*10)
 	wg := new(sync.WaitGroup)
 
