@@ -11,12 +11,12 @@ import (
 	"time"
 )
 
-func getPDNSResponse(url string, timeout int, addHeaders map[string]string) (body []byte, retry bool) {
+func getFlintResponse(url string, timeout int, addHeaders map[string]string) (respBody FlintRRsetResponse, retry bool) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 
 	req.SetRequestURI(url)
-	req.Header.Add("Connection", "close")
+	//req.Header.Add("Connection", "close")
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36")
 	for header := range addHeaders {
 		req.Header.Add(header, addHeaders[header])
@@ -29,41 +29,68 @@ func getPDNSResponse(url string, timeout int, addHeaders map[string]string) (bod
 	client := &fasthttp.Client{TLSConfig: &tls.Config{InsecureSkipVerify: true}}
 	client.DoTimeout(req, resp, time.Duration(timeout)*time.Second)
 	b := resp.Body()
-	if b == nil {
-		return b, true
+	jsonErr := json.Unmarshal(b, &respBody)
+	if jsonErr != nil {
+		log.Errorf("[PDNS API - getSubdomain] %s: %s", url, jsonErr)
 	}
-	return b, false
+	if b == nil {
+		return respBody, true
+	}
+	return respBody, false
+}
+
+func getDtreeResponse(url string, timeout int, addHeaders map[string]string) (respBody DtreeSubdomainResponse, retry bool) {
+	req := fasthttp.AcquireRequest()
+	defer fasthttp.ReleaseRequest(req)
+
+	req.SetRequestURI(url)
+	//req.Header.Add("Connection", "close")
+	req.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36")
+	for header := range addHeaders {
+		req.Header.Add(header, addHeaders[header])
+	}
+	req.Header.SetMethod("GET")
+
+	resp := fasthttp.AcquireResponse()
+	defer fasthttp.ReleaseResponse(resp)
+
+	client := &fasthttp.Client{TLSConfig: &tls.Config{InsecureSkipVerify: true}}
+	client.DoTimeout(req, resp, time.Duration(timeout)*time.Second)
+	b := resp.Body()
+	jsonErr := json.Unmarshal(b, &respBody)
+	if jsonErr != nil {
+		log.Errorf("[PDNS API - subdomain] %s: %s", jsonErr, url)
+	}
+
+	if b == nil {
+		return respBody, true
+	}
+	return respBody, false
 }
 
 func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.Conf) (subdomains []string) {
 	domain2Count := make(map[string]int)
 
-	now := time.Now()
-	sd, _ := time.ParseDuration("-24h")
-	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*conf.SubDuration).Format("20060102150405")
+
 	lastkey := ""
 	fetchCount := 0
 
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
-	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain, starttime, endtime)
-
+	//url := fmt.Sprintf(c, domain, starttime, endtime)
+	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain)
 	// Iteratively fetch data from PDNS pages.
 	for {
 		var respBody DtreeSubdomainResponse
+		var retryFlag bool
 
 		currUrl := url
 		if lastkey != "" {
-			currUrl = url+"&lastkey="+lastkey
+			currUrl = url+fmt.Sprintf(`?lastkey='%s'`, lastkey)
 		}
 		for i := 1; i <= retries; i++ {
-			respData, retryFlag := getPDNSResponse(currUrl, timeout, tokenHeader)
+			respBody, retryFlag = getDtreeResponse(currUrl, timeout, tokenHeader)
 			if retryFlag == false {
-				jsonErr := json.Unmarshal(respData, &respBody)
-				if jsonErr != nil {
-					log.Errorf("[PDNS API - subdomain] %s: %s", jsonErr, currUrl)
-				}
 				break
 			}
 			log.Warningf("[PDNS API - subdomain] No response! Retrying %s...", domain)
@@ -93,6 +120,7 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 			}
 		}
 
+		log.Printf("%s, %d", domain, fetchCount)
 		// Stop iterative data fetch if no data is left or the fetchCount reaches the max number.
 		if lastkey == "" || fetchCount >= conf.MaxFetchCount {
 			break
@@ -132,18 +160,16 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 	// Iteratively fetch data from PDNS pages.
 	for {
 		var respBody FlintRRsetResponse
+		var retryFlag bool
+
 		currUrl := url
 		if lastkey != "" {
 			currUrl = url+"&lastkey="+lastkey
 		}
 
 		for i := 1; i <= retries; i++ {
-			respData, retryFlag := getPDNSResponse(currUrl, timeout, tokenHeader)
+			respBody, retryFlag = getFlintResponse(currUrl, timeout, tokenHeader)
 			if retryFlag == false {
-				jsonErr := json.Unmarshal(respData, &respBody)
-				if jsonErr != nil {
-					log.Errorf("[PDNS API - getSubdomain] %s: %s", currUrl, jsonErr)
-				}
 				break
 			}
 			log.Warningf("[PDNS API - CNAME] No response! Retrying %s...", domain)
@@ -189,14 +215,11 @@ func getNsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (n
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
 
 	var respBody FlintRRsetResponse
+	var retryFlag bool
 
 	for i := 1; i <= retries; i++ {
-		respData, retryFlag := getPDNSResponse(url, timeout, tokenHeader)
+		respBody, retryFlag = getFlintResponse(url, timeout, tokenHeader)
 		if retryFlag == false {
-			jsonErr := json.Unmarshal(respData, &respBody)
-			if jsonErr != nil {
-				log.Errorf("[PDNS API - getSubdomain] %s: %s", url, jsonErr)
-			}
 			break
 		}
 		log.Warningf("[PDNS API - NS] No response! Retrying %s...", domain)
@@ -237,17 +260,14 @@ func getRCnameFromPDNS(domain string, timeout int, retries int, conf config.Conf
 	// Iteratively fetch data from PDNS pages.
 	for {
 		var respBody FlintRRsetResponse
+		var retryFlag bool
 		currUrl := url
 		if lastkey != "" {
 			currUrl = url+"&lastkey="+lastkey
 		}
 		for i := 1; i <= retries; i++ {
-			respData, retryFlag := getPDNSResponse(currUrl, timeout, tokenHeader)
+			respBody, retryFlag = getFlintResponse(currUrl, timeout, tokenHeader)
 			if retryFlag == false {
-				jsonErr := json.Unmarshal(respData, &respBody)
-				if jsonErr != nil {
-					log.Errorf("[PDNS API - getSubdomain] %s: %s", currUrl, jsonErr)
-				}
 				break
 			}
 			log.Warningf("[PDNS API - RCNAME] No response! Retrying %s...", domain)
