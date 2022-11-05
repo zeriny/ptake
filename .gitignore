@@ -12,3 +12,4 @@ checkReverseDomain.go
 test.go
 config/conf.yaml
 .idea
+illegal_domain.txt
