@@ -125,7 +125,7 @@ func checkFingerprints(domain DnsChain, domainStatus DomainStatus, forceSSL bool
 	if match == false && len(domainStatus.Cnames)>0 {
 		for i := range domainStatus.Cnames {
 			cnameStatus := domainStatus.Cnames[i]
-			cnameFQDN := domainStatus.Domain
+			cnameFQDN := cnameStatus.Domain
 
 			chains := domain.Chains
 			if chains != nil {
