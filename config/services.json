@@ -904,7 +904,8 @@
     "name_patterns": [
       ".a.bdydns.com",
       ".g.bdydns.com",
-      ".h.bdydns.com"
+      ".h.bdydns.com",
+      ".jomodns.com"
     ],
     "fingerprint": [
       "This page isn’t working",
@@ -960,7 +961,8 @@
   {
     "service": "netlify",
     "name_patterns": [
-      ".netlify.app"
+      ".netlify.app",
+      ".netlifyglobalcdn.com"
     ],
     "fingerprint": [
       "Not Found - Request ID:"
@@ -1630,7 +1632,8 @@
   {
     "service": "cdn77",
     "name_patterns": [
-      ".rsc.cdn77.com"
+      ".rsc.cdn77.com",
+      ".cdn77.org"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1642,7 +1645,8 @@
   {
     "service": "google_hosting_service",
     "name_patterns": [
-      ".ghs.google.com"
+      ".ghs.google.com",
+      ".googlehosted.com"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1682,7 +1686,8 @@
   {
     "service": "stackpath_cdn",
     "name_patterns": [
-      ".hwcdn.net"
+      ".hwcdn.net",
+      ".stackpathcdn.com"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1838,6 +1843,75 @@
     ],
     "http_fingerprint": [],
     "is_vulnerable": true,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "bunny_cdn",
+    "name_patterns": [
+      ".b-cdn.net"
+    ],
+    "fingerprint": [ ],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "edgecast",
+    "name_patterns": [
+      ".omicroncdn.net",
+      ".edgecastcdn.net"
+    ],
+    "fingerprint": [ ],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "Imperva",
+    "name_patterns": [
+      ".impervadns.net",
+      ".incapdns.net"
+    ],
+    "fingerprint": [ ],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "keycdn",
+    "name_patterns": [
+      ".kxcdn.com"
+    ],
+    "fingerprint": [ ],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "limelight",
+    "name_patterns": [
+      ".llnwi.net"
+    ],
+    "fingerprint": [ ],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
+    "cname_access": false,
+    "nxdomain": false
+  },
+  {
+    "service": "vercel",
+    "name_patterns": [
+      ".vercel-dns.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "is_vulnerable": false,
     "cname_access": false,
     "nxdomain": false
   }

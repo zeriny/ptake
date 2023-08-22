@@ -1,7 +1,7 @@
 ## Usage
 
 ```
-Usage of /var/folders/18/xmpy0xyd0wj4315wvln978240000gn/T/go-build3413329628/b001/exe/main:
+Usage:
   -c string
         Path to conf.yaml. (default "./config/conf.yaml")
   -check-full
@@ -67,6 +67,7 @@ pdns_api_token: "1bf55ed07a5c8ae****************"
 ## Compile
 ```
 $ env GOOS=linux GOARCH=amd64 go build -o ./bin/ptake_amd64 main.go
+$ env GOOS=linux GOARCH=arm64 go build -o ./bin/ptake_arm64 main.go
 ```
 
 #### Example
