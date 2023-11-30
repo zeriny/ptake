@@ -537,7 +537,6 @@
     "service": "azure",
     "name_patterns": [
       ".azurehdinsight.net",
-      ".azureedge.net"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -583,7 +582,7 @@
     "cname_access": false
   },
   {
-    "service": "azure_cdn",
+    "service": "azure_cdn_classical",
     "name_patterns": [
       ".azureedge.net"
     ],
@@ -591,6 +590,18 @@
     "dns_fingerprint": [],
     "http_fingerprint": [],
     "nxdomain": true,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "azure_frontdoor",
+    "name_patterns": [
+      ".azurefd.net"
+    ],
+    "fingerprint": ["Oops! We weren't able to find your Azure Front Door Service configuration."],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
     "is_vulnerable": true,
     "cname_access": false
   },
@@ -1849,11 +1860,17 @@
   {
     "service": "bunny_cdn",
     "name_patterns": [
-      ".b-cdn.net"
+      ".b-cdn.net",
+      ".bunnycdn.com",
+      ".b-cdn.com",
+      ".bunny.net",
+      "ns1.bunnydns.com"
     ],
-    "fingerprint": [ ],
+    "fingerprint": ["Domain suspended or not configured",
+      "If you are the administrator and believe this is an error on our side, please check your BunnyCDN account configuration or contact customer support"
+    ],
     "http_fingerprint": [],
-    "is_vulnerable": false,
+    "is_vulnerable": true,
     "cname_access": false,
     "nxdomain": false
   },
@@ -1914,5 +1931,25 @@
     "is_vulnerable": false,
     "cname_access": false,
     "nxdomain": false
+  },
+  {
+    "service": "CDNetworks",
+    "name_patterns": [
+      ".qtlgslb.com",
+      ".ecp.qtlcdn.com",
+      ".gccdn.net",
+      ".cdnetworks.net",
+      ".cdngc.net",
+      ".panthercdn.com",
+      ".gccdn.cn",
+      "ns1.cdnetdns.net",
+      "ns2.cdnetdns.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": ["dns1.cdn20.org."],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
   }
 ]
