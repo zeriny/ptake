@@ -1135,7 +1135,7 @@
     "fingerprint": [],
     "dns_fingerprint": [],
     "http_fingerprint": [],
-    "is_vulnerable": false,
+    "is_vulnerable": true,
     "cname_access": false,
     "nxdomain": false
   },
