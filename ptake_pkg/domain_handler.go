@@ -2,16 +2,17 @@ package ptake_pkg
 
 import (
 	"fmt"
-	"github.com/haccer/available"
-	"github.com/patrickmn/go-cache"
-	log "github.com/sirupsen/logrus"
-	"golang.org/x/net/publicsuffix"
 	"net"
 	"os"
 	"path"
 	"ptake/config"
 	"strings"
 	"time"
+
+	"github.com/haccer/available"
+	"github.com/patrickmn/go-cache"
+	log "github.com/sirupsen/logrus"
+	"golang.org/x/net/publicsuffix"
 )
 
 // Judge whether a domain has a legal format.
@@ -21,7 +22,7 @@ func isLegalDomain(domain string) (flag bool) {
 		return false
 	}
 
-	illegalCharacters := "~!@#$%^&()+/<>,[]\\/"
+	illegalCharacters := "~!?@#$%^&()+/<>,[]\\/"
 	for i := range illegalCharacters {
 		ch := string(illegalCharacters[i])
 		if strings.Contains(domain, ch) {
@@ -42,7 +43,7 @@ func isIP(s string) (flag bool) {
 	address := net.ParseIP(s)
 	if address == nil {
 		flag = false
-	}else {
+	} else {
 		flag = true
 	}
 	return flag
@@ -60,7 +61,7 @@ func domainFilter(subdomains []string) (filteredSubdomains []string) {
 			saveCache(fqdn, "illegal_domain.txt")
 			continue
 		}
-		if strings.HasPrefix(fqdn, "*."){
+		if strings.HasPrefix(fqdn, "*.") {
 			fqdn = strings.Replace(fqdn, "*", "randomsub_10236", -1)
 		}
 		filteredSubdomains = append(filteredSubdomains, fqdn)
@@ -110,7 +111,7 @@ func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 	cnameLimit := Min(len(metaList), o.Config.CnameListSize)
 	currCnameCount := 0
 	for i := range metaList {
-		if currCnameCount > cnameLimit{
+		if currCnameCount > cnameLimit {
 			break
 		}
 		rdata := strings.TrimRight(metaList[i].Rdata, ";")
@@ -234,7 +235,7 @@ func getRCnameRecuresive(subdomain string, o *config.GlobalConfig, rcnameCache *
 	}
 
 	rcname.Domain = subdomain
-	if depth > 1{
+	if depth > 1 {
 		domainList[subdomain] = 1
 	}
 
@@ -267,7 +268,7 @@ func getRCnames(subdomain string, o *config.GlobalConfig) {
 
 	// Output results and save caches.
 	rcnamePath := path.Join(o.OutputDir, "vulnerable_rcname.txt")
-	rdomainPath := o.OutputDir+"_reverse"
+	rdomainPath := o.OutputDir + "_reverse"
 	rdomainFile := path.Join(rdomainPath, "fqdn.txt")
 	cacheFile := path.Join(o.CachePath, "reverse_cache.txt")
 
