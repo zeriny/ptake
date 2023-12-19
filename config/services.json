@@ -2,7 +2,8 @@
   {
     "service": "fastly",
     "name_patterns": [
-      ".global.prod.fastly.net"
+      ".global.prod.fastly.net",
+      ".fastlylb.net"
     ],
     "fingerprint": [
       "Fastly error: unknown domain"
@@ -536,7 +537,7 @@
   {
     "service": "azure",
     "name_patterns": [
-      ".azurehdinsight.net",
+      ".azurehdinsight.net"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -956,11 +957,13 @@
     "nxdomain": false
   }, 
   {
-    "service": "huawei_cdn",
+    "service": "huawei_cloud_cdn",
     "name_patterns": [
       ".c.cdnhwc1.com",
       ".c.cdnhwc6.com",
-      ".c.cdnhwc3.com"
+      ".c.cdnhwc3.com",
+      ".c.cdnhwc2.com",
+      ".cdnhwcxcy07.com"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -973,7 +976,8 @@
     "service": "netlify",
     "name_patterns": [
       ".netlify.app",
-      ".netlifyglobalcdn.com"
+      ".netlifyglobalcdn.com",
+      ".netlify.com"
     ],
     "fingerprint": [
       "Not Found - Request ID:"
@@ -985,11 +989,13 @@
     "cname_access": false
   },
   {
-    "service": "tencent_cdn",
+    "service": "tencent_cloud_cdn",
     "name_patterns": [
-      ".dnsv1.com",
+      ".cdn.dnsv1.com",
       ".sp.sched.tdnsv8.com",
       ".tdnsv5.com",
+      ".tdnsv6.com",
+      ".tdnsv8.com",
       ".cdntip.com",
       ".ovscdns.com"
     ],
@@ -1440,14 +1446,19 @@
     "nxdomain": false
   },
   {
-    "service": "akamai",
+    "service": "akamai_cdn",
     "name_patterns": [
       ".edgekey.net",
       ".edgesuite.net",
       ".akamaized.net",
       ".akamai.net",
       ".akadns.net",
-      ".akamaiedge.net"
+      ".akamaiedge.net",
+      ".akamaitechnologies.com",
+      ".akamai-staging.net",
+      ".akamai.com",
+      ".akamaitech.net",
+      ".akamaitechnologies.fr"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1508,7 +1519,8 @@
       ".kunlunaq.com",
       ".kunlunso.com",
       ".alikunlun.net",
-      ".alikunlun.net"
+      ".alicdn.com",
+      ".alivecdn.com"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1644,7 +1656,8 @@
     "service": "cdn77",
     "name_patterns": [
       ".rsc.cdn77.com",
-      ".cdn77.org"
+      ".cdn77.org",
+      ".cdn77.net"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1673,7 +1686,8 @@
       ".b.galileo.jcloud-cdn.com",
       ".dy.galileo.jcloud-cdn.com",
       ".s.galileo.jcloud-cdn.com",
-      ".vod.galileo.jcloud-cdn.com"
+      ".vod.galileo.jcloud-cdn.com",
+      ".cloud-scdn.com"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1698,7 +1712,8 @@
     "service": "stackpath_cdn",
     "name_patterns": [
       ".hwcdn.net",
-      ".stackpathcdn.com"
+      ".stackpathcdn.com",
+      ".stackpathdns.com"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1726,7 +1741,8 @@
   {
     "service": "ksyun_cdn",
     "name_patterns": [
-      ".ksyuncdn.com"
+      ".ksyuncdn.com",
+      ".ks-cdn.com"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1912,7 +1928,8 @@
   {
     "service": "limelight",
     "name_patterns": [
-      ".llnwi.net"
+      ".llnwi.net",
+      ".lldns.net"
     ],
     "fingerprint": [ ],
     "http_fingerprint": [],

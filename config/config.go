@@ -5,8 +5,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
 	"io"
 	"io/ioutil"
 	"os"
@@ -14,29 +12,32 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"gopkg.in/yaml.v2"
 )
 
 type Conf struct {
-	SubAccess           int    `yaml:"sub_access"`
-	CnameAccess         int    `yaml:"cname_access"`
-	RecursiveDepth      int    `yaml:"recursive_depth"`
-	CnameListSize       int    `yaml:"cname_list_size"`
-	PdnsChainUrl        string `yaml:"pdns_chain_url"`
-	PdnsSubdomainUrl    string `yaml:"pdns_subdomain_url"`
-	PdnsNsUrl           string `yaml:"pdns_ns_url"`
-	PdnsReverseCnameUrl string `yaml:"pdns_reverse_cname_url"`
-	PdnsApiToken        string `yaml:"pdns_api_token"`
-	SubDuration			time.Duration    `yaml:"sub_duration"`
-	ChainDuration		time.Duration    `yaml:"chain_duration"`
-	MaxFetchCount	int		`yaml:"max_fetch_count"`
+	SubAccess           int           `yaml:"sub_access"`
+	CnameAccess         int           `yaml:"cname_access"`
+	RecursiveDepth      int           `yaml:"recursive_depth"`
+	CnameListSize       int           `yaml:"cname_list_size"`
+	PdnsChainUrl        string        `yaml:"pdns_chain_url"`
+	PdnsSubdomainUrl    string        `yaml:"pdns_subdomain_url"`
+	PdnsNsUrl           string        `yaml:"pdns_ns_url"`
+	PdnsReverseCnameUrl string        `yaml:"pdns_reverse_cname_url"`
+	PdnsApiToken        string        `yaml:"pdns_api_token"`
+	SubDuration         time.Duration `yaml:"sub_duration"`
+	ChainDuration       time.Duration `yaml:"chain_duration"`
+	MaxFetchCount       int           `yaml:"max_fetch_count"`
 }
 
 type GlobalConfig struct {
 	Dataset        string
-	SldFilePath      string
-	FqdnFilePath      string
-	OutputDir     string
-	ScanDate	   string
+	SldFilePath    string
+	FqdnFilePath   string
+	OutputDir      string
+	ScanDate       string
 	CheckAvailable bool
 	CheckFull      bool
 	Fresh          bool
@@ -195,7 +196,7 @@ func Initialize(o *GlobalConfig) {
 	defaultOutputPath := "./results/"
 
 	// SLD Path
-	if strings.Contains(o.Modules, "subdomain"){
+	if strings.Contains(o.Modules, "subdomain") {
 		if o.SldFilePath == "" {
 			o.SldFilePath = path.Join(defaultDataPath, o.Dataset, "sld.txt")
 			fmt.Printf("[+] Input data path (SLD list): %s\n", o.SldFilePath)
@@ -230,7 +231,6 @@ func Initialize(o *GlobalConfig) {
 		o.FqdnFilePath = path.Join(o.OutputDir, "fqdn.txt")
 		fmt.Printf("[+] Subdomain (fqdn) path: %s\n", o.FqdnFilePath)
 	}
-
 	// Cache Path
 	o.CachePath = path.Join(o.OutputDir, "cache")
 	err1 := os.MkdirAll(o.CachePath, os.ModePerm)
@@ -250,6 +250,7 @@ func Initialize(o *GlobalConfig) {
 		os.Remove(logPath)
 		fmt.Printf("[!] Log file is removed (%s)\n", logPath)
 	}
+
 	// Log Path
 	if o.LogPath != "" {
 		logPath = o.LogPath

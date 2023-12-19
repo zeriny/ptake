@@ -22,14 +22,14 @@ func isLegalDomain(domain string) (flag bool) {
 		return false
 	}
 
-	illegalCharacters := "~!?@#$%^&()+/<>,[]\\/"
+	illegalCharacters := "'~!?@#$`%^&()+/<>,[]\\/"
 	for i := range illegalCharacters {
 		ch := string(illegalCharacters[i])
 		if strings.Contains(domain, ch) {
 			return false
 		}
 	}
-	illegalPrefixes := "."
+	illegalPrefixes := ".-"
 	for i := range illegalPrefixes {
 		ch := string(illegalPrefixes[i])
 		if strings.HasPrefix(domain, ch) {

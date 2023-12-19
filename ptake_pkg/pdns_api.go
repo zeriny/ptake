@@ -4,17 +4,17 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	log "github.com/sirupsen/logrus"
-	"github.com/valyala/fasthttp"
 	"ptake/config"
 	"strings"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"github.com/valyala/fasthttp"
 )
 
 func getFlintResponse(url string, timeout int, addHeaders map[string]string) (respBody FlintRRsetResponse, retry bool) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
-
 	req.SetRequestURI(url)
 	//req.Header.Add("Connection", "close")
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36")
@@ -84,8 +84,9 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 
 		currUrl := url
 		if lastkey != "" {
-			currUrl = url+fmt.Sprintf(`?lastkey='%s'`, lastkey)
+			currUrl = url + fmt.Sprintf(`&lastkey='%s'`, lastkey)
 		}
+
 		for i := 1; i <= retries; i++ {
 			respBody, retryFlag = getDtreeResponse(currUrl, timeout, tokenHeader)
 			if retryFlag == false {
@@ -132,7 +133,7 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 			subdomains = append(subdomains, fqdn)
 		}
 	}
-	if len(subdomains)== 0{
+	if len(subdomains) == 0 {
 		subdomains = append(subdomains, domain)
 	}
 	return subdomains
@@ -147,7 +148,7 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 	now := time.Now()
 	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*conf.ChainDuration).Format("20060102150405")
+	starttime := now.Add(sd * conf.ChainDuration).Format("20060102150405")
 	url := fmt.Sprintf(conf.PdnsChainUrl, domain, starttime, endtime)
 
 	tokenHeader := make(map[string]string)
@@ -162,11 +163,11 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 
 		currUrl := url
 		if lastkey != "" {
-			currUrl = url+fmt.Sprintf(`&lastkey='%s'`, lastkey)
+			currUrl = url + fmt.Sprintf(`&lastkey='%s'`, lastkey)
 		}
-
 		for i := 1; i <= retries; i++ {
 			respBody, retryFlag = getFlintResponse(currUrl, timeout, tokenHeader)
+
 			if retryFlag == false {
 				break
 			}
@@ -180,6 +181,8 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 		fetchCount += 1
 		lastkey = respBody.LastKey
 		data := respBody.Data
+		fmt.Println(currUrl, data)
+
 		var metaList []FlintRRsetRecord
 		for i := range data {
 			if data[i].Count > conf.CnameAccess {
@@ -199,7 +202,6 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 
 	return chains
 }
-
 
 func getNsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (ns NSType) {
 
@@ -240,14 +242,13 @@ func getNsFromPDNS(domain string, timeout int, retries int, conf config.Conf) (n
 	return ns
 }
 
-
 func getRCnameFromPDNS(domain string, timeout int, retries int, conf config.Conf) (rcnames []string) {
 
 	// Only get chains during the recent 7 days.
 	now := time.Now()
 	sd, _ := time.ParseDuration("-24h")
 	endtime := now.Format("20060102150405")
-	starttime := now.Add(sd*7).Format("20060102150405")
+	starttime := now.Add(sd * 7).Format("20060102150405")
 
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
@@ -262,7 +263,7 @@ func getRCnameFromPDNS(domain string, timeout int, retries int, conf config.Conf
 		var retryFlag bool
 		currUrl := url
 		if lastkey != "" {
-			currUrl = url+fmt.Sprintf(`&lastkey='%s'`, lastkey)
+			currUrl = url + fmt.Sprintf(`&lastkey='%s'`, lastkey)
 		}
 		for i := 1; i <= retries; i++ {
 			respBody, retryFlag = getFlintResponse(currUrl, timeout, tokenHeader)
