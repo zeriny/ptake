@@ -75,7 +75,11 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 	domain2Count := make(map[string]int)
 	tokenHeader := make(map[string]string)
 	tokenHeader["fdp-token"] = conf.PdnsApiToken
-	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain)
+	now := time.Now()
+	sd, _ := time.ParseDuration("-24h")
+	endtime := now.Format("20060102150405")
+	starttime := now.Add(sd * conf.ChainDuration).Format("20060102150405")
+	url := fmt.Sprintf(conf.PdnsSubdomainUrl, domain, starttime, endtime)
 
 	// Iteratively fetch data from PDNS pages.
 	for {
@@ -92,7 +96,7 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 			if retryFlag == false {
 				break
 			}
-			log.Warningf("[PDNS API - subdomain] No response! Retrying %s...", domain)
+			log.Warningf("[PDNS API - subdomain] No response! Retrying %s...", currUrl)
 			time.Sleep(1 * time.Second)
 		}
 
@@ -133,9 +137,11 @@ func getSubdomainFromPDNS(domain string, timeout int, retries int, conf config.C
 			subdomains = append(subdomains, fqdn)
 		}
 	}
-	if len(subdomains) == 0 {
-		subdomains = append(subdomains, domain)
-	}
+	// if len(subdomains) == 0 {
+	// 	subdomains = append(subdomains, domain)
+	// }
+	// Add the domain itself to the list
+	subdomains = append(subdomains, domain)
 	return subdomains
 }
 
@@ -181,7 +187,6 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 		fetchCount += 1
 		lastkey = respBody.LastKey
 		data := respBody.Data
-		fmt.Println(currUrl, data)
 
 		var metaList []FlintRRsetRecord
 		for i := range data {
@@ -193,7 +198,6 @@ func getChainsFromPDNS(domain string, timeout int, retries int, conf config.Conf
 		for i := range metaList {
 			chains = append(chains, metaList[i])
 		}
-		//log.Printf("%s, %d", domain, fetchCount)
 
 		if lastkey == "" || fetchCount >= conf.MaxFetchCount {
 			break

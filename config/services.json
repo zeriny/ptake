@@ -1,6 +1,6 @@
 [
   {
-    "service": "fastly",
+    "service": "fastly_cdn",
     "name_patterns": [
       ".global.prod.fastly.net",
       ".fastlylb.net"
@@ -58,6 +58,18 @@
     "http_fingerprint": [
       "409 Conflict"
     ],
+    "nxdomain": false,
+    "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "cloudflare_cdn",
+    "name_patterns": [
+      "cloudflare.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
     "nxdomain": false,
     "is_vulnerable": false,
     "cname_access": false
@@ -869,21 +881,6 @@
     "cname_access": false
   },
   {
-    "service": "baidu_yunjiasu",
-    "name_patterns": [
-      ".cname.yunjiasu-cdn.net"
-    ],
-    "fingerprint": [
-      "网站维护中",
-      "网关错误，连接源站失败"
-    ],
-    "dns_fingerprint": [],
-    "http_fingerprint": [],
-    "is_vulnerable": true,
-    "cname_access": false,
-    "nxdomain": true
-  },
-  {
     "service": "baidu_bch",
     "name_patterns": [
       ".bj01.bdysite.com",
@@ -912,16 +909,19 @@
     "nxdomain": false
   },
   {
-    "service": "baidu_cdn",
+    "service": "baidu_cloud_cdn",
     "name_patterns": [
       ".a.bdydns.com",
       ".g.bdydns.com",
       ".h.bdydns.com",
-      ".jomodns.com"
+      ".jomodns.com",
+      ".cname.yunjiasu-cdn.net"
     ],
     "fingerprint": [
       "This page isn’t working",
-      "We’re having trouble finding that site."
+      "We’re having trouble finding that site.",
+      "网站维护中",
+      "网关错误，连接源站失败"
     ],
     "dns_fingerprint": [],
     "http_fingerprint": [],
@@ -1128,7 +1128,9 @@
     "service": "baishan_cdn",
     "name_patterns": [
       ".bsclink.cn",
-      ".trpcdn.net"
+      ".trpcdn.net",
+      ".bsccdn.com",
+      ".baishan-cloud.net"
     ],
     "fingerprint": [],
     "dns_fingerprint": [],
@@ -1143,10 +1145,15 @@
       ".wswebpic.com",
       ".wscdns.com",
       ".cdn20.com",
+      ".cdn30.com",
+      ".lxdns.com",
+      ".mwcloudcdn.com",
+      ".mwcname.com",
       ".wsdvs.com",
       ".wswebcdn",
       ".wssec.com",
       ".wsglb0.com",
+      ".ourglb0.com",
       ".wtxcdn.com"
     ],
     "fingerprint": [],
@@ -1514,7 +1521,6 @@
       ".kunlunle.com",
       ".kunlunhuf.com",
       ".alikunlun.com",
-      ".alikunlun.com",
       ".kunlunar.com",
       ".kunlunaq.com",
       ".kunlunso.com",
@@ -1554,7 +1560,7 @@
     "nxdomain": false
   },
   {
-    "service": "cloudfront",
+    "service": "cloudfront_cdn",
     "name_patterns": [
       ".cloudfront.net"
     ],
@@ -1891,10 +1897,15 @@
     "nxdomain": false
   },
   {
-    "service": "edgecast",
+    "service": "edgecast_cdn",
     "name_patterns": [
       ".omicroncdn.net",
-      ".edgecastcdn.net"
+      ".edgecastcdn.net",
+      ".alphacdn.net",
+      ".betacdn.net",
+      ".sigmacdn.net",
+      ".omegacdn.net",
+      ".lambdacdn.net"
     ],
     "fingerprint": [ ],
     "http_fingerprint": [],
@@ -1917,7 +1928,8 @@
   {
     "service": "keycdn",
     "name_patterns": [
-      ".kxcdn.com"
+      ".kxcdn.com",
+      ".bsgslb.cn"
     ],
     "fingerprint": [ ],
     "http_fingerprint": [],
@@ -1926,9 +1938,11 @@
     "nxdomain": false
   },
   {
-    "service": "limelight",
+    "service": "limelight_cdn",
     "name_patterns": [
       ".llnwi.net",
+      ".llnw.net",
+      ".llnwd.net",
       ".lldns.net"
     ],
     "fingerprint": [ ],
@@ -1950,15 +1964,16 @@
     "nxdomain": false
   },
   {
-    "service": "CDNetworks",
+    "service": "CDNetworks_cdn",
     "name_patterns": [
       ".qtlgslb.com",
       ".ecp.qtlcdn.com",
-      ".gccdn.net",
       ".cdnetworks.net",
       ".cdngc.net",
+      ".cdnga.net",
       ".panthercdn.com",
       ".gccdn.cn",
+      ".gccdn.net",
       "ns1.cdnetdns.net",
       "ns2.cdnetdns.net"
     ],
@@ -1967,6 +1982,88 @@
     "http_fingerprint": [],
     "nxdomain": false,
     "is_vulnerable": true,
+    "cname_access": false
+  },
+  {
+    "service": "Cachefly_cdn",
+    "name_patterns": [
+      ".cachefly.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "cdnsun_cdn",
+    "name_patterns": [
+      ".worldssl.net",
+      ".worldcdn.net",
+      "anankecdn.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "chinacache_cdn",
+    "name_patterns": [
+      ".ccgslb.com.cn",
+      ".ccgslb.com",
+      ".ccgslb.net",
+      ".chinacache.net",
+      ".ccmplus.com.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "Incapsula_cdn",
+    "name_patterns": [
+      ".incapdns.net",
+      ".incapsecuredns.net",
+      ".incapsula.net"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "Leaseweb",
+    "name_patterns": [
+      ".lswcdn.net",
+      ".leaseweb.com"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
+    "cname_access": false
+  },
+  {
+    "service": "yunfan_cdn",
+    "name_patterns": [
+      ".yfcdn.net",
+      ".yfcdn.cn"
+    ],
+    "fingerprint": [],
+    "dns_fingerprint": [],
+    "http_fingerprint": [],
+    "nxdomain": false,
+    "is_vulnerable": false,
     "cname_access": false
   }
 ]

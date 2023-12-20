@@ -16,13 +16,17 @@ import (
 )
 
 // Judge whether a domain has a legal format.
+// Brute-force validation.
 // TODO: more constraints.
 func isLegalDomain(domain string) (flag bool) {
 	if !strings.Contains(domain, ".") {
 		return false
 	}
+	if len(domain) > 64 {
+		return false
+	}
 
-	illegalCharacters := "'~!?@#$`%^&()+/<>,[]\\/"
+	illegalCharacters := "'~!?@#$`%^&()+/<>,[]{}\\/"
 	for i := range illegalCharacters {
 		ch := string(illegalCharacters[i])
 		if strings.Contains(domain, ch) {
@@ -36,6 +40,14 @@ func isLegalDomain(domain string) (flag bool) {
 			return false
 		}
 	}
+	var illegalLabels = [...]string{".-", ".*"}
+	for i := range illegalLabels {
+		label := string(illegalLabels[i])
+		if strings.Contains(domain, label) {
+			return false
+		}
+	}
+
 	return true
 }
 
@@ -61,8 +73,8 @@ func domainFilter(subdomains []string) (filteredSubdomains []string) {
 			saveCache(fqdn, "illegal_domain.txt")
 			continue
 		}
-		if strings.HasPrefix(fqdn, "*.") {
-			fqdn = strings.Replace(fqdn, "*", "randomsub_10236", -1)
+		if strings.HasPrefix(fqdn, "*.") || strings.Contains(fqdn, "*") {
+			fqdn = strings.Replace(fqdn, "*", "rAnD0msUb", -1)
 		}
 		filteredSubdomains = append(filteredSubdomains, fqdn)
 	}
