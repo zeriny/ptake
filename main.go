@@ -3,11 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"ptake/config"
 	"ptake/ptake_pkg"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -50,7 +51,6 @@ func main() {
 	config.Initialize(&gc)
 	log.Infoln("Initializing...")
 
-
 	modules := strings.Split(gc.Modules, ",")
 	for i := range modules {
 		switch modules[i] {
@@ -60,6 +60,9 @@ func main() {
 		case "chain":
 			log.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartGetChains(&gc)
+		case "active_resolve":
+			log.Printf("[+] Start module: %s\n", modules[i])
+			ptake_pkg.StartGetActiveChains(&gc)
 		case "check":
 			log.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartChecker(&gc)
@@ -67,7 +70,7 @@ func main() {
 			log.Printf("[+] Start module: %s\n", modules[i])
 			ptake_pkg.StartGetReverseCnames(&gc)
 		default:
-			log.Println("[-] Please select modules (-module 'subdomain,chain,check').")
+			log.Println("[-] Please select modules (-module 'subdomain,chain,active_resolve,check,rcname').")
 		}
 	}
 	log.Infoln("Scan Over!")

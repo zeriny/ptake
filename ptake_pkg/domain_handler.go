@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/haccer/available"
+	"github.com/miekg/dns"
 	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/publicsuffix"
@@ -101,7 +102,7 @@ func getSubdomains(sld string, o *config.GlobalConfig) {
 	saveCache(sld, cacheFile)
 }
 
-func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (chain DnsChain) {
+func getPassiveChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, depth int) (chain DnsChain) {
 	// The subdomain has been handled
 	if item, found := domainCache.Get(subdomain); found {
 		return item.(DnsChain)
@@ -142,7 +143,7 @@ func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 
 		if rtype == "CNAME" {
 			currCnameCount += 1
-			curr = getChainsRecursive(rdata, o, domainCache, depth+1)
+			curr = getPassiveChainsRecursive(rdata, o, domainCache, depth+1)
 		} else if (rtype == "A") || (rtype == "NS") {
 			currCnameCount += 1
 			curr.Name = rdata
@@ -158,17 +159,58 @@ func getChainsRecursive(subdomain string, o *config.GlobalConfig, domainCache *c
 	return chain
 }
 
+func getActiveChainsRecursive(subdomain string, rrset []ActiveRRsetRecord, o *config.GlobalConfig, depth int) (chain DnsChain) {
+
+	chain.Name = subdomain
+	for i := range rrset {
+		rname := rrset[i].RRName
+		rdata := rrset[i].Rdata
+		rtype := rrset[i].RRType
+		if rname != subdomain {
+			continue
+		}
+		if rtype == "A" {
+			var leaf DnsChain
+			leaf.Name = rdata
+			leaf.Chains = nil
+
+			var curr DnsChain
+			curr.Name = rname
+			curr.Chains = append(curr.Chains, leaf)
+			chain.Chains = append(chain.Chains, curr)
+		} else if rtype == "CNAME" {
+			curr := getActiveChainsRecursive(rdata, rrset, o, depth+1)
+			chain.Chains = append(chain.Chains, curr)
+		}
+	}
+	if o.Verbose {
+		log.Infof("Look up: %s (depth: %d, results:%d)", subdomain, depth, len(chain.Chains))
+	}
+	return chain
+}
+
 // Resolve subdomain and fetch CNAME records
 // Output CNAME object: {domain: "domain", cnames: []CNAME}
-func getChains(subdomain string, o *config.GlobalConfig) {
+func getChains(subdomain string, o *config.GlobalConfig, domainCache *cache.Cache, active_dns bool) {
 	isLegal := isLegalDomain(subdomain)
 	if isLegal == false {
 		log.Warningf("[-] '%s' is not in legal format.", subdomain)
 		return
 	}
 
-	domainCache := cache.New(30*time.Second, 10*time.Second)
-	chain := getChainsRecursive(subdomain, o, domainCache, 1)
+	var chain DnsChain
+	if active_dns == true {
+		// The subdomain has been handled
+		if item, found := domainCache.Get(subdomain); found {
+			chain = item.(DnsChain)
+		} else {
+			rrset := domainLookup(subdomain)
+			chain = getActiveChainsRecursive(subdomain, rrset, o, 1)
+			domainCache.Set(subdomain, chain, cache.NoExpiration)
+		}
+	} else {
+		chain = getPassiveChainsRecursive(subdomain, o, domainCache, 1)
+	}
 
 	// Output results and save caches.
 	chainPath := path.Join(o.OutputDir, "chain.txt")
@@ -227,6 +269,31 @@ func IsAvailable(domain string) bool {
 	// 2. check.go: remove the special condition for "ca" [line79], and line88 should be 'else if'
 	flag := available.Domain(domain)
 	return flag
+}
+
+// Get DNS records via active domain resolution.
+func domainLookup(domain string) (chains []ActiveRRsetRecord) {
+	d := new(dns.Msg)
+	d.SetQuestion(domain+".", dns.TypeA)
+	ret, err := dns.Exchange(d, "8.8.8.8:53")
+	if err != nil {
+		return
+	}
+
+	for _, a := range ret.Answer {
+		var chain ActiveRRsetRecord
+		if t, ok := a.(*dns.CNAME); ok {
+			chain.RRName = strings.TrimRight(t.Hdr.Name, ".")
+			chain.RRType = "CNAME"
+			chain.Rdata = strings.TrimRight(t.Target, ".")
+		} else if t, ok := a.(*dns.A); ok {
+			chain.RRName = strings.TrimRight(t.Hdr.Name, ".")
+			chain.RRType = "A"
+			chain.Rdata = t.A.To4().String()
+		}
+		chains = append(chains, chain)
+	}
+	return chains
 }
 
 func getBaseDomain(domain string) (base string) {
