@@ -12,4 +12,6 @@ checkReverseDomain.go
 test.go
 config/conf.yaml
 .idea
+.vscode/*
 illegal_domain.txt
+__debug*
